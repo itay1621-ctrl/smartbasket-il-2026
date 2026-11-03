@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#1e293b" />
+    <meta name="description" content="SmartBasket IL 2026 - משווה הסלים והסטוק החכם בישראל. השוואה בזמן אמת בין רמי לוי, מקס סטוק, הסטוק, מקס סטוק אונליין וסטוק אונליין עם אלגוריתם פיצול סל ושקלול דמי משלוח." />
+    <title>SmartBasket IL 2026 - משווה הסלים החכם בישראל</title>
+    
+    <!-- PWA Manifest & Icons -->
+    <link rel="manifest" href="./manifest.json" />
+    <link rel="icon" type="image/svg+xml" href="./icons/icon-192.svg" />
+    <link rel="apple-touch-icon" href="./icons/icon-192.svg" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="SmartBasket" />
+
+    <!-- Google Fonts: Heebo & Rubik for modern Hebrew typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+    <script type="module" crossorigin src="./assets/index-03cgttWR.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/cat-grocery-l-vrUd9W.js">
+    <link rel="modulepreload" crossorigin href="./assets/cat-stock-BE436BcM.js">
+    <link rel="modulepreload" crossorigin href="./assets/optimizer-D0VXxQol.js">
+    <link rel="modulepreload" crossorigin href="./assets/geo-regions-D4LCf2zd.js">
+    <link rel="stylesheet" crossorigin href="./assets/index-BPNwOeII.css">
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration error:', err));
+        });
+      }
+    </script>
+  </body>
+</html>

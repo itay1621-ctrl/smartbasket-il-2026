@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" width="192" height="192">
+  <defs>
+    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#2563eb" />
+      <stop offset="100%" stop-color="#1d4ed8" />
+    </linearGradient>
+  </defs>
+  <rect width="192" height="192" rx="40" fill="url(#grad1)" />
+  <!-- Shopping Basket with Smart Sparkles & Shekel -->
+  <path d="M48 76 L144 76 L132 144 L60 144 Z" fill="none" stroke="#ffffff" stroke-width="8" stroke-linejoin="round"/>
+  <path d="M64 76 L96 36 L128 76" fill="none" stroke="#60a5fa" stroke-width="8" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Shekel Sign inside basket -->
+  <text x="96" y="125" font-family="system-ui, sans-serif" font-size="44" font-weight="900" fill="#38bdf8" text-anchor="middle">₪</text>
+  <!-- Sparkle dot -->
+  <circle cx="140" cy="50" r="10" fill="#facc15"/>
+</svg>
