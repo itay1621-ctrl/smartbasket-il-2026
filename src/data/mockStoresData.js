@@ -1,1345 +1,4587 @@
-// נתוני רשתות ומוצרים מעודכנים לשנת 2026 - כולל רשתות מזון וסופרמרקטים + רשתות סטוק וכלי בית
+// נתוני רשתות ומוצרים מעודכנים לשנת 2026 - סופרמרקטים + רשתות סטוק וכלי בית
 
 export const STORES_METADATA = {
   // ==========================================
   // רשתות מזון וסופרמרקטים מובילים בישראל
   // ==========================================
   rami_levy: {
-    id: 'rami_levy',
-    name: 'רמי לוי (שיווק השקמה / אונליין / סטוק)',
-    shortName: 'רמי לוי',
-    color: '#0284c7', // Sky Blue
-    badgeColor: 'bg-blue-600',
-    sector: 'food', // also hybrid stock
-    sectorLabel: 'סופרמרקט + סטוק ענק',
-    type: 'סניפים + אונליין',
+    id: "rami_levy",
+    name: "רמי לוי (שיווק השקמה / אונליין / סטוק)",
+    shortName: "רמי לוי",
+    color: "#0284c7",
+    badgeColor: "bg-blue-600",
+    sector: "food",
+    sectorLabel: "סופרמרקט + סטוק ענק",
+    type: "סניפים + אונליין",
     baseDeliveryFee: 35.9,
-    freeDeliveryThreshold: 0, // ללא סף משלוח חינם בשנת 2026
+    freeDeliveryThreshold: 0,
     minOrder: 100,
-    deliveryNote: 'משלוח עד הבית ₪35.90 קבוע (איסוף ₪0)',
-    iconText: 'רמי לוי'
+    deliveryNote: "משלוח עד הבית ₪35.90 קבוע (איסוף בסניף ₪0)",
+    iconText: "רמי לוי"
   },
   shufersal: {
-    id: 'shufersal',
-    name: 'שופרסל (דיל / אונליין)',
-    shortName: 'שופרסל',
-    color: '#059669', // Emerald Green
-    badgeColor: 'bg-emerald-600',
-    sector: 'food',
-    sectorLabel: 'רשת מזון וסופרמרקט',
-    type: 'סניפים + אונליין',
+    id: "shufersal",
+    name: "שופרסל (דיל / שלי / אונליין)",
+    shortName: "שופרסל",
+    color: "#059669",
+    badgeColor: "bg-emerald-600",
+    sector: "food",
+    sectorLabel: "רשת מזון וסופרמרקט",
+    type: "סניפים + אונליין",
     baseDeliveryFee: 35.0,
     freeDeliveryThreshold: 0,
     minOrder: 150,
-    deliveryNote: 'משלוח עד הבית ₪35.00 קבוע (איסוף ₪0)',
-    iconText: 'שופרסל'
+    deliveryNote: "משלוח עד הבית ₪35.00 קבוע (איסוף בסניף ₪0)",
+    iconText: "שופרסל"
   },
   yohananof: {
-    id: 'yohananof',
-    name: 'סופרשוק יוחננוף',
-    shortName: 'יוחננוף',
-    color: '#dc2626', // Red
-    badgeColor: 'bg-red-600',
-    sector: 'food',
-    sectorLabel: 'רשת מזון ולואו-קוסט',
-    type: 'סניפים + אונליין',
+    id: "yohananof",
+    name: "סופרשוק יוחננוף",
+    shortName: "יוחננוף",
+    color: "#dc2626",
+    badgeColor: "bg-red-600",
+    sector: "food",
+    sectorLabel: "רשת מזון ולואו-קוסט",
+    type: "סניפים + אונליין",
     baseDeliveryFee: 32.0,
     freeDeliveryThreshold: 0,
     minOrder: 100,
-    deliveryNote: 'משלוח עד הבית ₪32.00 (איסוף ₪0)',
-    iconText: 'יוחננוף'
+    deliveryNote: "משלוח עד הבית ₪32.00 (איסוף בסניף ₪0)",
+    iconText: "יוחננוף"
   },
   carrefour: {
-    id: 'carrefour',
-    name: 'קרפור ישראל (Carrefour)',
-    shortName: 'קרפור',
-    color: '#2563eb', // Royal Blue
-    badgeColor: 'bg-blue-600',
-    sector: 'food',
-    sectorLabel: 'רשת מזון בינלאומית',
-    type: 'סניפים + אונליין',
+    id: "carrefour",
+    name: "קרפור ישראל (Carrefour)",
+    shortName: "קרפור",
+    color: "#2563eb",
+    badgeColor: "bg-blue-600",
+    sector: "food",
+    sectorLabel: "רשת מזון בינלאומית",
+    type: "סניפים + אונליין",
     baseDeliveryFee: 34.0,
     freeDeliveryThreshold: 450,
     minOrder: 120,
-    deliveryNote: 'משלוח ₪34.00 (חינם מעל ₪450)',
-    iconText: 'קרפור'
+    deliveryNote: "משלוח ₪34.00 (חינם מעל ₪450, איסוף ₪0)",
+    iconText: "קרפור"
   },
   osher_ad: {
-    id: 'osher_ad',
-    name: 'אושר עד (סניפי דיסקאונט ומארזים)',
-    shortName: 'אושר עד',
-    color: '#d97706', // Amber
-    badgeColor: 'bg-amber-600',
-    sector: 'food',
-    sectorLabel: 'דיסקאונט מארזי ענק',
-    type: 'סניפים בלבד',
+    id: "osher_ad",
+    name: "אושר עד (סניפי דיסקאונט ומארזים)",
+    shortName: "אושר עד",
+    color: "#d97706",
+    badgeColor: "bg-amber-600",
+    sector: "food",
+    sectorLabel: "דיסקאונט מארזי ענק",
+    type: "סניפים בלבד",
     baseDeliveryFee: 0,
     freeDeliveryThreshold: 0,
     minOrder: 0,
-    deliveryNote: 'סניפים בלבד (ללא משלוח ישיר, איסוף ₪0)',
-    iconText: 'אושר עד'
+    deliveryNote: "סניפים בלבד (ללא משלוח ישיר, איסוף ₪0)",
+    iconText: "אושר עד"
   },
   victory: {
-    id: 'victory',
-    name: 'ויקטורי (סופרמרקט / אונליין)',
-    shortName: 'ויקטורי',
-    color: '#7c3aed', // Purple
-    badgeColor: 'bg-purple-600',
-    sector: 'food',
-    sectorLabel: 'רשת סופרמרקטים',
-    type: 'סניפים + אונליין',
+    id: "victory",
+    name: "ויקטורי (סופרמרקט / אונליין)",
+    shortName: "ויקטורי",
+    color: "#7c3aed",
+    badgeColor: "bg-purple-600",
+    sector: "food",
+    sectorLabel: "רשת סופרמרקטים",
+    type: "סניפים + אונליין",
     baseDeliveryFee: 35.0,
     freeDeliveryThreshold: 0,
     minOrder: 100,
-    deliveryNote: 'משלוח עד הבית ₪35.00 קבוע',
-    iconText: 'ויקטורי'
+    deliveryNote: "משלוח עד הבית ₪35.00 קבוע (איסוף בסניף ₪0)",
+    iconText: "ויקטורי"
   },
 
   // ==========================================
   // רשתות הסטוק והלואו-קוסט המובילות בישראל
   // ==========================================
   max_stock: {
-    id: 'max_stock',
-    name: 'מקס סטוק (סניפים פיזיים)',
-    shortName: 'מקס סטוק',
-    color: '#e11d48', // Crimson Red
-    badgeColor: 'bg-rose-600',
-    sector: 'stock',
-    sectorLabel: 'רשת סטוק וכלי בית',
-    type: 'סניפים בלבד (64 סניפים)',
+    id: "max_stock",
+    name: "מקס סטוק (סניפים פיזיים)",
+    shortName: "מקס סטוק",
+    color: "#e11d48",
+    badgeColor: "bg-rose-600",
+    sector: "stock",
+    sectorLabel: "רשת סטוק וכלי בית",
+    type: "סניפים בלבד (64 סניפים)",
     baseDeliveryFee: 0,
     freeDeliveryThreshold: 0,
     minOrder: 0,
-    deliveryNote: 'איסוף עצמי בסניף (₪0)',
-    iconText: 'מקס סטוק'
+    deliveryNote: "איסוף עצמי בסניף (₪0)",
+    iconText: "מקס סטוק"
   },
   hastock: {
-    id: 'hastock',
-    name: 'הסטוק (רשת הסטוק)',
-    shortName: 'הסטוק',
-    color: '#ea580c', // Orange
-    badgeColor: 'bg-orange-600',
-    sector: 'stock',
-    sectorLabel: 'רשת סטוק וכלי בית',
-    type: 'סניפים + משלוחים (51 סניפים)',
+    id: "hastock",
+    name: "הסטוק (רשת הסטוק)",
+    shortName: "הסטוק",
+    color: "#ea580c",
+    badgeColor: "bg-orange-600",
+    sector: "stock",
+    sectorLabel: "רשת סטוק וכלי בית",
+    type: "סניפים + משלוחים (51 סניפים)",
     baseDeliveryFee: 35.0,
     freeDeliveryThreshold: 350,
     minOrder: 50,
-    deliveryNote: 'משלוח עד הבית ₪35 (חינם מעל ₪350, איסוף ₪0)',
-    iconText: 'הסטוק'
+    deliveryNote: "משלוח עד הבית ₪35 (חינם מעל ₪350, איסוף ₪0)",
+    iconText: "הסטוק"
   },
   max_stock_online: {
-    id: 'max_stock_online',
-    name: 'מקס סטוק אונליין',
-    shortName: 'מקס אונליין',
-    color: '#9333ea', // Purple
-    badgeColor: 'bg-purple-600',
-    sector: 'stock',
-    sectorLabel: 'אתר ייעודי לריהוט וסטוק',
-    type: 'משלוחים בלבד',
-    baseDeliveryFee: 99.0, // 99 ₪ לפריט ראשון + 70 ₪ לכל פריט נוסף
+    id: "max_stock_online",
+    name: "מקס סטוק אונליין",
+    shortName: "מקס אונליין",
+    color: "#9333ea",
+    badgeColor: "bg-purple-600",
+    sector: "stock",
+    sectorLabel: "אתר ייעודי לריהוט וסטוק",
+    type: "משלוחים בלבד",
+    baseDeliveryFee: 99.0,
     perAdditionalItemFee: 70.0,
     freeDeliveryThreshold: 0,
     minOrder: 80,
-    deliveryNote: '₪99 לפריט 1 + ₪70 לכל פריט נוסף (איסוף חינם קיסריה/אשדוד)',
-    iconText: 'מקס אונליין'
+    deliveryNote: "₪99 לפריט 1 + ₪70 לכל פריט נוסף (איסוף חינם קיסריה/אשדוד)",
+    iconText: "מקס אונליין"
   },
   stock_online: {
-    id: 'stock_online',
-    name: 'סטוק אונליין (Stock Online)',
-    shortName: 'סטוק אונליין',
-    color: '#10b981', // Emerald
-    badgeColor: 'bg-emerald-600',
-    sector: 'stock',
-    sectorLabel: 'חנות מקוונת לבית ולסטוק',
-    type: 'חנות מקוונת בלבד',
+    id: "stock_online",
+    name: "סטוק אונליין (Stock Online)",
+    shortName: "סטוק אונליין",
+    color: "#10b981",
+    badgeColor: "bg-emerald-600",
+    sector: "stock",
+    sectorLabel: "חנות מקוונת לבית ולסטוק",
+    type: "חנות מקוונת בלבד",
     baseDeliveryFee: 70.0,
     freeDeliveryThreshold: 299,
     minOrder: 50,
-    deliveryNote: 'משלוח ₪70 (משלוח חינם מעל ₪299)',
-    iconText: 'סטוק Online'
+    deliveryNote: "משלוח ₪70 (משלוח חינם מעל ₪299)",
+    iconText: "סטוק Online"
   }
 };
 
 export const CATEGORIES = [
-  { id: 'all', name: 'הכל', icon: '✨' },
-  { id: 'food', name: 'מזון ומכולת', icon: '🍏' },
-  { id: 'kitchen', name: 'מטבח', icon: '🍳' },
-  { id: 'cleaning_bath', name: 'ניקיון ואמבטיה', icon: '🧼' },
-  { id: 'textile', name: 'טקסטיל', icon: '🛏️' },
-  { id: 'furniture', name: 'ריהוט ואחסון', icon: '🛋️' },
-  { id: 'diy', name: 'כלי עבודה ו-DIY', icon: '🔧' },
-  { id: 'decor', name: 'אקססוריז ותאורה', icon: '💡' }
+  { id: "all", name: "הכל", icon: "🛒" },
+  { id: "dairy_eggs", name: "חלב וביצים", icon: "🥛" },
+  { id: "produce", name: "פירות וירקות", icon: "🍎" },
+  { id: "meat_fish", name: "בשר ודגים", icon: "🍗" },
+  { id: "bakery", name: "לחם ומאפים", icon: "🥖" },
+  { id: "pantry", name: "מזווה ושימורים", icon: "🥫" },
+  { id: "snacks_drinks", name: "שתייה וחטיפים", icon: "☕" },
+  { id: "cleaning_bath", name: "ניקיון וטיפוח", icon: "🧼" },
+  { id: "kitchen", name: "מטבח ואירוח", icon: "🍳" },
+  { id: "furniture", name: "ריהוט ואחסון", icon: "🛋️" },
+  { id: "diy", name: "כלי עבודה ו-DIY", icon: "🔧" },
+  { id: "decor", name: "אקססוריז ועיצוב", icon: "💡" }
 ];
 
 export const CATALOG_PRODUCTS = [
-  // ==========================================
-  // קטגוריית מזון ומכולת (food)
-  // ==========================================
   {
-    id: 'p_shocolit',
-    name: 'שוקולית עלית 500 גרם',
-    category: 'food',
-    unit: 'יח׳',
-    aliases: ['שוקולית', 'שוקולית עלית', 'אבקת שוקולית', 'שוקו'],
-    prices: {
-      rami_levy: 14.90,
-      shufersal: 14.90,
-      yohananof: 14.50,
-      carrefour: 14.90,
-      osher_ad: 13.90,
-      victory: 14.90,
-      max_stock: 14.20,
-      hastock: 14.20,
-      max_stock_online: 14.50,
-      stock_online: 15.00
+    "id": "p_eggs_l_12",
+    "name": "תבנית 12 ביצים L (פיקוח)",
+    "category": "dairy_eggs",
+    "unit": "תבנית 12 יח׳",
+    "isRegulated": true,
+    "aliases": [
+      "ביצים",
+      "ביצים L",
+      "תבנית ביצים",
+      "ביצים 12",
+      "ביצים גודל L"
+    ],
+    "prices": {
+      "rami_levy": 14.3,
+      "shufersal": 14.3,
+      "yohananof": 14.3,
+      "carrefour": 14.3,
+      "osher_ad": 14.3,
+      "victory": 14.3,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_ketchup_osem',
-    name: 'קטשופ אסם עשיר 750 גרם',
-    category: 'food',
-    unit: 'יח׳',
-    aliases: ['קטשופ אסם', 'קטשופ', 'קטשופ אוסם', 'בקבוק קטשופ'],
-    prices: {
-      rami_levy: 10.90,
-      shufersal: 11.90,
-      yohananof: 10.50,
-      carrefour: 10.90,
-      osher_ad: 9.90,
-      victory: 11.50,
-      max_stock: 10.90,
-      hastock: 10.90,
-      max_stock_online: 11.50,
-      stock_online: 12.00
+    "id": "p_eggs_xl_12",
+    "name": "תבנית 12 ביצים XL",
+    "category": "dairy_eggs",
+    "unit": "תבנית 12 יח׳",
+    "aliases": [
+      "ביצים XL",
+      "ביצים ענקיות",
+      "תבנית ביצים XL"
+    ],
+    "prices": {
+      "rami_levy": 15.9,
+      "shufersal": 16.9,
+      "yohananof": 15.9,
+      "carrefour": 16.5,
+      "osher_ad": 15.5,
+      "victory": 16.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_milk_tnuva',
-    name: 'חלב תנובה 3% 1 ליטר',
-    category: 'food',
-    unit: 'יח׳',
-    aliases: ['חלב', 'חלב תנובה', 'חלב 3%', 'תנובה', 'קרטון חלב'],
-    prices: {
-      rami_levy: 7.11,
-      shufersal: 7.11,
-      yohananof: 7.11,
-      carrefour: 7.11,
-      osher_ad: 7.11,
-      victory: 7.11,
-      max_stock: 6.90,
-      hastock: 7.20,
-      max_stock_online: 7.10,
-      stock_online: null
+    "id": "p_eggs_l_30",
+    "name": "תבנית ענק 30 ביצים L",
+    "category": "dairy_eggs",
+    "unit": "תבנית 30 יח׳",
+    "aliases": [
+      "תבנית 30 ביצים",
+      "30 ביצים",
+      "קרטון ביצים 30",
+      "ביצים 30"
+    ],
+    "prices": {
+      "rami_levy": 33.9,
+      "shufersal": 36.9,
+      "yohananof": 34.5,
+      "carrefour": 35.9,
+      "osher_ad": 32.9,
+      "victory": 36.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: false
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_eggs_l',
-    name: 'ביצים גודל L (מארז 12)',
-    category: 'food',
-    unit: 'מארז',
-    aliases: ['ביצים', 'ביצים L', 'תבנית ביצים', 'ביצי עוף'],
-    prices: {
-      rami_levy: 13.90,
-      shufersal: 13.90,
-      yohananof: 13.90,
-      carrefour: 13.90,
-      osher_ad: 13.50,
-      victory: 13.90,
-      max_stock: null,
-      hastock: 14.50,
-      max_stock_online: null,
-      stock_online: null
+    "id": "p_milk_3pct_carton",
+    "name": "חלב תנובה 3% בקרטון 1 ליטר (פיקוח)",
+    "category": "dairy_eggs",
+    "unit": "ליטר",
+    "isRegulated": true,
+    "aliases": [
+      "חלב",
+      "חלב 3%",
+      "חלב תנובה",
+      "קרטון חלב",
+      "חלב בקרטון"
+    ],
+    "prices": {
+      "rami_levy": 7.11,
+      "shufersal": 7.11,
+      "yohananof": 7.11,
+      "carrefour": 7.11,
+      "osher_ad": 7.11,
+      "victory": 7.11,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: false,
-      hastock: true,
-      max_stock_online: false,
-      stock_online: false
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_black_coffee',
-    name: 'קפה שחור עלית עם הל 100 גרם',
-    category: 'food',
-    unit: 'יח׳',
-    aliases: ['קפה', 'קפה שחור', 'קפה עלית', 'קפה טורקי', 'קפה עם הל'],
-    prices: {
-      rami_levy: 9.90,
-      shufersal: 10.50,
-      yohananof: 8.90,
-      carrefour: 9.90,
-      osher_ad: 8.90,
-      victory: 9.90,
-      max_stock: 8.50,
-      hastock: 8.90,
-      max_stock_online: 8.90,
-      stock_online: 9.50
+    "id": "p_milk_1pct_carton",
+    "name": "חלב תנובה 1% בקרטון 1 ליטר (פיקוח)",
+    "category": "dairy_eggs",
+    "unit": "ליטר",
+    "isRegulated": true,
+    "aliases": [
+      "חלב 1%",
+      "חלב דל שומן",
+      "חלב 1 אחוז"
+    ],
+    "prices": {
+      "rami_levy": 6.64,
+      "shufersal": 6.64,
+      "yohananof": 6.64,
+      "carrefour": 6.64,
+      "osher_ad": 6.64,
+      "victory": 6.64,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_canola_oil',
-    name: 'שמן קנולה מזוכך 1 ליטר',
-    category: 'food',
-    unit: 'בקבוק',
-    aliases: ['שמן', 'שמן קנולה', 'שמן לטיגון'],
-    prices: {
-      rami_levy: 8.90,
-      shufersal: 9.90,
-      yohananof: 8.50,
-      carrefour: 8.90,
-      osher_ad: 8.20,
-      victory: 9.20,
-      max_stock: 9.90,
-      hastock: 9.50,
-      max_stock_online: 9.90,
-      stock_online: 10.90
+    "id": "p_milk_3pct_bag",
+    "name": "חלב תנובה 3% בשקית 1 ליטר (פיקוח)",
+    "category": "dairy_eggs",
+    "unit": "ליטר",
+    "isRegulated": true,
+    "aliases": [
+      "חלב בשקית",
+      "שקית חלב",
+      "חלב שקית 3%"
+    ],
+    "prices": {
+      "rami_levy": 5.94,
+      "shufersal": 5.94,
+      "yohananof": 5.94,
+      "carrefour": 5.94,
+      "osher_ad": 5.94,
+      "victory": 5.94,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_tahini_raw',
-    name: 'טחינה גולמית מובחרת 500 גרם',
-    category: 'food',
-    unit: 'יח׳',
-    aliases: ['טחינה', 'טחינה גולמית', 'טחינה הר ברכה', 'טחינה אל ארז'],
-    prices: {
-      rami_levy: 13.90,
-      shufersal: 14.90,
-      yohananof: 12.90,
-      carrefour: 13.50,
-      osher_ad: 11.90,
-      victory: 13.90,
-      max_stock: 12.00,
-      hastock: 12.90,
-      max_stock_online: 12.50,
-      stock_online: 13.50
+    "id": "p_butter_tnuva_100g",
+    "name": "חמאה תנובה 100 גרם (פיקוח)",
+    "category": "dairy_eggs",
+    "unit": "יח׳",
+    "isRegulated": true,
+    "aliases": [
+      "חמאה",
+      "חמאה תנובה",
+      "חמאה 100 גרם",
+      "חמאה צהובה"
+    ],
+    "prices": {
+      "rami_levy": 4.44,
+      "shufersal": 4.44,
+      "yohananof": 4.44,
+      "carrefour": 4.44,
+      "osher_ad": 4.44,
+      "victory": 4.44,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_tuna_4pack',
-    name: 'שימורי טונה סטארקיסט במים/שמן (רביעייה)',
-    category: 'food',
-    unit: 'מארז',
-    aliases: ['טונה', 'שימורי טונה', 'טונה רביעיה', 'סטארקיסט'],
-    prices: {
-      rami_levy: 22.90,
-      shufersal: 24.90,
-      yohananof: 21.90,
-      carrefour: 22.90,
-      osher_ad: 21.00,
-      victory: 23.50,
-      max_stock: 21.00,
-      hastock: 21.90,
-      max_stock_online: 21.90,
-      stock_online: 23.50
+    "id": "p_cheese_emek_200g",
+    "name": "גבינה צהובה עמק תנובה 28% פרוסה 200 גרם",
+    "category": "dairy_eggs",
+    "unit": "מארז",
+    "aliases": [
+      "גבינה צהובה",
+      "עמק",
+      "גבינת עמק",
+      "צהובה 200 גרם",
+      "עמק 28%"
+    ],
+    "prices": {
+      "rami_levy": 13.9,
+      "shufersal": 15.9,
+      "yohananof": 14.5,
+      "carrefour": 14.9,
+      "osher_ad": 13.5,
+      "victory": 15.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
-    }
-  },
-
-  // ==========================================
-  // קטגוריית מטבח (kitchen) - סל מעבר דירה
-  // ==========================================
-  {
-    id: 'p_pot_24',
-    name: 'סיר בישול 24 ס״מ',
-    category: 'kitchen',
-    unit: 'יח׳',
-    aliases: ['סיר 24 ס"מ', 'סיר 24 ס״מ', 'סיר 24', 'סיר', 'סיר בישול', 'סיר נון סטיק'],
-    prices: {
-      rami_levy: 59.90,
-      shufersal: 79.90,
-      yohananof: 64.90,
-      carrefour: 69.90,
-      osher_ad: 54.90,
-      victory: 69.90,
-      max_stock: 69.00,
-      hastock: 49.90,
-      max_stock_online: 75.00,
-      stock_online: 79.00
-    },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_soteuse_28',
-    name: 'סוטאז׳ 28 ס״מ עם מכסה',
-    category: 'kitchen',
-    unit: 'יח׳',
-    aliases: ['סוטאז\' 28 ס"מ', 'סוטאז\' 28', 'סוטאז 28', 'סוטאז\'', 'סוטאז', 'סיר סוטאז'],
-    prices: {
-      rami_levy: 69.90,
-      shufersal: 89.90,
-      yohananof: 74.90,
-      carrefour: 79.90,
-      osher_ad: 69.90,
-      victory: 79.90,
-      max_stock: 79.00,
-      hastock: 69.90,
-      max_stock_online: 85.00,
-      stock_online: 89.00
+    "id": "p_cheese_noam_200g",
+    "name": "גבינה צהובה נועם טרה 28% פרוסה 200 גרם",
+    "category": "dairy_eggs",
+    "unit": "מארז",
+    "aliases": [
+      "גבינה נועם",
+      "נועם טרה",
+      "צהובה נועם"
+    ],
+    "prices": {
+      "rami_levy": 13.5,
+      "shufersal": 15.2,
+      "yohananof": 13.9,
+      "carrefour": 13.9,
+      "osher_ad": 12.9,
+      "victory": 14.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_pans_pair',
-    name: 'זוג מחבתות נון-סטיק',
-    category: 'kitchen',
-    unit: 'מארז',
-    aliases: ['זוג מחבתות', 'סט מחבתות', 'מחבתות', 'מחבת', 'מחבת נון סטיק'],
-    prices: {
-      rami_levy: 59.90,
-      shufersal: 79.90,
-      yohananof: 69.90,
-      carrefour: 74.90,
-      osher_ad: 64.90,
-      victory: 75.00,
-      max_stock: 84.00,
-      hastock: 69.90,
-      max_stock_online: 89.00,
-      stock_online: 95.00
+    "id": "p_white_cheese_5pct_250g",
+    "name": "גבינה לבנה תנובה 5% 250 גרם (פיקוח)",
+    "category": "dairy_eggs",
+    "unit": "גביע",
+    "isRegulated": true,
+    "aliases": [
+      "גבינה לבנה",
+      "גבינה לבנה 5%",
+      "לבנה תנובה",
+      "גבינה תנובה 250 גרם"
+    ],
+    "prices": {
+      "rami_levy": 5.43,
+      "shufersal": 5.43,
+      "yohananof": 5.43,
+      "carrefour": 5.43,
+      "osher_ad": 5.43,
+      "victory": 5.43,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_plates_12',
-    name: 'סט 12 צלחות אוכל',
-    category: 'kitchen',
-    unit: 'סט',
-    aliases: ['סט 12 צלחות', '12 צלחות', 'סט צלחות', 'צלחות אוכל', 'צלחות'],
-    prices: {
-      rami_levy: 29.90,
-      shufersal: 49.90,
-      yohananof: 35.00,
-      carrefour: 42.00,
-      osher_ad: 32.00,
-      victory: 39.90,
-      max_stock: 39.90,
-      hastock: 49.90,
-      max_stock_online: 45.00,
-      stock_online: 49.00
+    "id": "p_white_cheese_ski_250g",
+    "name": "גבינה לבנה סקי שטראוס 5% 250 גרם",
+    "category": "dairy_eggs",
+    "unit": "גביע",
+    "aliases": [
+      "גבינת סקי",
+      "סקי שטראוס",
+      "סקי 5%"
+    ],
+    "prices": {
+      "rami_levy": 5.9,
+      "shufersal": 6.5,
+      "yohananof": 5.9,
+      "carrefour": 6.2,
+      "osher_ad": 5.8,
+      "victory": 6.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_cutlery_24',
-    name: 'סט סכו״ם 24 חלקים',
-    category: 'kitchen',
-    unit: 'סט',
-    aliases: ['סט סכו"ם 24 חלקים', 'סט סכו״ם 24 חלקים', 'סט סכו"ם', 'סט סכו״ם', 'סכו"ם 24 חלקים', 'סכו״ם', 'סכום'],
-    prices: {
-      rami_levy: 19.90,
-      shufersal: 34.90,
-      yohananof: 24.90,
-      carrefour: 29.90,
-      osher_ad: 19.90,
-      victory: 29.90,
-      max_stock: 20.90,
-      hastock: 29.90,
-      max_stock_online: 25.00,
-      stock_online: 29.00
+    "id": "p_cottage_5pct_250g",
+    "name": "קוטג׳ תנובה 5% 250 גרם",
+    "category": "dairy_eggs",
+    "unit": "גביע",
+    "aliases": [
+      "קוטג",
+      "קוטג׳",
+      "קוטג 5%",
+      "קוטג׳ תנובה",
+      "קוטג 250 גרם"
+    ],
+    "prices": {
+      "rami_levy": 6.9,
+      "shufersal": 7.2,
+      "yohananof": 6.9,
+      "carrefour": 7,
+      "osher_ad": 6.7,
+      "victory": 7.2,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_glasses_mugs',
-    name: 'סט 6 כוסות שתייה + 6 מאגים',
-    category: 'kitchen',
-    unit: 'סט',
-    aliases: ['6 כוסות + 6 מאגים', '6 כוסות ו-6 מאגים', 'כוסות ומאגים', 'סט כוסות ומאגים', 'כוסות', 'מאגים'],
-    prices: {
-      rami_levy: 39.80,
-      shufersal: 54.90,
-      yohananof: 44.90,
-      carrefour: 49.90,
-      osher_ad: 39.90,
-      victory: 49.90,
-      max_stock: 46.80,
-      hastock: 49.90,
-      max_stock_online: 49.00,
-      stock_online: 55.00
+    "id": "p_cottage_9pct_250g",
+    "name": "קוטג׳ תנובה 9% 250 גרם",
+    "category": "dairy_eggs",
+    "unit": "גביע",
+    "aliases": [
+      "קוטג 9%",
+      "קוטג׳ 9%"
+    ],
+    "prices": {
+      "rami_levy": 6.9,
+      "shufersal": 7.4,
+      "yohananof": 6.9,
+      "carrefour": 7.1,
+      "osher_ad": 6.8,
+      "victory": 7.4,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_dish_rack_2tier',
-    name: 'מייבש כלים דו-קומתי',
-    category: 'kitchen',
-    unit: 'יח׳',
-    aliases: ['מייבש כלים דו-קומתי', 'מייבש כלים דו קומתי', 'מייבש כלים', 'מתקן כלים', 'מתקן ייבוש כלים'],
-    prices: {
-      rami_levy: 29.90,
-      shufersal: 45.00,
-      yohananof: 34.90,
-      carrefour: 39.90,
-      osher_ad: 29.90,
-      victory: 39.90,
-      max_stock: 30.00,
-      hastock: 39.90,
-      max_stock_online: 35.00,
-      stock_online: 39.00
+    "id": "p_cheese_napoleon_225g",
+    "name": "גבינת שמנת נפוליאון תנובה 24% 225 גרם",
+    "category": "dairy_eggs",
+    "unit": "גביע",
+    "aliases": [
+      "נפוליאון",
+      "גבינת שמנת",
+      "נפוליאון 24%",
+      "שמנת נפוליאון"
+    ],
+    "prices": {
+      "rami_levy": 12.9,
+      "shufersal": 14.5,
+      "yohananof": 12.9,
+      "carrefour": 13.5,
+      "osher_ad": 12.5,
+      "victory": 14.2,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_storage_strainer_utensils',
-    name: '10 קופסאות אחסון + מסננת וששת',
-    category: 'kitchen',
-    unit: 'ערכה',
-    aliases: ['10 קופסאות אחסון + מסננת וששת', 'קופסאות אחסון ומסננת וששת', '10 קופסאות אחסון', 'קופסאות אחסון', 'ששת ומסננת', 'מסננת וששת'],
-    prices: {
-      rami_levy: 32.80, // כולל מסננת ב-2.90 ₪
-      shufersal: 59.90,
-      yohananof: 42.00,
-      carrefour: 49.90,
-      osher_ad: 36.90,
-      victory: 49.90,
-      max_stock: 45.80,
-      hastock: 49.90,
-      max_stock_online: 49.00,
-      stock_online: 52.00
+    "id": "p_cheese_bulgarian_250g",
+    "name": "גבינה בולגרית פיראוס 5% 250 גרם",
+    "category": "dairy_eggs",
+    "unit": "מארז",
+    "aliases": [
+      "בולגרית",
+      "גבינה בולגרית",
+      "בולגרית פיראוס",
+      "בולגרית 5%"
+    ],
+    "prices": {
+      "rami_levy": 14.9,
+      "shufersal": 16.9,
+      "yohananof": 14.9,
+      "carrefour": 15.5,
+      "osher_ad": 14.2,
+      "victory": 16.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
-    }
-  },
-
-  // ==========================================
-  // קטגוריית ניקיון ואמבטיה (cleaning_bath)
-  // ==========================================
-  {
-    id: 'p_cleaning_kit',
-    name: 'ערכת ניקיון מלאה דלי+מגב+סמרטוטים+חומרים',
-    category: 'cleaning_bath',
-    unit: 'ערכה',
-    aliases: ['ערכת ניקיון מלאה', 'ערכת ניקיון', 'דלי ומגב', 'סט ניקיון', 'חומרי ניקוי ודלי'],
-    prices: {
-      rami_levy: 49.90,
-      shufersal: 69.90,
-      yohananof: 54.90,
-      carrefour: 59.90,
-      osher_ad: 46.90,
-      victory: 59.90,
-      max_stock: 59.40,
-      hastock: 64.90,
-      max_stock_online: 65.00,
-      stock_online: 69.00
-    },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_laundry_basket_pins',
-    name: 'סל כביסה + אטבים + שקיות רשת',
-    category: 'cleaning_bath',
-    unit: 'ערכה',
-    aliases: ['סל כביסה + אטבים + שקיות רשת', 'סל כביסה ואטבים', 'סל כביסה', 'אטבי כביסה'],
-    prices: {
-      rami_levy: 24.90,
-      shufersal: 39.90,
-      yohananof: 28.00,
-      carrefour: 34.90,
-      osher_ad: 24.90,
-      victory: 32.00,
-      max_stock: 26.80,
-      hastock: 29.90,
-      max_stock_online: 30.00,
-      stock_online: 35.00
+    "id": "p_sour_cream_15pct",
+    "name": "שמנת חמוצה תנובה 15% 200 מ״ל (פיקוח)",
+    "category": "dairy_eggs",
+    "unit": "גביע",
+    "isRegulated": true,
+    "aliases": [
+      "שמנת חמוצה",
+      "שמנת 15%",
+      "שמנת תנובה"
+    ],
+    "prices": {
+      "rami_levy": 2.63,
+      "shufersal": 2.63,
+      "yohananof": 2.63,
+      "carrefour": 2.63,
+      "osher_ad": 2.63,
+      "victory": 2.63,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_ocean_bath_accessories',
-    name: 'אבזור אמבטיה ללא קידוח מסדרת OCEAN',
-    category: 'cleaning_bath',
-    unit: 'סט',
-    aliases: ['אבזור אמבטיה ללא קידוח מסדרת OCEAN', 'אבזור אמבטיה ללא קידוח', 'אבזור אמבטיה ocean', 'מתלים לאמבטיה', 'מדף ואקום'],
-    prices: {
-      rami_levy: 54.90,
-      shufersal: 79.90,
-      yohananof: 62.00,
-      carrefour: 69.90,
-      osher_ad: null,
-      victory: 69.90,
-      max_stock: 62.50,
-      hastock: 69.90,
-      max_stock_online: 69.00,
-      stock_online: 75.00
+    "id": "p_whipping_cream_38pct",
+    "name": "שמנת מתוקה להקצפה 38% השף הלבן 250 מ״ל",
+    "category": "dairy_eggs",
+    "unit": "מיכל",
+    "aliases": [
+      "שמנת מתוקה",
+      "שמנת להקצפה",
+      "שמנת 38%",
+      "השף הלבן"
+    ],
+    "prices": {
+      "rami_levy": 7.9,
+      "shufersal": 8.9,
+      "yohananof": 7.9,
+      "carrefour": 8.2,
+      "osher_ad": 7.5,
+      "victory": 8.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: false,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_bath_entry_mats',
-    name: 'שטיח אמבטיה + שטיח כניסה',
-    category: 'cleaning_bath',
-    unit: 'זוג',
-    aliases: ['שטיח אמבטיה + שטיח כניסה', 'שטיח אמבטיה ושטיח כניסה', 'שטיח אמבטיה', 'שטיח כניסה'],
-    prices: {
-      rami_levy: 24.90,
-      shufersal: 44.90,
-      yohananof: 29.90,
-      carrefour: 34.90,
-      osher_ad: 24.90,
-      victory: 35.00,
-      max_stock: 26.80,
-      hastock: 29.90,
-      max_stock_online: 30.00,
-      stock_online: 32.00
+    "id": "p_milky_chocolate",
+    "name": "מעדן חלב מילקי שוקולד שטראוס 133 גרם",
+    "category": "dairy_eggs",
+    "unit": "גביע",
+    "aliases": [
+      "מילקי",
+      "מילקי שוקולד",
+      "מעדן מילקי"
+    ],
+    "prices": {
+      "rami_levy": 3.2,
+      "shufersal": 3.5,
+      "yohananof": 3.2,
+      "carrefour": 3.3,
+      "osher_ad": 3.1,
+      "victory": 3.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
-    }
-  },
-
-  // ==========================================
-  // קטגוריית טקסטיל (textile)
-  // ==========================================
-  {
-    id: 'p_towels_set_body_face',
-    name: '2 מגבות גוף + 2 פנים + מגבות מטבח',
-    category: 'textile',
-    unit: 'סט',
-    aliases: ['2 מגבות גוף + 2 פנים + מגבות מטבח', 'סט מגבות מלא', 'מגבות גוף ופנים', 'מגבות גוף'],
-    prices: {
-      rami_levy: 59.90,
-      shufersal: 89.90,
-      yohananof: 72.00,
-      carrefour: 79.90,
-      osher_ad: 65.00,
-      victory: 79.90,
-      max_stock: 73.60,
-      hastock: 69.60,
-      max_stock_online: 79.00,
-      stock_online: 85.00
-    },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_bedding_pillows_set',
-    name: 'סט מצעים זוגי + זוג כריות שינה',
-    category: 'textile',
-    unit: 'ערכה',
-    aliases: ['סט מצעים זוגי + זוג כריות שינה', 'מצעים וכריות', 'סט מצעים זוגי', 'מצעים זוגיים'],
-    prices: {
-      rami_levy: 99.80,
-      shufersal: 149.90,
-      yohananof: 119.00,
-      carrefour: 129.90,
-      osher_ad: 109.00,
-      victory: 129.90,
-      max_stock: 119.80,
-      hastock: 109.80,
-      max_stock_online: 129.00,
-      stock_online: 139.00
+    "id": "p_danone_bio_200g",
+    "name": "יוגורט דנונה ביו שטראוס 3% 200 גרם",
+    "category": "dairy_eggs",
+    "unit": "גביע",
+    "aliases": [
+      "יוגורט",
+      "דנונה",
+      "יוגורט דנונה",
+      "דנונה ביו"
+    ],
+    "prices": {
+      "rami_levy": 4.9,
+      "shufersal": 5.4,
+      "yohananof": 4.9,
+      "carrefour": 5.1,
+      "osher_ad": 4.6,
+      "victory": 5.4,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
-    }
-  },
-
-  // ==========================================
-  // קטגוריית ריהוט ואחסון (furniture)
-  // ==========================================
-  {
-    id: 'p_coffee_tables_pair',
-    name: 'שולחן סלון / זוג שולחנות קפה',
-    category: 'furniture',
-    unit: 'יח׳',
-    aliases: ['שולחן סלון / זוג שולחנות קפה', 'שולחן סלון', 'זוג שולחנות קפה', 'שולחנות קפה'],
-    prices: {
-      rami_levy: 129.90,
-      shufersal: null,
-      yohananof: null,
-      carrefour: null,
-      osher_ad: null,
-      victory: null,
-      max_stock: 119.90,
-      hastock: 149.90,
-      max_stock_online: 200.00,
-      stock_online: 599.00
-    },
-    inStock: {
-      rami_levy: true,
-      shufersal: false,
-      yohananof: false,
-      carrefour: false,
-      osher_ad: false,
-      victory: false,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_cubes_shelf_6',
-    name: 'כוורת 6 תאים / מעמד מדפים',
-    category: 'furniture',
-    unit: 'יח׳',
-    aliases: ['כוורת 6 תאים / מעמד מדפים', 'כוורת 6 תאים', 'מעמד מדפים', 'כוורת'],
-    prices: {
-      rami_levy: 139.90,
-      shufersal: null,
-      yohananof: null,
-      carrefour: null,
-      osher_ad: null,
-      victory: null,
-      max_stock: 119.90,
-      hastock: 159.90,
-      max_stock_online: 180.00,
-      stock_online: 199.00
+    "id": "p_choco_yotvata_1l",
+    "name": "משקה שוקו יטבתה 1 ליטר בבקבוק",
+    "category": "dairy_eggs",
+    "unit": "בקבוק",
+    "aliases": [
+      "שוקו",
+      "שוקו יטבתה",
+      "בקבוק שוקו",
+      "שוקו ליטר"
+    ],
+    "prices": {
+      "rami_levy": 9.9,
+      "shufersal": 11.9,
+      "yohananof": 10.5,
+      "carrefour": 10.9,
+      "osher_ad": 9.5,
+      "victory": 11.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: false,
-      yohananof: false,
-      carrefour: false,
-      osher_ad: false,
-      victory: false,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_shoes_closet_wood',
-    name: 'ארון נעליים עץ מעוצב',
-    category: 'furniture',
-    unit: 'יח׳',
-    aliases: ['ארון נעליים עץ', 'ארון נעליים', 'מעמד נעליים'],
-    prices: {
-      rami_levy: 219.00,
-      shufersal: null,
-      yohananof: null,
-      carrefour: null,
-      osher_ad: null,
-      victory: null,
-      max_stock: 200.00,
-      hastock: 249.90,
-      max_stock_online: 240.00,
-      stock_online: 280.00
+    "id": "p_tomatoes_kg",
+    "name": "עגבניות חממה טריות (ק״ג)",
+    "category": "produce",
+    "unit": "ק״ג",
+    "aliases": [
+      "עגבניות",
+      "עגבניה",
+      "עגבניות חממה",
+      "קילו עגבניות"
+    ],
+    "prices": {
+      "rami_levy": 4.9,
+      "shufersal": 6.9,
+      "yohananof": 4.9,
+      "carrefour": 5.5,
+      "osher_ad": 4.5,
+      "victory": 6.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: false,
-      yohananof: false,
-      carrefour: false,
-      osher_ad: false,
-      victory: false,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_clothes_hanger_stand',
-    name: 'מעמד תליית בגדים כפול מתכוונן',
-    category: 'furniture',
-    unit: 'יח׳',
-    aliases: ['מעמד תליית בגדים', 'מתלה בגדים', 'קולב עומד'],
-    prices: {
-      rami_levy: 169.90,
-      shufersal: null,
-      yohananof: null,
-      carrefour: null,
-      osher_ad: null,
-      victory: null,
-      max_stock: 199.90,
-      hastock: 179.90,
-      max_stock_online: 220.00,
-      stock_online: 230.00
+    "id": "p_cherry_tomatoes_pack",
+    "name": "עגבניות שרי מארז 500 גרם",
+    "category": "produce",
+    "unit": "מארז",
+    "aliases": [
+      "עגבניות שרי",
+      "שרי",
+      "מארז שרי"
+    ],
+    "prices": {
+      "rami_levy": 5.9,
+      "shufersal": 7.9,
+      "yohananof": 5.9,
+      "carrefour": 6.5,
+      "osher_ad": 5.5,
+      "victory": 7.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: false,
-      yohananof: false,
-      carrefour: false,
-      osher_ad: false,
-      victory: false,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_side_tables_bamboo',
-    name: 'זוג שידות צד + מעמד במבוק',
-    category: 'furniture',
-    unit: 'סט',
-    aliases: ['זוג שידות צד + מעמד במבוק', 'זוג שידות צד', 'שידות צד', 'מעמד במבוק'],
-    prices: {
-      rami_levy: 199.70,
-      shufersal: null,
-      yohananof: null,
-      carrefour: null,
-      osher_ad: null,
-      victory: null,
-      max_stock: 179.70,
-      hastock: 219.70,
-      max_stock_online: 229.00,
-      stock_online: 249.00
+    "id": "p_cucumbers_kg",
+    "name": "מלפפונים ירוקים טריים (ק״ג)",
+    "category": "produce",
+    "unit": "ק״ג",
+    "aliases": [
+      "מלפפונים",
+      "מלפפון",
+      "קילו מלפפונים"
+    ],
+    "prices": {
+      "rami_levy": 4.9,
+      "shufersal": 6.5,
+      "yohananof": 4.9,
+      "carrefour": 5.2,
+      "osher_ad": 4.5,
+      "victory": 6.2,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: false,
-      yohananof: false,
-      carrefour: false,
-      osher_ad: false,
-      victory: false,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
-    }
-  },
-
-  // ==========================================
-  // קטגוריית כלי עבודה ו-DIY (diy)
-  // ==========================================
-  {
-    id: 'p_hand_tools_kit',
-    name: 'ערכת כלי עבודה ידניים מקיפה',
-    category: 'diy',
-    unit: 'ערכה',
-    aliases: ['ערכת כלי עבודה ידניים', 'ערכת כלי עבודה', 'כלי עבודה', 'ערכת 12 כלים'],
-    prices: {
-      rami_levy: 29.90, // כולל ערכת 12 כלים ב-10 ₪
-      shufersal: 49.90,
-      yohananof: 39.90,
-      carrefour: 44.90,
-      osher_ad: 34.90,
-      victory: 44.90,
-      max_stock: 68.50,
-      hastock: 79.90,
-      max_stock_online: 75.00,
-      stock_online: 79.00
-    },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_cordless_drill',
-    name: 'מברגה / מקדחה נטענת',
-    category: 'diy',
-    unit: 'יח׳',
-    aliases: ['מברגה/מקדחה נטענת', 'מברגה נטענת', 'מקדחה נטענת', 'מברגה'],
-    prices: {
-      rami_levy: 59.90, // DeWalt בשיתוף עץ האורן
-      shufersal: null,
-      yohananof: null,
-      carrefour: null,
-      osher_ad: null,
-      victory: null,
-      max_stock: 50.00, // גנרית 3.6V
-      hastock: 69.90,
-      max_stock_online: 69.00,
-      stock_online: 79.00
+    "id": "p_onions_dry_kg",
+    "name": "בצל יבש מובחר (ק״ג)",
+    "category": "produce",
+    "unit": "ק״ג",
+    "aliases": [
+      "בצל",
+      "בצל יבש",
+      "קילו בצל",
+      "בצל צהוב"
+    ],
+    "prices": {
+      "rami_levy": 3.9,
+      "shufersal": 5.5,
+      "yohananof": 3.9,
+      "carrefour": 4.2,
+      "osher_ad": 3.5,
+      "victory": 5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: false,
-      yohananof: false,
-      carrefour: false,
-      osher_ad: false,
-      victory: false,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_paint_seal_kit',
-    name: 'ערכת צביעה ואיטום לבית',
-    category: 'diy',
-    unit: 'ערכה',
-    aliases: ['ערכת צביעה ואיטום', 'ערכת צביעה', 'מברשות ורולר צבע', 'איטום'],
-    prices: {
-      rami_levy: 44.90,
-      shufersal: 64.90,
-      yohananof: 52.00,
-      carrefour: 59.90,
-      osher_ad: null,
-      victory: 59.90,
-      max_stock: 56.80,
-      hastock: 64.90,
-      max_stock_online: 59.00,
-      stock_online: 65.00
+    "id": "p_potatoes_bag_kg",
+    "name": "תפוחי אדמה לבנים בשקית (ק״ג)",
+    "category": "produce",
+    "unit": "ק״ג",
+    "aliases": [
+      "תפוחי אדמה",
+      "תפוח אדמה",
+      "תפו״א",
+      "שקית תפוחי אדמה"
+    ],
+    "prices": {
+      "rami_levy": 4.5,
+      "shufersal": 5.9,
+      "yohananof": 4.5,
+      "carrefour": 4.9,
+      "osher_ad": 4.2,
+      "victory": 5.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: false,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
-    }
-  },
-
-  // ==========================================
-  // קטגוריית אקססוריז ותאורה (decor)
-  // ==========================================
-  {
-    id: 'p_body_mirror',
-    name: 'מראת גוף גדולה מעוצבת',
-    category: 'decor',
-    unit: 'יח׳',
-    aliases: ['מראת גוף', 'מראה עומדת', 'מראה גדולה', 'מראה'],
-    prices: {
-      rami_levy: 99.90,
-      shufersal: null,
-      yohananof: null,
-      carrefour: null,
-      osher_ad: null,
-      victory: null,
-      max_stock: 99.90,
-      hastock: 119.90,
-      max_stock_online: 129.00,
-      stock_online: 149.00
-    },
-    inStock: {
-      rami_levy: true,
-      shufersal: false,
-      yohananof: false,
-      carrefour: false,
-      osher_ad: false,
-      victory: false,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_carpet_120_180',
-    name: 'שטיח סלון 120x180 ס״מ',
-    category: 'decor',
-    unit: 'יח׳',
-    aliases: ['שטיח סלון 120x180', 'שטיח סלון', 'שטיח 120x180', 'שטיח'],
-    prices: {
-      rami_levy: 109.90,
-      shufersal: null,
-      yohananof: null,
-      carrefour: null,
-      osher_ad: null,
-      victory: null,
-      max_stock: 99.90,
-      hastock: 129.90,
-      max_stock_online: 120.00,
-      stock_online: 135.00
+    "id": "p_red_peppers_kg",
+    "name": "פלפל אדום מתוק - גמבה (ק״ג)",
+    "category": "produce",
+    "unit": "ק״ג",
+    "aliases": [
+      "פלפל אדום",
+      "גמבה",
+      "פלפלים",
+      "גמבות",
+      "קילו גמבה"
+    ],
+    "prices": {
+      "rami_levy": 7.9,
+      "shufersal": 10.9,
+      "yohananof": 7.9,
+      "carrefour": 8.9,
+      "osher_ad": 7.5,
+      "victory": 9.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: false,
-      yohananof: false,
-      carrefour: false,
-      osher_ad: false,
-      victory: false,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_curtains_rod_pair',
-    name: 'זוג וילונות + מוט תלייה',
-    category: 'decor',
-    unit: 'סט',
-    aliases: ['זוג וילונות + מוט', 'וילונות ומוט', 'זוג וילונות', 'וילון'],
-    prices: {
-      rami_levy: 59.80,
-      shufersal: 89.90,
-      yohananof: 69.90,
-      carrefour: 74.90,
-      osher_ad: null,
-      victory: 74.90,
-      max_stock: 61.70,
-      hastock: 79.80,
-      max_stock_online: 69.00,
-      stock_online: 79.00
+    "id": "p_carrots_bag_kg",
+    "name": "גזר טרי ארוז בשקית (ק״ג)",
+    "category": "produce",
+    "unit": "ק״ג",
+    "aliases": [
+      "גזר",
+      "שקית גזר",
+      "גזר ארוז",
+      "קילו גזר"
+    ],
+    "prices": {
+      "rami_levy": 3.9,
+      "shufersal": 4.9,
+      "yohananof": 3.9,
+      "carrefour": 4.2,
+      "osher_ad": 3.5,
+      "victory": 4.8,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: false,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_artificial_tree_cushions',
-    name: 'עץ מלאכותי + עציצים + כריות נוי',
-    category: 'decor',
-    unit: 'ערכה',
-    aliases: ['עץ מלאכותי + עציצים + כריות נוי', 'עץ מלאכותי ועציצים', 'עציצים וכריות נוי', 'עץ מלאכותי'],
-    prices: {
-      rami_levy: 119.60,
-      shufersal: null,
-      yohananof: null,
-      carrefour: null,
-      osher_ad: null,
-      victory: null,
-      max_stock: 121.50,
-      hastock: 139.60,
-      max_stock_online: 135.00,
-      stock_online: 145.00
+    "id": "p_romaine_lettuce",
+    "name": "חסה ערבית רעננה (יחידה)",
+    "category": "produce",
+    "unit": "יח׳",
+    "aliases": [
+      "חסה",
+      "חסה ערבית",
+      "ראש חסה"
+    ],
+    "prices": {
+      "rami_levy": 4.9,
+      "shufersal": 6.9,
+      "yohananof": 4.9,
+      "carrefour": 5.5,
+      "osher_ad": 4.5,
+      "victory": 6.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: false,
-      yohananof: false,
-      carrefour: false,
-      osher_ad: false,
-      victory: false,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
     }
   },
   {
-    id: 'p_lighting_package',
-    name: 'חבילת תאורה 3 קנים + מנורת שולחן + נורות',
-    category: 'decor',
-    unit: 'ערכה',
-    aliases: ['חבילת תאורה 3 קנים + מנורת שולחן + נורות', 'חבילת תאורה', 'גוף תאורה 3 קנים', 'מנורת שולחן ונורות'],
-    prices: {
-      rami_levy: 119.70,
-      shufersal: null,
-      yohananof: null,
-      carrefour: null,
-      osher_ad: null,
-      victory: null,
-      max_stock: 120.70,
-      hastock: 149.70,
-      max_stock_online: 139.00,
-      stock_online: 159.00
+    "id": "p_lemons_kg",
+    "name": "לימונים עסיסיים טריים (ק״ג)",
+    "category": "produce",
+    "unit": "ק״ג",
+    "aliases": [
+      "לימון",
+      "לימונים",
+      "קילו לימון"
+    ],
+    "prices": {
+      "rami_levy": 6.9,
+      "shufersal": 8.9,
+      "yohananof": 6.9,
+      "carrefour": 7.5,
+      "osher_ad": 6.5,
+      "victory": 8.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
     },
-    inStock: {
-      rami_levy: true,
-      shufersal: false,
-      yohananof: false,
-      carrefour: false,
-      osher_ad: false,
-      victory: false,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_bananas_kg",
+    "name": "בננות טריות (ק״ג)",
+    "category": "produce",
+    "unit": "ק״ג",
+    "aliases": [
+      "בננות",
+      "בננה",
+      "קילו בננות"
+    ],
+    "prices": {
+      "rami_levy": 6.9,
+      "shufersal": 8.9,
+      "yohananof": 6.9,
+      "carrefour": 7.5,
+      "osher_ad": 6.5,
+      "victory": 8.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_apples_hermon_kg",
+    "name": "תפוחי עץ חרמון אדומים (ק״ג)",
+    "category": "produce",
+    "unit": "ק״ג",
+    "aliases": [
+      "תפוחים",
+      "תפוחי עץ",
+      "תפוח אדום",
+      "תפוחי חרמון"
+    ],
+    "prices": {
+      "rami_levy": 8.9,
+      "shufersal": 11.9,
+      "yohananof": 8.9,
+      "carrefour": 9.9,
+      "osher_ad": 8.5,
+      "victory": 11.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_avocado_kg",
+    "name": "אבוקדו מובחר (ק״ג)",
+    "category": "produce",
+    "unit": "ק״ג",
+    "aliases": [
+      "אבוקדו",
+      "קילו אבוקדו"
+    ],
+    "prices": {
+      "rami_levy": 9.9,
+      "shufersal": 13.9,
+      "yohananof": 9.9,
+      "carrefour": 11.5,
+      "osher_ad": 9.5,
+      "victory": 12.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_chicken_breast_schnitzel_kg",
+    "name": "חזה עוף טרי פרוס לשניצל (ק״ג)",
+    "category": "meat_fish",
+    "unit": "ק״ג",
+    "aliases": [
+      "חזה עוף",
+      "שניצל עוף",
+      "חזה עוף פרוס",
+      "שניצל טרי",
+      "עוף לשניצל"
+    ],
+    "prices": {
+      "rami_levy": 34.9,
+      "shufersal": 41.9,
+      "yohananof": 35.9,
+      "carrefour": 36.9,
+      "osher_ad": 33.9,
+      "victory": 39.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_chicken_thighs_kg",
+    "name": "כרעיים עוף טרי (ק״ג)",
+    "category": "meat_fish",
+    "unit": "ק״ג",
+    "aliases": [
+      "כרעיים",
+      "כרעיים עוף",
+      "שוקיים וירכיים עוף",
+      "עוף טרי"
+    ],
+    "prices": {
+      "rami_levy": 24.9,
+      "shufersal": 29.9,
+      "yohananof": 24.9,
+      "carrefour": 26.5,
+      "osher_ad": 23.9,
+      "victory": 28.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_ground_beef_fresh_kg",
+    "name": "בשר בקר טחון טרי (ק״ג)",
+    "category": "meat_fish",
+    "unit": "ק״ג",
+    "aliases": [
+      "בשר טחון",
+      "בקר טחון",
+      "בשר טחון טרי",
+      "קילו טחון"
+    ],
+    "prices": {
+      "rami_levy": 49.9,
+      "shufersal": 59.9,
+      "yohananof": 49.9,
+      "carrefour": 52.9,
+      "osher_ad": 48.9,
+      "victory": 56.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_salmon_fillet_kg",
+    "name": "פילה סלמון נורווגי קפוא / טרי (ק״ג)",
+    "category": "meat_fish",
+    "unit": "ק״ג",
+    "aliases": [
+      "סלמון",
+      "פילה סלמון",
+      "דג סלמון",
+      "סלמון נורווגי"
+    ],
+    "prices": {
+      "rami_levy": 59.9,
+      "shufersal": 69.9,
+      "yohananof": 59.9,
+      "carrefour": 64.9,
+      "osher_ad": 58.9,
+      "victory": 68.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_frozen_schnitzel_mamaof_700g",
+    "name": "שניצל עוף אמיתי מאמא עוף 700 גרם",
+    "category": "meat_fish",
+    "unit": "מארז",
+    "aliases": [
+      "מאמא עוף",
+      "שניצל קפוא",
+      "שניצל מאמא עוף",
+      "שניצל מוכן"
+    ],
+    "prices": {
+      "rami_levy": 29.9,
+      "shufersal": 36.9,
+      "yohananof": 29.9,
+      "carrefour": 32.9,
+      "osher_ad": 28.9,
+      "victory": 35.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_tuna_oil_4pack",
+    "name": "טונה בהירה בשמן צמחי מארז רביעייה (4x140 גרם)",
+    "category": "meat_fish",
+    "unit": "מארז 4 יח׳",
+    "aliases": [
+      "טונה",
+      "טונה בשמן",
+      "מארז טונה",
+      "שימורי טונה",
+      "רביעיית טונה"
+    ],
+    "prices": {
+      "rami_levy": 16.9,
+      "shufersal": 21.9,
+      "yohananof": 17.5,
+      "carrefour": 18.9,
+      "osher_ad": 16.5,
+      "victory": 20.9,
+      "max_stock": 17.9,
+      "hastock": 17.5,
+      "max_stock_online": 18,
+      "stock_online": 19
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_tuna_water_4pack",
+    "name": "טונה בהירה במים מארז רביעייה (4x140 גרם)",
+    "category": "meat_fish",
+    "unit": "מארז 4 יח׳",
+    "aliases": [
+      "טונה במים",
+      "טונה דיאטטית"
+    ],
+    "prices": {
+      "rami_levy": 16.9,
+      "shufersal": 21.9,
+      "yohananof": 17.5,
+      "carrefour": 18.9,
+      "osher_ad": 16.5,
+      "victory": 20.9,
+      "max_stock": 17.9,
+      "hastock": 17.5,
+      "max_stock_online": 18,
+      "stock_online": 19
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_frozen_peas_sunfrost_800g",
+    "name": "אפונה ירוקה עדינה סנפרוסט 800 גרם",
+    "category": "meat_fish",
+    "unit": "שקית",
+    "aliases": [
+      "סנפרוסט",
+      "אפונה סנפרוסט",
+      "אפונה עדינה",
+      "ירקות קפואים"
+    ],
+    "prices": {
+      "rami_levy": 14.9,
+      "shufersal": 18.9,
+      "yohananof": 15.5,
+      "carrefour": 16.5,
+      "osher_ad": 14.2,
+      "victory": 17.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_frozen_fries_tfugan_1kg",
+    "name": "צ׳יפס קפוא תפוגן 1 ק״ג לתנור ולטיגון",
+    "category": "meat_fish",
+    "unit": "שקית",
+    "aliases": [
+      "תפוגן",
+      "צ׳יפס תפוגן",
+      "ציפס קפוא",
+      "ציפס"
+    ],
+    "prices": {
+      "rami_levy": 11.9,
+      "shufersal": 14.9,
+      "yohananof": 11.9,
+      "carrefour": 12.5,
+      "osher_ad": 10.9,
+      "victory": 14.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_bread_standard_sliced_750g",
+    "name": "לחם אחיד כהה פרוס 750 גרם (פיקוח)",
+    "category": "bakery",
+    "unit": "כיכר",
+    "isRegulated": true,
+    "aliases": [
+      "לחם",
+      "לחם אחיד",
+      "לחם פרוס",
+      "לחם שחור",
+      "לחם כהה"
+    ],
+    "prices": {
+      "rami_levy": 7.91,
+      "shufersal": 7.91,
+      "yohananof": 7.91,
+      "carrefour": 7.91,
+      "osher_ad": 7.91,
+      "victory": 7.91,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_bread_whole_wheat_sliced",
+    "name": "לחם 100% חיטה מלאה פרוס 750 גרם",
+    "category": "bakery",
+    "unit": "כיכר",
+    "aliases": [
+      "לחם מלא",
+      "לחם חיטה מלאה",
+      "לחם קל",
+      "לחם דגנים"
+    ],
+    "prices": {
+      "rami_levy": 11.9,
+      "shufersal": 14.9,
+      "yohananof": 12.5,
+      "carrefour": 12.9,
+      "osher_ad": 11.5,
+      "victory": 14.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_challah_shabbat",
+    "name": "חלת שבת קלועה מסורתית",
+    "category": "bakery",
+    "unit": "יח׳",
+    "aliases": [
+      "חלה",
+      "חלת שבת",
+      "חלה קלועה",
+      "חלות לשבת"
+    ],
+    "prices": {
+      "rami_levy": 6.9,
+      "shufersal": 8.9,
+      "yohananof": 6.9,
+      "carrefour": 7.5,
+      "osher_ad": 6.5,
+      "victory": 8.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_pita_bread_10pack",
+    "name": "פיתות טריות מארז 10 יחידות",
+    "category": "bakery",
+    "unit": "מארז 10 יח׳",
+    "aliases": [
+      "פיתות",
+      "פיתה",
+      "מארז פיתות",
+      "שקית פיתות"
+    ],
+    "prices": {
+      "rami_levy": 8.9,
+      "shufersal": 11.9,
+      "yohananof": 8.9,
+      "carrefour": 9.5,
+      "osher_ad": 7.9,
+      "victory": 10.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_burger_buns_6pack",
+    "name": "לחמניות המבורגר / אצבע מארז 6 יחידות",
+    "category": "bakery",
+    "unit": "מארז 6 יח׳",
+    "aliases": [
+      "לחמניות",
+      "לחמנייה",
+      "לחמניות המבורגר"
+    ],
+    "prices": {
+      "rami_levy": 9.9,
+      "shufersal": 12.5,
+      "yohananof": 9.9,
+      "carrefour": 10.5,
+      "osher_ad": 8.9,
+      "victory": 12,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_tortillas_8pack",
+    "name": "טורטיות חיטה איכותיות מארז 8 יחידות",
+    "category": "bakery",
+    "unit": "מארז 8 יח׳",
+    "aliases": [
+      "טורטיות",
+      "טורטיה",
+      "מארז טורטיות"
+    ],
+    "prices": {
+      "rami_levy": 7.9,
+      "shufersal": 10.9,
+      "yohananof": 8.5,
+      "carrefour": 8.9,
+      "osher_ad": 7.5,
+      "victory": 10.5,
+      "max_stock": 7.9,
+      "hastock": 8.5,
+      "max_stock_online": 8,
+      "stock_online": 9
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_rice_cakes_100g",
+    "name": "פריכיות אורז מלא דקות 100 גרם",
+    "category": "bakery",
+    "unit": "חבילה",
+    "aliases": [
+      "פריכיות",
+      "פריכיות אורז",
+      "פריכיות דקות"
+    ],
+    "prices": {
+      "rami_levy": 4.9,
+      "shufersal": 5.9,
+      "yohananof": 4.9,
+      "carrefour": 5.2,
+      "osher_ad": 4.5,
+      "victory": 5.9,
+      "max_stock": 3.9,
+      "hastock": 4.5,
+      "max_stock_online": 4,
+      "stock_online": 5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_rice_persian_sugat_1kg",
+    "name": "אורז פרסי קלאסי סוגת 1 ק״ג",
+    "category": "pantry",
+    "unit": "ק״ג",
+    "aliases": [
+      "אורז",
+      "אורז סוגת",
+      "אורז פרסי",
+      "קילו אורז"
+    ],
+    "prices": {
+      "rami_levy": 8.9,
+      "shufersal": 11.9,
+      "yohananof": 8.9,
+      "carrefour": 9.5,
+      "osher_ad": 7.9,
+      "victory": 10.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_pasta_barilla_500g",
+    "name": "פסטה ברילה (ספגטי / פנה) 500 גרם",
+    "category": "pantry",
+    "unit": "חבילה",
+    "aliases": [
+      "פסטה",
+      "ברילה",
+      "פסטה ברילה",
+      "ספגטי",
+      "פנה",
+      "מקרוני"
+    ],
+    "prices": {
+      "rami_levy": 5.9,
+      "shufersal": 7.9,
+      "yohananof": 5.9,
+      "carrefour": 6.5,
+      "osher_ad": 5.5,
+      "victory": 7.5,
+      "max_stock": 6.9,
+      "hastock": 7,
+      "max_stock_online": 7,
+      "stock_online": 7.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_ptitim_osem_500g",
+    "name": "פתיתים אפויים אסם 500 גרם",
+    "category": "pantry",
+    "unit": "שקית",
+    "aliases": [
+      "פתיתים",
+      "פתיתים אסם",
+      "פתיתים אפויים",
+      "קוסקוס"
+    ],
+    "prices": {
+      "rami_levy": 4.9,
+      "shufersal": 6.5,
+      "yohananof": 4.9,
+      "carrefour": 5.5,
+      "osher_ad": 4.5,
+      "victory": 6.2,
+      "max_stock": 4.9,
+      "hastock": 5.5,
+      "max_stock_online": 5,
+      "stock_online": 6
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_canola_oil_1l",
+    "name": "שמן קנולה מזוכך 1 ליטר",
+    "category": "pantry",
+    "unit": "בקבוק",
+    "aliases": [
+      "שמן",
+      "שמן קנולה",
+      "בקבוק שמן",
+      "שמן טיגון",
+      "שמן סויה"
+    ],
+    "prices": {
+      "rami_levy": 7.9,
+      "shufersal": 9.9,
+      "yohananof": 7.9,
+      "carrefour": 8.5,
+      "osher_ad": 7.5,
+      "victory": 9.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_olive_oil_extra_virgin_750ml",
+    "name": "שמן זית כתית מעולה חמיצות עד 0.5% 750 מ״ל",
+    "category": "pantry",
+    "unit": "בקבוק",
+    "aliases": [
+      "שמן זית",
+      "שמן זית כתית",
+      "שמן זית 750",
+      "בקבוק שמן זית"
+    ],
+    "prices": {
+      "rami_levy": 29.9,
+      "shufersal": 39.9,
+      "yohananof": 28.9,
+      "carrefour": 31.9,
+      "osher_ad": 27.9,
+      "victory": 36.9,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_sugar_white_sugat_1kg",
+    "name": "סוכר לבן סוגת 1 ק״ג",
+    "category": "pantry",
+    "unit": "ק״ג",
+    "aliases": [
+      "סוכר",
+      "סוכר לבן",
+      "קילו סוכר",
+      "סוכר סוגת"
+    ],
+    "prices": {
+      "rami_levy": 4.5,
+      "shufersal": 5.5,
+      "yohananof": 4.5,
+      "carrefour": 4.9,
+      "osher_ad": 4.2,
+      "victory": 5.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_salt_table_fine_1kg",
+    "name": "מלח שולחן דק 1 ק״ג במלחייה / שקית",
+    "category": "pantry",
+    "unit": "ק״ג",
+    "aliases": [
+      "מלח",
+      "מלח שולחן",
+      "מלח דק",
+      "קילו מלח"
+    ],
+    "prices": {
+      "rami_levy": 2.2,
+      "shufersal": 2.8,
+      "yohananof": 2.2,
+      "carrefour": 2.5,
+      "osher_ad": 2,
+      "victory": 2.8,
+      "max_stock": 2,
+      "hastock": 2.5,
+      "max_stock_online": 2.5,
+      "stock_online": 2.9
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_flour_white_1kg",
+    "name": "קמח לבן בהיר סוגת 1 ק״ג",
+    "category": "pantry",
+    "unit": "ק״ג",
+    "aliases": [
+      "קמח",
+      "קמח לבן",
+      "קמח סוגת",
+      "קילו קמח"
+    ],
+    "prices": {
+      "rami_levy": 3.9,
+      "shufersal": 4.9,
+      "yohananof": 3.9,
+      "carrefour": 4.2,
+      "osher_ad": 3.5,
+      "victory": 4.8,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_tomato_paste_jachin_3pack",
+    "name": "רסק עגבניות 28-30% יכין מארז שלישייה (3x100 גרם)",
+    "category": "pantry",
+    "unit": "מארז שלישייה",
+    "aliases": [
+      "רסק",
+      "רסק עגבניות",
+      "שלישיית רסק",
+      "רסק יכין"
+    ],
+    "prices": {
+      "rami_levy": 6.9,
+      "shufersal": 8.9,
+      "yohananof": 6.9,
+      "carrefour": 7.5,
+      "osher_ad": 6.5,
+      "victory": 8.5,
+      "max_stock": 6.9,
+      "hastock": 7.5,
+      "max_stock_online": 7,
+      "stock_online": 7.9
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_ketchup_osem_750g",
+    "name": "קטשופ אסם ענק 750 גרם",
+    "category": "pantry",
+    "unit": "בקבוק",
+    "aliases": [
+      "קטשופ",
+      "קטשופ אסם",
+      "בקבוק קטשופ"
+    ],
+    "prices": {
+      "rami_levy": 10.9,
+      "shufersal": 13.9,
+      "yohananof": 11.2,
+      "carrefour": 11.9,
+      "osher_ad": 10.5,
+      "victory": 13.5,
+      "max_stock": 11.5,
+      "hastock": 11.9,
+      "max_stock_online": 12,
+      "stock_online": 12.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_mayo_telma_500g",
+    "name": "מיונז אמיתי תלמה 500 גרם",
+    "category": "pantry",
+    "unit": "צנצנת",
+    "aliases": [
+      "מיונז",
+      "מיונז תלמה",
+      "מיונז אמיתי"
+    ],
+    "prices": {
+      "rami_levy": 9.9,
+      "shufersal": 12.9,
+      "yohananof": 9.9,
+      "carrefour": 10.5,
+      "osher_ad": 9.5,
+      "victory": 12.5,
+      "max_stock": 10.9,
+      "hastock": 11.5,
+      "max_stock_online": 11,
+      "stock_online": 11.9
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_corn_canned_jachin",
+    "name": "תירס מתוק גרגירים יכין קופסת שימורים 550 גרם",
+    "category": "pantry",
+    "unit": "פחית",
+    "aliases": [
+      "תירס",
+      "שימורי תירס",
+      "תירס מתוק",
+      "תירס יכין"
+    ],
+    "prices": {
+      "rami_levy": 5.5,
+      "shufersal": 6.9,
+      "yohananof": 5.5,
+      "carrefour": 5.9,
+      "osher_ad": 5.2,
+      "victory": 6.9,
+      "max_stock": 4.9,
+      "hastock": 5.5,
+      "max_stock_online": 5,
+      "stock_online": 5.9
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_tahini_raw_500g",
+    "name": "טחינה גולמית טהורה 100% שומשום (הר ברכה / אל ארז) 500 גרם",
+    "category": "pantry",
+    "unit": "צנצנת",
+    "aliases": [
+      "טחינה",
+      "טחינה גולמית",
+      "טחינה אל ארז",
+      "טחינה הר ברכה",
+      "טחינה 500"
+    ],
+    "prices": {
+      "rami_levy": 11.9,
+      "shufersal": 15.9,
+      "yohananof": 12.5,
+      "carrefour": 12.9,
+      "osher_ad": 11.5,
+      "victory": 14.9,
+      "max_stock": 12.9,
+      "hastock": 13.5,
+      "max_stock_online": 13,
+      "stock_online": 14
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_hashahar_spread_500g",
+    "name": "ממרח שוקולד השחר העולה פרווה / חלבי 500 גרם",
+    "category": "pantry",
+    "unit": "מיכל",
+    "aliases": [
+      "השחר",
+      "שוקולד השחר",
+      "ממרח השחר",
+      "ממרח שוקולד"
+    ],
+    "prices": {
+      "rami_levy": 11.9,
+      "shufersal": 14.5,
+      "yohananof": 11.9,
+      "carrefour": 12.5,
+      "osher_ad": 11.2,
+      "victory": 13.9,
+      "max_stock": 12,
+      "hastock": 12.5,
+      "max_stock_online": 12.5,
+      "stock_online": 13
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_nutella_350g",
+    "name": "ממרח אגוזי לוז וקקאו נוטלה 350 גרם",
+    "category": "pantry",
+    "unit": "צנצנת",
+    "aliases": [
+      "נוטלה",
+      "שוקולד נוטלה",
+      "ממרח נוטלה"
+    ],
+    "prices": {
+      "rami_levy": 12.9,
+      "shufersal": 15.9,
+      "yohananof": 12.9,
+      "carrefour": 13.5,
+      "osher_ad": 12.5,
+      "victory": 15.5,
+      "max_stock": 12.9,
+      "hastock": 13.9,
+      "max_stock_online": 13,
+      "stock_online": 14
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_cornflakes_telma_750g",
+    "name": "קורנפלקס תלמה של אלופים 750 גרם",
+    "category": "pantry",
+    "unit": "אריזה",
+    "aliases": [
+      "קורנפלקס",
+      "קורנפלקס תלמה",
+      "קורנפלקס אלופים",
+      "דגני בוקר"
+    ],
+    "prices": {
+      "rami_levy": 15.9,
+      "shufersal": 19.9,
+      "yohananof": 16.5,
+      "carrefour": 16.9,
+      "osher_ad": 14.9,
+      "victory": 18.9,
+      "max_stock": 16.9,
+      "hastock": 17.5,
+      "max_stock_online": 17,
+      "stock_online": 18
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_kariyot_cereal_750g",
+    "name": "דגני בוקר כריות במילוי קרם שוקולד תלמה 750 גרם",
+    "category": "pantry",
+    "unit": "אריזה",
+    "aliases": [
+      "כריות",
+      "כריות תלמה",
+      "כריות שוקולד",
+      "דגני כריות"
+    ],
+    "prices": {
+      "rami_levy": 21.9,
+      "shufersal": 27.9,
+      "yohananof": 22.5,
+      "carrefour": 23.9,
+      "osher_ad": 19.9,
+      "victory": 26.9,
+      "max_stock": 22.9,
+      "hastock": 23.9,
+      "max_stock_online": 23,
+      "stock_online": 24.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_black_coffee_elite_100g",
+    "name": "קפה שחור קלוי וטחון עלית 100 גרם",
+    "category": "snacks_drinks",
+    "unit": "שקית",
+    "aliases": [
+      "קפה שחור",
+      "קפה עלית",
+      "קפה שחור עלית",
+      "קפה בוץ"
+    ],
+    "prices": {
+      "rami_levy": 5.9,
+      "shufersal": 7.5,
+      "yohananof": 5.9,
+      "carrefour": 6.5,
+      "osher_ad": 5.5,
+      "victory": 7.2,
+      "max_stock": 5.9,
+      "hastock": 6.5,
+      "max_stock_online": 6,
+      "stock_online": 6.9
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_tasters_choice_200g",
+    "name": "קפה נמס נסקפה טייסטרס צ׳ויס Nescafe 200 גרם",
+    "category": "snacks_drinks",
+    "unit": "צנצנת",
+    "aliases": [
+      "טייסטרס צויס",
+      "טייסטרס צ׳ויס",
+      "נסקפה טייסטרס",
+      "קפה טייסטרס",
+      "נס קפה"
+    ],
+    "prices": {
+      "rami_levy": 24.9,
+      "shufersal": 33.9,
+      "yohananof": 25.9,
+      "carrefour": 27.9,
+      "osher_ad": 24.5,
+      "victory": 31.9,
+      "max_stock": 24.9,
+      "hastock": 26,
+      "max_stock_online": 25,
+      "stock_online": 28
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_jacobs_kronung_200g",
+    "name": "קפה נמס מיובש בהקפאה ג׳ייקובס קרוננג Jacobs 200 גרם",
+    "category": "snacks_drinks",
+    "unit": "צנצנת",
+    "aliases": [
+      "גייקובס",
+      "ג׳ייקובס",
+      "קפה גייקובס",
+      "יעקובס"
+    ],
+    "prices": {
+      "rami_levy": 22.9,
+      "shufersal": 29.9,
+      "yohananof": 23.5,
+      "carrefour": 24.9,
+      "osher_ad": 22.5,
+      "victory": 28.9,
+      "max_stock": 23.9,
+      "hastock": 24.9,
+      "max_stock_online": 24,
+      "stock_online": 26
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_wissotzky_classic_100tea",
+    "name": "תה ויסוצקי קלאסי 100 שקיקים",
+    "category": "snacks_drinks",
+    "unit": "אריזה",
+    "aliases": [
+      "תה",
+      "תה ויסוצקי",
+      "ויסוצקי קלאסי",
+      "100 תה",
+      "שקיקי תה"
+    ],
+    "prices": {
+      "rami_levy": 14.9,
+      "shufersal": 19.9,
+      "yohananof": 15.5,
+      "carrefour": 16.5,
+      "osher_ad": 14.5,
+      "victory": 18.9,
+      "max_stock": 15.9,
+      "hastock": 16.9,
+      "max_stock_online": 16,
+      "stock_online": 17.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_shocolit_500g",
+    "name": "שוקולית עלית 500 גרם להכנת שוקו חם וקר",
+    "category": "snacks_drinks",
+    "unit": "אריזה",
+    "aliases": [
+      "שוקולית",
+      "שוקולית עלית",
+      "אבקת שוקולית",
+      "שוקו אבקה"
+    ],
+    "prices": {
+      "rami_levy": 14.9,
+      "shufersal": 16.9,
+      "yohananof": 14.5,
+      "carrefour": 14.9,
+      "osher_ad": 13.9,
+      "victory": 16.5,
+      "max_stock": 14.2,
+      "hastock": 14.5,
+      "max_stock_online": 14.5,
+      "stock_online": 15
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_water_sixpack_1_5l",
+    "name": "שישיית מים מינרליים נביעות / עין גדי (6x1.5 ליטר)",
+    "category": "snacks_drinks",
+    "unit": "שישייה",
+    "aliases": [
+      "מים",
+      "שישיית מים",
+      "מים מינרליים",
+      "נביעות",
+      "עין גדי"
+    ],
+    "prices": {
+      "rami_levy": 11.9,
+      "shufersal": 14.9,
+      "yohananof": 11.9,
+      "carrefour": 12.9,
+      "osher_ad": 10.9,
+      "victory": 14.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_coca_cola_1_5l",
+    "name": "קוקה קולה קלאסי 1.5 ליטר",
+    "category": "snacks_drinks",
+    "unit": "בקבוק",
+    "aliases": [
+      "קולה",
+      "קוקה קולה",
+      "בקבוק קולה",
+      "קולה 1.5"
+    ],
+    "prices": {
+      "rami_levy": 6.9,
+      "shufersal": 8.9,
+      "yohananof": 6.9,
+      "carrefour": 7.5,
+      "osher_ad": 6.5,
+      "victory": 8.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_coca_cola_zero_1_5l",
+    "name": "קוקה קולה זירו Coca-Cola Zero 1.5 ליטר",
+    "category": "snacks_drinks",
+    "unit": "בקבוק",
+    "aliases": [
+      "קולה זירו",
+      "זירו",
+      "קוקה קולה זירו"
+    ],
+    "prices": {
+      "rami_levy": 6.9,
+      "shufersal": 8.9,
+      "yohananof": 6.9,
+      "carrefour": 7.5,
+      "osher_ad": 6.5,
+      "victory": 8.5,
+      "max_stock": null,
+      "hastock": null,
+      "max_stock_online": null,
+      "stock_online": null
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": false,
+      "hastock": false,
+      "max_stock_online": false,
+      "stock_online": false
+    }
+  },
+  {
+    "id": "p_bamba_osem_80g",
+    "name": "חטיף בוטנים במבה אסם 80 גרם",
+    "category": "snacks_drinks",
+    "unit": "שקית",
+    "aliases": [
+      "במבה",
+      "במבה אסם",
+      "חטיף במבה",
+      "שקית במבה"
+    ],
+    "prices": {
+      "rami_levy": 3.9,
+      "shufersal": 4.9,
+      "yohananof": 3.9,
+      "carrefour": 4.2,
+      "osher_ad": 3.5,
+      "victory": 4.8,
+      "max_stock": 3.9,
+      "hastock": 4,
+      "max_stock_online": 4,
+      "stock_online": 4.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_bisli_grill_70g",
+    "name": "חטיף חיטה ביסלי גריל אסם 70 גרם",
+    "category": "snacks_drinks",
+    "unit": "שקית",
+    "aliases": [
+      "ביסלי",
+      "ביסלי גריל",
+      "חטיף ביסלי"
+    ],
+    "prices": {
+      "rami_levy": 3.9,
+      "shufersal": 4.9,
+      "yohananof": 3.9,
+      "carrefour": 4.2,
+      "osher_ad": 3.5,
+      "victory": 4.8,
+      "max_stock": 3.9,
+      "hastock": 4,
+      "max_stock_online": 4,
+      "stock_online": 4.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_tapuchips_classic_50g",
+    "name": "חטיף תפוחי אדמה תפוצ׳יפס קלאסי עלית 50 גרם",
+    "category": "snacks_drinks",
+    "unit": "שקית",
+    "aliases": [
+      "תפוציפס",
+      "תפוצ׳יפס",
+      "ציפס עלית",
+      "תפוחי אדמה חטיף"
+    ],
+    "prices": {
+      "rami_levy": 3.9,
+      "shufersal": 4.9,
+      "yohananof": 3.9,
+      "carrefour": 4.2,
+      "osher_ad": 3.5,
+      "victory": 4.8,
+      "max_stock": 3.5,
+      "hastock": 3.9,
+      "max_stock_online": 4,
+      "stock_online": 4.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_petit_beurre_osem_500g",
+    "name": "ביסקוויט פטיבר קלאסי אסם 500 גרם",
+    "category": "snacks_drinks",
+    "unit": "אריזה",
+    "aliases": [
+      "פטיבר",
+      "פטי בר",
+      "עוגיות פטיבר",
+      "ביסקוויטים"
+    ],
+    "prices": {
+      "rami_levy": 9.9,
+      "shufersal": 12.5,
+      "yohananof": 9.9,
+      "carrefour": 10.5,
+      "osher_ad": 9.2,
+      "victory": 12,
+      "max_stock": 9.5,
+      "hastock": 9.9,
+      "max_stock_online": 10,
+      "stock_online": 10.9
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_chocolate_parah_milk_100g",
+    "name": "טבלת שוקולד חלב פרה עלית 100 גרם",
+    "category": "snacks_drinks",
+    "unit": "טבלה",
+    "aliases": [
+      "שוקולד פרה",
+      "שוקולד חלב",
+      "חפיסת שוקולד",
+      "שוקולד עלית"
+    ],
+    "prices": {
+      "rami_levy": 4.9,
+      "shufersal": 5.9,
+      "yohananof": 4.9,
+      "carrefour": 5.2,
+      "osher_ad": 4.5,
+      "victory": 5.8,
+      "max_stock": 4.5,
+      "hastock": 4.9,
+      "max_stock_online": 5,
+      "stock_online": 5.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_fairy_dish_soap_650ml",
+    "name": "נוזל לניקוי כלים פיירי Fairy לימון 650 מ״ל",
+    "category": "cleaning_bath",
+    "unit": "בקבוק",
+    "aliases": [
+      "פיירי",
+      "נוזל כלים",
+      "סבון כלים",
+      "פיירי לימון",
+      "נוזל לניקוי כלים"
+    ],
+    "prices": {
+      "rami_levy": 8.9,
+      "shufersal": 11.9,
+      "yohananof": 8.9,
+      "carrefour": 9.5,
+      "osher_ad": 8.5,
+      "victory": 11.5,
+      "max_stock": 8.9,
+      "hastock": 9.5,
+      "max_stock_online": 9.5,
+      "stock_online": 10
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_ariel_laundry_gel_2_5l",
+    "name": "ג׳ל כביסה מרוכז אריאל Ariel 2.5 ליטר",
+    "category": "cleaning_bath",
+    "unit": "מיכל",
+    "aliases": [
+      "ג׳ל כביסה",
+      "גיל כביסה",
+      "אריאל כביסה",
+      "נוזל כביסה אריאל"
+    ],
+    "prices": {
+      "rami_levy": 29.9,
+      "shufersal": 39.9,
+      "yohananof": 31.9,
+      "carrefour": 34.9,
+      "osher_ad": 28.9,
+      "victory": 38.9,
+      "max_stock": 29.9,
+      "hastock": 32.9,
+      "max_stock_online": 32,
+      "stock_online": 35
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_ariel_pods_35",
+    "name": "קפסולות לכביסה אריאל Ariel All-in-1 מארז 35 יח׳",
+    "category": "cleaning_bath",
+    "unit": "קופסה",
+    "aliases": [
+      "קפסולות כביסה",
+      "קפסולות אריאל",
+      "טבליות כביסה"
+    ],
+    "prices": {
+      "rami_levy": 29.9,
+      "shufersal": 37.9,
+      "yohananof": 29.9,
+      "carrefour": 32.9,
+      "osher_ad": 28.5,
+      "victory": 36.9,
+      "max_stock": 28.9,
+      "hastock": 31.9,
+      "max_stock_online": 30,
+      "stock_online": 34
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_badin_fabric_softener_1l",
+    "name": "מרכך כביסה מרוכז בדין אקסטרה 1 ליטר",
+    "category": "cleaning_bath",
+    "unit": "בקבוק",
+    "aliases": [
+      "בדין",
+      "מרכך כביסה",
+      "מרכך בדין",
+      "מרכך מרוכז"
+    ],
+    "prices": {
+      "rami_levy": 9.9,
+      "shufersal": 13.9,
+      "yohananof": 9.9,
+      "carrefour": 10.9,
+      "osher_ad": 9.5,
+      "victory": 12.9,
+      "max_stock": 9.9,
+      "hastock": 10.9,
+      "max_stock_online": 11,
+      "stock_online": 12
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_sano_bleach_4l",
+    "name": "אקונומיקה מבושמת סנו ז׳אוול 4 ליטר",
+    "category": "cleaning_bath",
+    "unit": "גלון",
+    "aliases": [
+      "אקונומיקה",
+      "סנו זאוול",
+      "סנו ז׳אוול",
+      "אקונומיקה 4 ליטר"
+    ],
+    "prices": {
+      "rami_levy": 10.9,
+      "shufersal": 14.9,
+      "yohananof": 10.9,
+      "carrefour": 11.9,
+      "osher_ad": 9.9,
+      "victory": 13.9,
+      "max_stock": 10.5,
+      "hastock": 11.5,
+      "max_stock_online": 12,
+      "stock_online": 13
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_sano_forte_plus",
+    "name": "מסיר שומנים ורב-שימושי סנו פורטה פלוס 750 מ״ל",
+    "category": "cleaning_bath",
+    "unit": "מתז",
+    "aliases": [
+      "סנו פורטה",
+      "מסיר שומנים",
+      "פורטה פלוס",
+      "סנו"
+    ],
+    "prices": {
+      "rami_levy": 11.9,
+      "shufersal": 14.9,
+      "yohananof": 11.9,
+      "carrefour": 12.5,
+      "osher_ad": 10.9,
+      "victory": 14.5,
+      "max_stock": 10.9,
+      "hastock": 11.9,
+      "max_stock_online": 12,
+      "stock_online": 13
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_toilet_paper_lily_32",
+    "name": "נייר טואלט לילי פרימיום דו-שכבתי 32 גלילים",
+    "category": "cleaning_bath",
+    "unit": "חבילה 32 גלילים",
+    "aliases": [
+      "נייר טואלט",
+      "לילי",
+      "נייר טואלט לילי",
+      "32 גלילים",
+      "טואלט"
+    ],
+    "prices": {
+      "rami_levy": 29.9,
+      "shufersal": 39.9,
+      "yohananof": 31.9,
+      "carrefour": 34.9,
+      "osher_ad": 28.9,
+      "victory": 38.9,
+      "max_stock": 29.9,
+      "hastock": 32.9,
+      "max_stock_online": 32,
+      "stock_online": 36
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_paper_towels_nikol_6",
+    "name": "מגבות נייר למטבח ניקול ענק 6 גלילים כפולים",
+    "category": "cleaning_bath",
+    "unit": "מארז 6 יח׳",
+    "aliases": [
+      "מגבות נייר",
+      "נייר מטבח",
+      "ניקול",
+      "גלילי נייר"
+    ],
+    "prices": {
+      "rami_levy": 12.9,
+      "shufersal": 16.9,
+      "yohananof": 12.9,
+      "carrefour": 13.9,
+      "osher_ad": 11.9,
+      "victory": 15.9,
+      "max_stock": 12.5,
+      "hastock": 13.5,
+      "max_stock_online": 13.5,
+      "stock_online": 15
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_trash_bags_sano_sushi_60",
+    "name": "שקיות אשפה גדולות במיוחד עם שרוך סנו סושי 60 יח׳",
+    "category": "cleaning_bath",
+    "unit": "גליל",
+    "aliases": [
+      "שקיות אשפה",
+      "שקיות זבל",
+      "שקיות שרוך",
+      "סנו סושי"
+    ],
+    "prices": {
+      "rami_levy": 13.9,
+      "shufersal": 17.9,
+      "yohananof": 13.9,
+      "carrefour": 14.9,
+      "osher_ad": 12.9,
+      "victory": 16.9,
+      "max_stock": 12.9,
+      "hastock": 13.9,
+      "max_stock_online": 14,
+      "stock_online": 15
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_finish_dishwasher_tabs_70",
+    "name": "טבליות למדיח כלים פיניש Finish All-in-1 מארז 70 יח׳",
+    "category": "cleaning_bath",
+    "unit": "מארז",
+    "aliases": [
+      "טבליות למדיח",
+      "פיניש",
+      "קפסולות למדיח",
+      "סבון למדיח",
+      "טבליות פיניש"
+    ],
+    "prices": {
+      "rami_levy": 39.9,
+      "shufersal": 54.9,
+      "yohananof": 41.9,
+      "carrefour": 44.9,
+      "osher_ad": 38.9,
+      "victory": 49.9,
+      "max_stock": 39.9,
+      "hastock": 43.9,
+      "max_stock_online": 42,
+      "stock_online": 46
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_colgate_toothpaste_75ml",
+    "name": "משחת שיניים קולגייט טוטאל Colgate Total 75 מ״ל",
+    "category": "cleaning_bath",
+    "unit": "שפופרת",
+    "aliases": [
+      "קולגייט",
+      "משחת שיניים",
+      "קולגייט טוטאל"
+    ],
+    "prices": {
+      "rami_levy": 9.9,
+      "shufersal": 14.9,
+      "yohananof": 9.9,
+      "carrefour": 11.5,
+      "osher_ad": 9.2,
+      "victory": 13.9,
+      "max_stock": 8.9,
+      "hastock": 9.9,
+      "max_stock_online": 10,
+      "stock_online": 11
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_oral_b_toothbrush_2pack",
+    "name": "מברשת שיניים אורל-בי Oral-B זוג מארז חיסכון",
+    "category": "cleaning_bath",
+    "unit": "מארז זוג",
+    "aliases": [
+      "מברשת שיניים",
+      "אורל בי",
+      "מברשות שיניים"
+    ],
+    "prices": {
+      "rami_levy": 12.9,
+      "shufersal": 16.9,
+      "yohananof": 12.9,
+      "carrefour": 13.9,
+      "osher_ad": 11.9,
+      "victory": 15.9,
+      "max_stock": 9.9,
+      "hastock": 11.9,
+      "max_stock_online": 11,
+      "stock_online": 13
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_shampoo_head_shoulders_500ml",
+    "name": "שמפו נגד קשקשים הד אנד שולדרס 500 מ״ל",
+    "category": "cleaning_bath",
+    "unit": "בקבוק",
+    "aliases": [
+      "שמפו",
+      "הד אנד שולדרס",
+      "שמפו קשקשים",
+      "שמפו לשיער"
+    ],
+    "prices": {
+      "rami_levy": 16.9,
+      "shufersal": 22.9,
+      "yohananof": 17.5,
+      "carrefour": 18.9,
+      "osher_ad": 15.9,
+      "victory": 21.9,
+      "max_stock": 16.9,
+      "hastock": 17.9,
+      "max_stock_online": 18,
+      "stock_online": 19.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_body_wash_dove_700ml",
+    "name": "תחליב רחצה מזין דאב / פינוק 700 מ״ל",
+    "category": "cleaning_bath",
+    "unit": "בקבוק",
+    "aliases": [
+      "תחליב רחצה",
+      "סבון גוף",
+      "סבון דאב",
+      "פינוק",
+      "דאב"
+    ],
+    "prices": {
+      "rami_levy": 9.9,
+      "shufersal": 13.9,
+      "yohananof": 9.9,
+      "carrefour": 11.5,
+      "osher_ad": 9.5,
+      "victory": 12.9,
+      "max_stock": 8.9,
+      "hastock": 9.9,
+      "max_stock_online": 10,
+      "stock_online": 11.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_deodorant_rexona_rollon",
+    "name": "דאודורנט רול-און רקסונה Rexona 50 מ״ל",
+    "category": "cleaning_bath",
+    "unit": "יח׳",
+    "aliases": [
+      "דאודורנט",
+      "רקסונה",
+      "דאודורנט רול און"
+    ],
+    "prices": {
+      "rami_levy": 10.9,
+      "shufersal": 14.9,
+      "yohananof": 11.2,
+      "carrefour": 12,
+      "osher_ad": 10.5,
+      "victory": 14.2,
+      "max_stock": 9.9,
+      "hastock": 10.9,
+      "max_stock_online": 11,
+      "stock_online": 12
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_hand_soap_liquid_500ml",
+    "name": "סבון ידיים נוזלי נקה 7 עם משאבה 500 מ״ל",
+    "category": "cleaning_bath",
+    "unit": "בקבוק משאבה",
+    "aliases": [
+      "סבון ידיים",
+      "סבון נוזלי",
+      "נקה 7"
+    ],
+    "prices": {
+      "rami_levy": 5.9,
+      "shufersal": 7.9,
+      "yohananof": 5.9,
+      "carrefour": 6.5,
+      "osher_ad": 5.5,
+      "victory": 7.5,
+      "max_stock": 4.9,
+      "hastock": 5.5,
+      "max_stock_online": 5.5,
+      "stock_online": 6.5
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_cleaning_kit_rental",
+    "name": "ערכת ניקיון מלאה לדירה (דלי שטיפה + מגב סיליקון + מטאטא ויעה + 5 מטליות מיקרופייבר)",
+    "category": "cleaning_bath",
+    "unit": "ערכה",
+    "aliases": [
+      "ערכת ניקיון",
+      "דלי ומגב",
+      "מטאטא ויעה",
+      "ערכת ניקיון מלאה"
+    ],
+    "prices": {
+      "rami_levy": 49.9,
+      "shufersal": 69.9,
+      "yohananof": 59.9,
+      "carrefour": 64.9,
+      "osher_ad": 52,
+      "victory": 68,
+      "max_stock": 59.4,
+      "hastock": 64.9,
+      "max_stock_online": 65,
+      "stock_online": 75
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_laundry_basket_accessories",
+    "name": "סל כביסה מתקפל + מארז 48 אטבי כביסה + 3 שקיות רשת לכביסה עדינה",
+    "category": "cleaning_bath",
+    "unit": "סט",
+    "aliases": [
+      "סל כביסה",
+      "אטבי כביסה",
+      "שקיות כביסה"
+    ],
+    "prices": {
+      "rami_levy": 24.9,
+      "shufersal": 34.9,
+      "yohananof": 29.9,
+      "carrefour": 32,
+      "osher_ad": 26,
+      "victory": 34,
+      "max_stock": 26.8,
+      "hastock": 29.9,
+      "max_stock_online": 35,
+      "stock_online": 42
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_bathroom_ocean_set",
+    "name": "אבזור אמבטיה ללא קידוח סדרת OCEAN (מתקן ואקום למברשות, מעמד סבון, ווים כפולים)",
+    "category": "cleaning_bath",
+    "unit": "סט",
+    "aliases": [
+      "אבזור אמבטיה",
+      "סדרת OCEAN",
+      "ללא קידוח",
+      "אמבטיה"
+    ],
+    "prices": {
+      "rami_levy": 54.9,
+      "shufersal": 74.9,
+      "yohananof": 64.9,
+      "carrefour": 68,
+      "osher_ad": 58,
+      "victory": 72,
+      "max_stock": 62.5,
+      "hastock": 69.9,
+      "max_stock_online": 79,
+      "stock_online": 89
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_bathroom_mats_duo",
+    "name": "שטיח אמבטיה ספוג זיכרון נגד החלקה + שטיח כניסה לבית",
+    "category": "cleaning_bath",
+    "unit": "זוג",
+    "aliases": [
+      "שטיח אמבטיה",
+      "שטיח כניסה",
+      "שטיח ספוג זיכרון"
+    ],
+    "prices": {
+      "rami_levy": 24.9,
+      "shufersal": 36.9,
+      "yohananof": 29.9,
+      "carrefour": 32,
+      "osher_ad": 26,
+      "victory": 35,
+      "max_stock": 26.8,
+      "hastock": 29.9,
+      "max_stock_online": 39,
+      "stock_online": 49
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_pot_24cm",
+    "name": "סיר נירוסטה / נון סטיק 24 ס״מ עם מכסה זכוכית",
+    "category": "kitchen",
+    "unit": "יח׳",
+    "aliases": [
+      "סיר",
+      "סיר 24",
+      "סיר 24 ס״מ",
+      "סיר נירוסטה"
+    ],
+    "prices": {
+      "rami_levy": 59.9,
+      "shufersal": 79.9,
+      "yohananof": 69.9,
+      "carrefour": 74.9,
+      "osher_ad": 62,
+      "victory": 79,
+      "max_stock": 69,
+      "hastock": 49.9,
+      "max_stock_online": 89,
+      "stock_online": 99
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_sautoir_28cm",
+    "name": "סוטאז׳ רחב 28 ס״מ Non-Stick לבישול וצלייה",
+    "category": "kitchen",
+    "unit": "יח׳",
+    "aliases": [
+      "סוטאז",
+      "סוטאז׳",
+      "סוטאז 28",
+      "סוטאז 28 ס״מ"
+    ],
+    "prices": {
+      "rami_levy": 69.9,
+      "shufersal": 89.9,
+      "yohananof": 79.9,
+      "carrefour": 84.9,
+      "osher_ad": 72,
+      "victory": 89,
+      "max_stock": 79,
+      "hastock": 69.9,
+      "max_stock_online": 99,
+      "stock_online": 119
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_pans_pair_20_24",
+    "name": "זוג מחבתות Non-Stick קוטר 20 ס״מ + 24 ס״מ",
+    "category": "kitchen",
+    "unit": "זוג",
+    "aliases": [
+      "מחבת",
+      "מחבתות",
+      "זוג מחבתות"
+    ],
+    "prices": {
+      "rami_levy": 59.9,
+      "shufersal": 89.9,
+      "yohananof": 74.9,
+      "carrefour": 79.9,
+      "osher_ad": 65,
+      "victory": 89,
+      "max_stock": 84,
+      "hastock": 69.9,
+      "max_stock_online": 95,
+      "stock_online": 129
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_dinner_set_12pcs",
+    "name": "סט 12 צלחות אוכל פורצלן / אופל (4 מנות עיקריות, 4 עמוקות, 4 קינוח)",
+    "category": "kitchen",
+    "unit": "סט 12 חלקים",
+    "aliases": [
+      "צלחות",
+      "סט צלחות",
+      "סט 12 צלחות",
+      "צלחות אוכל"
+    ],
+    "prices": {
+      "rami_levy": 29.9,
+      "shufersal": 59.9,
+      "yohananof": 45,
+      "carrefour": 49.9,
+      "osher_ad": 39,
+      "victory": 59,
+      "max_stock": 39.9,
+      "hastock": 49.9,
+      "max_stock_online": 59,
+      "stock_online": 79
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_cutlery_set_24pcs",
+    "name": "סט סכו״ם נירוסטה 24 חלקים מלא (6 סכינים, 6 מזלגות, 6 כפות, 6 כפיות)",
+    "category": "kitchen",
+    "unit": "סט 24 חלקים",
+    "aliases": [
+      "סכום",
+      "סכו״ם",
+      "סט סכו״ם",
+      "סט סכום 24"
+    ],
+    "prices": {
+      "rami_levy": 19.9,
+      "shufersal": 39.9,
+      "yohananof": 29.9,
+      "carrefour": 34.9,
+      "osher_ad": 25,
+      "victory": 39,
+      "max_stock": 20.9,
+      "hastock": 29.9,
+      "max_stock_online": 39,
+      "stock_online": 49
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_glasses_mugs_12pcs",
+    "name": "מארז 6 כוסות שתייה קרה מזכוכית + 6 מאגים קרמיקה לקפה",
+    "category": "kitchen",
+    "unit": "סט 12 כוסות",
+    "aliases": [
+      "כוסות",
+      "מאגים",
+      "6 כוסות",
+      "כוסות שתייה"
+    ],
+    "prices": {
+      "rami_levy": 39.8,
+      "shufersal": 59.9,
+      "yohananof": 49.9,
+      "carrefour": 52,
+      "osher_ad": 42,
+      "victory": 59,
+      "max_stock": 46.8,
+      "hastock": 49.9,
+      "max_stock_online": 59,
+      "stock_online": 69
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_dish_drying_rack",
+    "name": "מייבש כלים דו-קומתי מודרני ממתכת בציפוי אל-חלד עם מגש ניקוז",
+    "category": "kitchen",
+    "unit": "יח׳",
+    "aliases": [
+      "מייבש כלים",
+      "מתקן ייבוש כלים",
+      "מייבש כלים דו קומתי"
+    ],
+    "prices": {
+      "rami_levy": 29.9,
+      "shufersal": 49.9,
+      "yohananof": 39.9,
+      "carrefour": 42,
+      "osher_ad": 34,
+      "victory": 49,
+      "max_stock": 30,
+      "hastock": 39.9,
+      "max_stock_online": 49,
+      "stock_online": 69
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_storage_boxes_utensils",
+    "name": "מארז 10 קופסאות אחסון מזון הרמטיות + מסננת נירוסטה וסט 5 כלי ששת",
+    "category": "kitchen",
+    "unit": "סט משולב",
+    "aliases": [
+      "קופסאות אחסון",
+      "ששת",
+      "מסננת",
+      "כלי מטבח"
+    ],
+    "prices": {
+      "rami_levy": 32.8,
+      "shufersal": 59.9,
+      "yohananof": 45,
+      "carrefour": 49.9,
+      "osher_ad": 38,
+      "victory": 59,
+      "max_stock": 45.8,
+      "hastock": 49.9,
+      "max_stock_online": 59,
+      "stock_online": 79
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_coffee_tables_pair",
+    "name": "שולחן סלון מודרני / זוג שולחנות קפה עגולים בסגנון סקנדינבי",
+    "category": "furniture",
+    "unit": "יח׳ / זוג",
+    "aliases": [
+      "שולחן סלון",
+      "שולחנות קפה",
+      "שולחן קפה",
+      "שולחן עגול"
+    ],
+    "prices": {
+      "rami_levy": 129.9,
+      "shufersal": 179.9,
+      "yohananof": 149.9,
+      "carrefour": 169,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 119.9,
+      "hastock": 149.9,
+      "max_stock_online": 200,
+      "stock_online": 599
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_storage_cube_6",
+    "name": "כוורת 6 תאים מודולרית / מעמד מדפים לאחסון ספרים וחפצים",
+    "category": "furniture",
+    "unit": "יח׳",
+    "aliases": [
+      "כוורת",
+      "כוורת 6 תאים",
+      "מעמד מדפים",
+      "מדפים"
+    ],
+    "prices": {
+      "rami_levy": 139.9,
+      "shufersal": 199.9,
+      "yohananof": 169.9,
+      "carrefour": 179,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 119.9,
+      "hastock": 159.9,
+      "max_stock_online": 219,
+      "stock_online": 349
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_shoe_cabinet_wood",
+    "name": "ארון נעליים מעץ 3 תאים מתקפלים דמוי אלון / לבן",
+    "category": "furniture",
+    "unit": "יח׳",
+    "aliases": [
+      "ארון נעליים",
+      "מעמד נעליים",
+      "ארון נעליים עץ"
+    ],
+    "prices": {
+      "rami_levy": 219,
+      "shufersal": 299,
+      "yohananof": 259,
+      "carrefour": 279,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 200,
+      "hastock": 249.9,
+      "max_stock_online": 289,
+      "stock_online": 449
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_clothes_hanger_rack",
+    "name": "מעמד מתכת נייד על גלגלים לתליית בגדים + מדף נעליים תחתון",
+    "category": "furniture",
+    "unit": "יח׳",
+    "aliases": [
+      "מעמד תליית בגדים",
+      "מתלה בגדים",
+      "קולב עומד"
+    ],
+    "prices": {
+      "rami_levy": 169.9,
+      "shufersal": 229,
+      "yohananof": 189.9,
+      "carrefour": 199,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 199.9,
+      "hastock": 179.9,
+      "max_stock_online": 229,
+      "stock_online": 299
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_bedside_tables_pair",
+    "name": "זוג שידות צד למיטה עם מגירה + מעמד מדפי במבוק",
+    "category": "furniture",
+    "unit": "זוג + מעמד",
+    "aliases": [
+      "שידות צד",
+      "שידת לילה",
+      "זוג שידות לילה",
+      "מעמד במבוק"
+    ],
+    "prices": {
+      "rami_levy": 199.7,
+      "shufersal": 269,
+      "yohananof": 229,
+      "carrefour": 249,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 179.7,
+      "hastock": 219.7,
+      "max_stock_online": 259,
+      "stock_online": 399
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_hand_tools_kit",
+    "name": "ערכת כלי עבודה ידניים מלאה בארגז (פטיש, פלייר, מפתח שבדי, מטר, קאטר, סט מברגים ודיבלים)",
+    "category": "diy",
+    "unit": "ארגז כלים",
+    "aliases": [
+      "כלי עבודה",
+      "ארגז כלים",
+      "ערכת כלי עבודה",
+      "פטיש ומברג"
+    ],
+    "prices": {
+      "rami_levy": 29.9,
+      "shufersal": 79.9,
+      "yohananof": 59.9,
+      "carrefour": 69.9,
+      "osher_ad": 49,
+      "victory": 69,
+      "max_stock": 68.5,
+      "hastock": 79.9,
+      "max_stock_online": 89,
+      "stock_online": 119
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_cordless_drill_screwdriver",
+    "name": "מברגה / מקדחה נטענת 12V כוללת סוללה ומטען מהיר",
+    "category": "diy",
+    "unit": "יח׳",
+    "aliases": [
+      "מברגה",
+      "מברגה נטענת",
+      "מקדחה",
+      "מברגה DeWalt"
+    ],
+    "prices": {
+      "rami_levy": 59.9,
+      "shufersal": 119,
+      "yohananof": 89.9,
+      "carrefour": 99,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 50,
+      "hastock": 69.9,
+      "max_stock_online": 99,
+      "stock_online": 149
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_painting_sealing_kit",
+    "name": "ערכת צביעה ואיטום (רולר, מברשת, מסקינטייפ, שפכטל, שפכטל אמריקאי 1 ק״ג, אקדח סיליקון וסיליקון לבן)",
+    "category": "diy",
+    "unit": "ערכה מלאה",
+    "aliases": [
+      "ערכת צביעה",
+      "סיליקון",
+      "שפכטל",
+      "צבע לבית",
+      "איטום"
+    ],
+    "prices": {
+      "rami_levy": 44.9,
+      "shufersal": 79.9,
+      "yohananof": 59.9,
+      "carrefour": 65,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 56.8,
+      "hastock": 64.9,
+      "max_stock_online": 79,
+      "stock_online": 99
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_towels_bundle_7pcs",
+    "name": "2 מגבות גוף גדולות 100% כותנה + 2 מגבות פנים + 3 מגבות מטבח איכותיות",
+    "category": "decor",
+    "unit": "מארז 7 מגבות",
+    "aliases": [
+      "מגבות",
+      "מגבות גוף",
+      "מגבות פנים",
+      "מגבות מטבח",
+      "סט מגבות"
+    ],
+    "prices": {
+      "rami_levy": 59.9,
+      "shufersal": 99.9,
+      "yohananof": 79.9,
+      "carrefour": 84.9,
+      "osher_ad": 69,
+      "victory": 89,
+      "max_stock": 73.6,
+      "hastock": 69.6,
+      "max_stock_online": 89,
+      "stock_online": 119
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_bedding_double_pillows",
+    "name": "סט מצעים זוגי 100% כותנה / מיקרופייבר יוקרתי + זוג כריות שינה אורתופדיות",
+    "category": "decor",
+    "unit": "סט מצעים + 2 כריות",
+    "aliases": [
+      "מצעים",
+      "סט מצעים",
+      "כריות שינה",
+      "מצעים זוגיים"
+    ],
+    "prices": {
+      "rami_levy": 99.8,
+      "shufersal": 149.9,
+      "yohananof": 129.9,
+      "carrefour": 139,
+      "osher_ad": 109,
+      "victory": 149,
+      "max_stock": 119.8,
+      "hastock": 109.8,
+      "max_stock_online": 139,
+      "stock_online": 189
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": true,
+      "victory": true,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_full_length_mirror",
+    "name": "מראת גוף עומדת עם מסגרת דקה מודרנית (פרוטוקול פתיחה ובדיקת שבר בקופה!)",
+    "category": "decor",
+    "unit": "יח׳",
+    "aliases": [
+      "מראה",
+      "מראת גוף",
+      "מראה עומדת",
+      "מראה גדולה"
+    ],
+    "prices": {
+      "rami_levy": 99.9,
+      "shufersal": 149.9,
+      "yohananof": 129.9,
+      "carrefour": 139,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 99.9,
+      "hastock": 119.9,
+      "max_stock_online": 159,
+      "stock_online": 249
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_living_room_rug_120_180",
+    "name": "שטיח סלון מודרני גיאומטרי קל לניקוי 120x180 ס״מ",
+    "category": "decor",
+    "unit": "יח׳",
+    "aliases": [
+      "שטיח",
+      "שטיח סלון",
+      "שטיח 120x180"
+    ],
+    "prices": {
+      "rami_levy": 109.9,
+      "shufersal": 169.9,
+      "yohananof": 139.9,
+      "carrefour": 149,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 99.9,
+      "hastock": 129.9,
+      "max_stock_online": 169,
+      "stock_online": 299
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_curtains_pair_rod",
+    "name": "זוג וילונות הצללה לסלון / חדר שינה + מוט תלייה טלסקופי",
+    "category": "decor",
+    "unit": "סט וילונות + מוט",
+    "aliases": [
+      "וילון",
+      "וילונות",
+      "זוג וילונות",
+      "מוט וילון"
+    ],
+    "prices": {
+      "rami_levy": 59.8,
+      "shufersal": 99.9,
+      "yohananof": 79.9,
+      "carrefour": 84.9,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 61.7,
+      "hastock": 79.8,
+      "max_stock_online": 99,
+      "stock_online": 139
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_artificial_plant_decor",
+    "name": "עץ מלאכותי דקורטיבי בוגונוויליה/פיקוס + 3 עציצים סוקולנטים + 2 כריות נוי לסלון",
+    "category": "decor",
+    "unit": "חבילת סטיילינג",
+    "aliases": [
+      "עציץ",
+      "עץ מלאכותי",
+      "כריות נוי",
+      "אקססוריז לבית"
+    ],
+    "prices": {
+      "rami_levy": 119.6,
+      "shufersal": 179.9,
+      "yohananof": 149.9,
+      "carrefour": 159,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 121.5,
+      "hastock": 139.6,
+      "max_stock_online": 169,
+      "stock_online": 249
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
+    }
+  },
+  {
+    "id": "p_lighting_package",
+    "name": "חבילת תאורה מלאה: שנדליר 3 קנים + מנורת שולחן מודרנית + מארז 6 נורות LED חסכוניות",
+    "category": "decor",
+    "unit": "מארז תאורה",
+    "aliases": [
+      "תאורה",
+      "מנורה",
+      "נורות LED",
+      "שנדליר"
+    ],
+    "prices": {
+      "rami_levy": 119.7,
+      "shufersal": 189.9,
+      "yohananof": 159.9,
+      "carrefour": 169,
+      "osher_ad": null,
+      "victory": null,
+      "max_stock": 120.7,
+      "hastock": 149.7,
+      "max_stock_online": 179,
+      "stock_online": 279
+    },
+    "inStock": {
+      "rami_levy": true,
+      "shufersal": true,
+      "yohananof": true,
+      "carrefour": true,
+      "osher_ad": false,
+      "victory": false,
+      "max_stock": true,
+      "hastock": true,
+      "max_stock_online": true,
+      "stock_online": true
     }
   }
 ];
 
-// ==========================================
-// סלי קניות מוכנים מראש לטעינה מהירה
-// ==========================================
+export const WEEKLY_GROCERY_BASKET = [
+  "תבנית 12 ביצים L (פיקוח)",
+  "חלב תנובה 3% בקרטון 1 ליטר (פיקוח)",
+  "גבינה צהובה עמק תנובה 28% פרוסה 200 גרם",
+  "קוטג׳ תנובה 5% 250 גרם",
+  "גבינה לבנה תנובה 5% 250 גרם (פיקוח)",
+  "לחם אחיד כהה פרוס 750 גרם (פיקוח)",
+  "עגבניות חממה טריות (ק״ג)",
+  "מלפפונים ירוקים טריים (ק״ג)",
+  "בצל יבש מובחר (ק״ג)",
+  "תפוחי אדמה לבנים בשקית (ק״ג)",
+  "חזה עוף טרי פרוס לשניצל (ק״ג)",
+  "אורז פרסי קלאסי סוגת 1 ק״ג",
+  "פסטה ברילה (ספגטי / פנה) 500 גרם",
+  "שמן קנולה מזוכך 1 ליטר",
+  "קפה שחור קלוי וטחון עלית 100 גרם",
+  "קפה נמס נסקפה טייסטרס צ׳ויס Nescafe 200 גרם",
+  "נוזל לניקוי כלים פיירי Fairy לימון 650 מ״ל",
+  "נייר טואלט לילי פרימיום דו-שכבתי 32 גלילים",
+  "חטיף בוטנים במבה אסם 80 גרם",
+  "טונה בהירה בשמן צמחי מארז רביעייה (4x140 גרם)"
+];
 
-// סל מלא של כל 27 פריטי מעבר לדירה שכורה
-export const RENTAL_APARTMENT_BASKET = `סיר בישול 24 ס״מ
-סוטאז׳ 28 ס״מ עם מכסה
-זוג מחבתות נון-סטיק
-סט 12 צלחות אוכל
-סט סכו״ם 24 חלקים
-סט 6 כוסות שתייה + 6 מאגים
-מייבש כלים דו-קומתי
-10 קופסאות אחסון + מסננת וששת
-ערכת ניקיון מלאה דלי+מגב+סמרטוטים+חומרים
-סל כביסה + אטבים + שקיות רשת
-אבזור אמבטיה ללא קידוח מסדרת OCEAN
-שטיח אמבטיה + שטיח כניסה
-2 מגבות גוף + 2 פנים + מגבות מטבח
-סט מצעים זוגי + זוג כריות שינה
-שולחן סלון / זוג שולחנות קפה
-כוורת 6 תאים / מעמד מדפים
-ארון נעליים עץ מעוצב
-מעמד תליית בגדים כפול מתכוונן
-זוג שידות צד + מעמד במבוק
-ערכת כלי עבודה ידניים מקיפה
-מברגה / מקדחה נטענת
-ערכת צביעה ואיטום לבית
-מראת גוף גדולה מעוצבת
-שטיח סלון 120x180 ס״מ
-זוג וילונות + מוט תלייה
-עץ מלאכותי + עציצים + כריות נוי
-חבילת תאורה 3 קנים + מנורת שולחן + נורות`;
+export const RENTAL_APARTMENT_BASKET = [
+  "סיר נירוסטה / נון סטיק 24 ס״מ עם מכסה זכוכית",
+  "סוטאז׳ רחב 28 ס״מ Non-Stick לבישול וצלייה",
+  "זוג מחבתות Non-Stick קוטר 20 ס״מ + 24 ס״מ",
+  "סט 12 צלחות אוכל פורצלן / אופל (4 מנות עיקריות, 4 עמוקות, 4 קינוח)",
+  "סט סכו״ם נירוסטה 24 חלקים מלא (6 סכינים, 6 מזלגות, 6 כפות, 6 כפיות)",
+  "מארז 6 כוסות שתייה קרה מזכוכית + 6 מאגים קרמיקה לקפה",
+  "מייבש כלים דו-קומתי מודרני ממתכת בציפוי אל-חלד עם מגש ניקוז",
+  "מארז 10 קופסאות אחסון מזון הרמטיות + מסננת נירוסטה וסט 5 כלי ששת",
+  "ערכת ניקיון מלאה לדירה (דלי שטיפה + מגב סיליקון + מטאטא ויעה + 5 מטליות מיקרופייבר)",
+  "סל כביסה מתקפל + מארז 48 אטבי כביסה + 3 שקיות רשת לכביסה עדינה",
+  "אבזור אמבטיה ללא קידוח סדרת OCEAN (מתקן ואקום למברשות, מעמד סבון, ווים כפולים)",
+  "שטיח אמבטיה ספוג זיכרון נגד החלקה + שטיח כניסה לבית",
+  "2 מגבות גוף גדולות 100% כותנה + 2 מגבות פנים + 3 מגבות מטבח איכותיות",
+  "סט מצעים זוגי 100% כותנה / מיקרופייבר יוקרתי + זוג כריות שינה אורתופדיות",
+  "שולחן סלון מודרני / זוג שולחנות קפה עגולים בסגנון סקנדינבי",
+  "כוורת 6 תאים מודולרית / מעמד מדפים לאחסון ספרים וחפצים",
+  "ארון נעליים מעץ 3 תאים מתקפלים דמוי אלון / לבן",
+  "מעמד מתכת נייד על גלגלים לתליית בגדים + מדף נעליים תחתון",
+  "זוג שידות צד למיטה עם מגירה + מעמד מדפי במבוק",
+  "ערכת כלי עבודה ידניים מלאה בארגז (פטיש, פלייר, מפתח שבדי, מטר, קאטר, סט מברגים ודיבלים)",
+  "מברגה / מקדחה נטענת 12V כוללת סוללה ומטען מהיר",
+  "ערכת צביעה ואיטום (רולר, מברשת, מסקינטייפ, שפכטל, שפכטל אמריקאי 1 ק״ג, אקדח סיליקון וסיליקון לבן)",
+  "מראת גוף עומדת עם מסגרת דקה מודרנית (פרוטוקול פתיחה ובדיקת שבר בקופה!)",
+  "שטיח סלון מודרני גיאומטרי קל לניקוי 120x180 ס״מ",
+  "זוג וילונות הצללה לסלון / חדר שינה + מוט תלייה טלסקופי",
+  "עץ מלאכותי דקורטיבי בוגונוויליה/פיקוס + 3 עציצים סוקולנטים + 2 כריות נוי לסלון",
+  "חבילת תאורה מלאה: שנדליר 3 קנים + מנורת שולחן מודרנית + מארז 6 נורות LED חסכוניות"
+];
 
-// סל מוצרי מזון וסופרמרקט שבועי
-export const WEEKLY_GROCERY_BASKET = `שוקולית עלית 500 גרם
-קטשופ אסם עשיר 750 גרם
-2 חלב תנובה 3% 1 ליטר
-ביצים גודל L (מארז 12)
-קפה שחור עלית עם הל 100 גרם
-שמן קנולה מזוכך 1 ליטר
-טחינה גולמית מובחרת 500 גרם
-שימורי טונה סטארקיסט במים/שמן (רביעייה)`;
+export const MEGA_COMBINED_BASKET = [
+  ...WEEKLY_GROCERY_BASKET,
+  ...RENTAL_APARTMENT_BASKET
+];
 
-// סל ברירת מחדל משולב
-export const INITIAL_USER_LIST = `שוקולית עלית 500 גרם
-קטשופ אסם עשיר 750 גרם
-2 חלב תנובה 3% 1 ליטר
-סיר בישול 24 ס״מ
-זוג מחבתות נון-סטיק
-סט 12 צלחות אוכל
-ערכת ניקיון מלאה דלי+מגב+סמרטוטים+חומרים
-סט מצעים זוגי + זוג כריות שינה
-שולחן סלון / זוג שולחנות קפה
-ערכת כלי עבודה ידניים מקיפה
-מברגה / מקדחה נטענת
-מראת גוף גדולה מעוצבת`;
+export const INITIAL_USER_LIST = WEEKLY_GROCERY_BASKET.join("\n");

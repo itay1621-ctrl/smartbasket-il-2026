@@ -3,7 +3,8 @@ import {
   CATALOG_PRODUCTS,
   CATEGORIES,
   RENTAL_APARTMENT_BASKET,
-  WEEKLY_GROCERY_BASKET
+  WEEKLY_GROCERY_BASKET,
+  MEGA_COMBINED_BASKET
 } from '../data/mockStoresData.js';
 import {
   BookOpen,
@@ -84,17 +85,20 @@ export default function MasterProductCatalog({ rawText, setRawText, parsedItems 
   };
 
   const handleLoadRentalBasket = () => {
-    setRawText(RENTAL_APARTMENT_BASKET);
+    const list = Array.isArray(RENTAL_APARTMENT_BASKET) ? RENTAL_APARTMENT_BASKET.join('\n') : RENTAL_APARTMENT_BASKET;
+    setRawText(list);
     setIsOpen(true);
   };
 
   const handleLoadGroceryBasket = () => {
-    setRawText(WEEKLY_GROCERY_BASKET);
+    const list = Array.isArray(WEEKLY_GROCERY_BASKET) ? WEEKLY_GROCERY_BASKET.join('\n') : WEEKLY_GROCERY_BASKET;
+    setRawText(list);
     setIsOpen(true);
   };
 
   const handleLoadCombinedBasket = () => {
-    setRawText(WEEKLY_GROCERY_BASKET + '\n' + RENTAL_APARTMENT_BASKET);
+    const list = Array.isArray(MEGA_COMBINED_BASKET) ? MEGA_COMBINED_BASKET.join('\n') : MEGA_COMBINED_BASKET;
+    setRawText(list);
     setIsOpen(true);
   };
 
@@ -108,7 +112,7 @@ export default function MasterProductCatalog({ rawText, setRawText, parsedItems 
               קטלוג כל המוצרים ורשימות מוכנות מראש
             </h2>
             <div style={{ fontSize: '0.75rem', color: '#0369a1' }}>
-              כל 35 הפריטים: 27 מוצרי דירה שכורה + 8 מוצרי סופר ומזון
+              מעל 120 מוצרים: ביצים, חלב, גבינות, בשר, פירות וירקות, יבשים, ניקיון וסטוק מלא!
             </div>
           </div>
         </div>
@@ -129,7 +133,7 @@ export default function MasterProductCatalog({ rawText, setRawText, parsedItems 
             gap: '0.35rem'
           }}
         >
-          <span>{isOpen ? 'סגור קטלוג' : 'פתח קטלוג מלא'}</span>
+          <span>{isOpen ? 'סגור קטלוג' : 'פתח קטלוג מלא (' + CATALOG_PRODUCTS.length + ' מוצרים)'}</span>
           {isOpen ? <ChevronUp size={15} /> : <ChevronDown size={15} />}
         </button>
       </div>
