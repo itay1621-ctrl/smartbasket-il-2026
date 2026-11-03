@@ -1,19 +1,26 @@
 import React, { useState, useMemo } from 'react';
 import Header from './components/Header';
-import MasterProductCatalog from './components/MasterProductCatalog';
-import ShoppingListInput from './components/ShoppingListInput';
+import OrganizedBasketView from './components/OrganizedBasketView';
+import ProductCatalogBrowser from './components/ProductCatalogBrowser';
 import ShippingToggle from './components/ShippingToggle';
 import OptimalSplitCard from './components/OptimalSplitCard';
 import GeoBranchSelector from './components/GeoBranchSelector';
 import OneStopRankingTable from './components/OneStopRankingTable';
 import ItemPriceBreakdownTable from './components/ItemPriceBreakdownTable';
-import { INITIAL_USER_LIST } from './data/mockStoresData';
+import { INITIAL_USER_LIST, CATALOG_PRODUCTS } from './data/mockStoresData';
 import { DEFAULT_REGION_ID } from './data/regionsData';
 import {
   parseShoppingList,
   calculateOptimalSplit,
   calculateOneStopRankings
 } from './utils/basketOptimizer';
+import {
+  ShoppingBag,
+  BookOpen,
+  BarChart3,
+  ArrowRight,
+  Sparkles
+} from 'lucide-react';
 
 export default function App() {
   const [rawText, setRawText] = useState(INITIAL_USER_LIST);
@@ -22,6 +29,9 @@ export default function App() {
   const [selectedRegionId, setSelectedRegionId] = useState(DEFAULT_REGION_ID);
   // סינון סקטור רשתות: כל הרשתות, רק מזון וסופרמרקטים, או רק רשתות סטוק
   const [sectorFilter, setSectorFilter] = useState('all');
+
+  // ניווט טאבים ראשי: 'basket' (הסל שלי) | 'catalog' (קטלוג ומיון) | 'comparison' (השוואת מחירים)
+  const [activeTab, setActiveTab] = useState('basket');
 
   // עיבוד רשימת המוצרים בזמן אמת
   const parsedItems = useMemo(() => {
@@ -48,71 +58,162 @@ export default function App() {
     <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
       <Header />
 
-      <main className="app-container">
-        {/* קטלוג כל המוצרים המלא וסלים מוכנים מראש לבחירה (סל מעבר דירה 27 מוצרים, סל סופר 8 מוצרים) */}
-        <MasterProductCatalog
-          rawText={rawText}
-          setRawText={setRawText}
-          parsedItems={parsedItems}
-        />
-
-        {/* שלב 1: אזור הזנת רשימת הקניות החכמה + צ'יפים של קטגוריות */}
-        <ShoppingListInput
-          rawText={rawText}
-          setRawText={setRawText}
-          parsedCount={parsedItems.length}
-        />
-
-        {/* שלב 2: מתג שקלול דמי משלוח 2026 (כבוי כברירת מחדל לתצוגת מחיר רגיל) */}
-        <ShippingToggle
-          isShippingEnabled={isShippingEnabled}
-          setIsShippingEnabled={setIsShippingEnabled}
-        />
-
-        {/* שלב 3: לוח השוואה (Comparison Dashboard) */}
-        {parsedItems.length > 0 ? (
-          <>
-            {/* כרטיס פיצול קנייה אופטימלי עם הדגשת מחיר רגיל ללא משלוח ואופציית משלוח */}
-            <OptimalSplitCard
-              optimalSplit={optimalSplit}
-              isShippingEnabled={isShippingEnabled}
-              setIsShippingEnabled={setIsShippingEnabled}
-            />
-
-            {/* בורר אזור גיאוגרפי וכרטיסיות סניפים קרובים (סופרמרקטים + סטוק פיזי) */}
-            <GeoBranchSelector
-              selectedRegionId={selectedRegionId}
-              onSelectRegion={setSelectedRegionId}
-              optimalStoreKeys={optimalStoreKeys}
-            />
-
-            {/* טבלת דירוג חנות יחידה עם מתג סינון: מזון, סטוק או הכל */}
-            <OneStopRankingTable
-              rankings={oneStopRankings}
-              isShippingEnabled={isShippingEnabled}
-              sectorFilter={sectorFilter}
-              setSectorFilter={setSectorFilter}
-            />
-
-            {/* טבלה מתקפלת להשוואת פריט-אחר-פריט בין כל 10 הרשתות (כולל רשתות פיזיות) */}
-            <ItemPriceBreakdownTable parsedItems={parsedItems} />
-          </>
-        ) : (
-          <div
-            className="card"
-            style={{
-              textAlign: 'center',
-              padding: '3rem 1.5rem',
-              color: '#64748b'
-            }}
+      {/* סרגל טאבים ראשי מודרני ונעוץ בראש הדף */}
+      <div className="tab-nav-wrapper">
+        <div className="tab-nav-container" role="tablist">
+          <button
+            role="tab"
+            aria-selected={activeTab === 'basket'}
+            className={`tab-nav-item ${activeTab === 'basket' ? 'active' : ''}`}
+            onClick={() => setActiveTab('basket')}
           >
-            <div style={{ fontSize: '2.5rem', marginBlockEnd: '0.75rem' }}>🛒</div>
-            <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#0f172a' }}>
-              רשימת הקניות שלכם ריקה
-            </div>
-            <p style={{ fontSize: '0.85rem', marginBlockStart: '0.25rem' }}>
-              פתחו את "קטלוג כל המוצרים" למעלה לבחירת פריטים או לחצו על סל מוכן מראש.
-            </p>
+            <ShoppingBag size={17} />
+            <span>הסל שלי</span>
+            {parsedItems.length > 0 && (
+              <span className="tab-badge-pill primary">
+                {parsedItems.length}
+              </span>
+            )}
+          </button>
+
+          <button
+            role="tab"
+            aria-selected={activeTab === 'catalog'}
+            className={`tab-nav-item ${activeTab === 'catalog' ? 'active' : ''}`}
+            onClick={() => setActiveTab('catalog')}
+          >
+            <BookOpen size={17} />
+            <span>קטלוג ומיון</span>
+            <span className="tab-badge-pill neutral">
+              {CATALOG_PRODUCTS.length}
+            </span>
+          </button>
+
+          <button
+            role="tab"
+            aria-selected={activeTab === 'comparison'}
+            className={`tab-nav-item ${activeTab === 'comparison' ? 'active' : ''}`}
+            onClick={() => setActiveTab('comparison')}
+          >
+            <BarChart3 size={17} />
+            <span>השוואת מחירים</span>
+            {optimalSplit && optimalSplit.savingsVsSingle > 5 && (
+              <span className="tab-badge-pill savings">
+                חסוך ₪{Math.round(optimalSplit.savingsVsSingle)}
+              </span>
+            )}
+          </button>
+        </div>
+      </div>
+
+      <main className="app-container">
+        {/* טאב 1: הסל שלי - רשימה מסודרת ונוחה */}
+        {activeTab === 'basket' && (
+          <OrganizedBasketView
+            rawText={rawText}
+            setRawText={setRawText}
+            parsedItems={parsedItems}
+            onSwitchToCatalog={() => setActiveTab('catalog')}
+            onSwitchToComparison={() => setActiveTab('comparison')}
+            optimalSplit={optimalSplit}
+          />
+        )}
+
+        {/* טאב 2: קטלוג ומיון מוצרים - בחירה קלה מתוך 345 מוצרים עם מיון מלא */}
+        {activeTab === 'catalog' && (
+          <ProductCatalogBrowser
+            rawText={rawText}
+            setRawText={setRawText}
+            parsedItems={parsedItems}
+            onSwitchToBasket={() => setActiveTab('basket')}
+            onSwitchToComparison={() => setActiveTab('comparison')}
+          />
+        )}
+
+        {/* טאב 3: השוואת מחירים, פיצול אופטימלי ורשתות */}
+        {activeTab === 'comparison' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
+            {parsedItems.length > 0 ? (
+              <>
+                {/* כפתור חזרה מהיר לעריכת הסל */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <button
+                    onClick={() => setActiveTab('basket')}
+                    className="btn btn-secondary"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '0.4rem',
+                      fontSize: '0.85rem',
+                      padding: '0.4rem 0.8rem',
+                      borderRadius: '10px'
+                    }}
+                  >
+                    <ArrowRight size={15} />
+                    <span>חזרה לעריכת הסל ({parsedItems.length} פריטים)</span>
+                  </button>
+
+                  <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>
+                    השוואת אמת בין 10 רשתות מזון וסטוק
+                  </span>
+                </div>
+
+                {/* מתג שקלול דמי משלוח 2026 (כבוי כברירת מחדל לתצוגת מחיר רגיל) */}
+                <ShippingToggle
+                  isShippingEnabled={isShippingEnabled}
+                  setIsShippingEnabled={setIsShippingEnabled}
+                />
+
+                {/* כרטיס פיצול קנייה אופטימלי עם הדגשת מחיר רגיל ללא משלוח ואופציית משלוח */}
+                <OptimalSplitCard
+                  optimalSplit={optimalSplit}
+                  isShippingEnabled={isShippingEnabled}
+                  setIsShippingEnabled={setIsShippingEnabled}
+                />
+
+                {/* בורר אזור גיאוגרפי וכרטיסיות סניפים קרובים (סופרמרקטים + סטוק פיזי) */}
+                <GeoBranchSelector
+                  selectedRegionId={selectedRegionId}
+                  onSelectRegion={setSelectedRegionId}
+                  optimalStoreKeys={optimalStoreKeys}
+                />
+
+                {/* טבלת דירוג חנות יחידה עם מתג סינון: מזון, סטוק או הכל */}
+                <OneStopRankingTable
+                  rankings={oneStopRankings}
+                  isShippingEnabled={isShippingEnabled}
+                  sectorFilter={sectorFilter}
+                  setSectorFilter={setSectorFilter}
+                />
+
+                {/* טבלה מתקפלת להשוואת פריט-אחר-פריט בין כל 10 הרשתות (כולל רשתות פיזיות) */}
+                <ItemPriceBreakdownTable parsedItems={parsedItems} />
+              </>
+            ) : (
+              <div
+                className="card"
+                style={{
+                  textAlign: 'center',
+                  padding: '3rem 1.5rem',
+                  color: '#64748b'
+                }}
+              >
+                <div style={{ fontSize: '2.5rem', marginBlockEnd: '0.75rem' }}>📊</div>
+                <div style={{ fontWeight: 700, fontSize: '1.1rem', color: '#0f172a' }}>
+                  אין מוצרים להשוואה
+                </div>
+                <p style={{ fontSize: '0.85rem', marginBlockStart: '0.25rem', marginBlockEnd: '1.25rem' }}>
+                  הוסיפו מוצרים מתוך הקטלוג או הסל כדי לראות את השוואת המחירים והחיסכון.
+                </p>
+                <button
+                  onClick={() => setActiveTab('catalog')}
+                  className="btn btn-primary"
+                  style={{ borderRadius: '12px', padding: '0.6rem 1.25rem' }}
+                >
+                  מעבר לקטלוג המוצרים לבחירה 📦
+                </button>
+              </div>
+            )}
           </div>
         )}
 

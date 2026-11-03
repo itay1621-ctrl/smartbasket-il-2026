@@ -3,6 +3,28 @@ import react from '@vitejs/plugin-react';
 
 export default defineConfig({
   plugins: [react()],
+  build: {
+    outDir: 'dist',
+    emptyOutDir: true,
+    rollupOptions: {
+      external: ['react', 'react-dom', 'react-dom/client', 'lucide-react'],
+      output: {
+        format: 'es',
+        paths: {
+          'react': 'https://esm.sh/react@19',
+          'react-dom/client': 'https://esm.sh/react-dom@19/client',
+          'react-dom': 'https://esm.sh/react-dom@19',
+          'lucide-react': 'https://esm.sh/lucide-react@0.469.0'
+        },
+        manualChunks(id) {
+          if (id.includes('groceryCatalogData')) return 'cat-grocery';
+          if (id.includes('stockCatalogData')) return 'cat-stock';
+          if (id.includes('regionsData')) return 'geo-regions';
+          if (id.includes('basketOptimizer')) return 'optimizer';
+        }
+      }
+    }
+  },
   server: {
     port: 3000,
     open: false,
@@ -25,7 +47,6 @@ export default defineConfig({
           'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36'
         }
       },
-      // תמיכה בשרתי שקיפות מחירים של רמי לוי ומזון (חוק שקיפות המחירים)
       '/api/ramilevy-prices': {
         target: 'https://url.publishedprices.co.il',
         changeOrigin: true,
