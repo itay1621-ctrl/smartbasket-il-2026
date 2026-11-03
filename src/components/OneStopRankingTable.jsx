@@ -1,7 +1,12 @@
 import React from 'react';
-import { Store, Award, CheckCircle, AlertTriangle } from 'lucide-react';
+import { Store, Award, CheckCircle, AlertTriangle, Filter } from 'lucide-react';
 
-export default function OneStopRankingTable({ rankings, isShippingEnabled }) {
+export default function OneStopRankingTable({
+  rankings,
+  isShippingEnabled,
+  sectorFilter,
+  setSectorFilter
+}) {
   if (!rankings || rankings.length === 0) return null;
 
   return (
@@ -12,20 +17,76 @@ export default function OneStopRankingTable({ rankings, isShippingEnabled }) {
           <span>קנייה מרוכזת (One-Stop Shop)</span>
         </h2>
         <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-          דירוג 5 הרשתות מהזולה ליקרה
+          השוואה בין כל הרשתות מהזולה ליקרה
         </span>
       </div>
 
       <p style={{ fontSize: '0.8rem', color: '#64748b', marginBlockStart: '-0.5rem' }}>
-        אם אתם מעדיפים להזמין את כל המוצרים ממקום אחד בלבד:
+        מציאת הרשת המשתלמת ביותר אם תרצו לרכוש את כל המוצרים ממקום אחד בלבד:
       </p>
+
+      {/* מתג סינון סקטור רשתות: כל הרשתות / רק סופרמרקטים / רק רשתות סטוק */}
+      <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBlockEnd: '0.5rem' }}>
+        <button
+          onClick={() => setSectorFilter('all')}
+          style={{
+            paddingInline: '0.75rem',
+            paddingBlock: '0.35rem',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            borderRadius: '9999px',
+            border: '1px solid',
+            borderColor: sectorFilter === 'all' ? '#2563eb' : '#cbd5e1',
+            background: sectorFilter === 'all' ? '#2563eb' : '#f8fafc',
+            color: sectorFilter === 'all' ? '#ffffff' : '#475569',
+            cursor: 'pointer'
+          }}
+        >
+          ✨ כל הרשתות (מזון + סטוק)
+        </button>
+        <button
+          onClick={() => setSectorFilter('food')}
+          style={{
+            paddingInline: '0.75rem',
+            paddingBlock: '0.35rem',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            borderRadius: '9999px',
+            border: '1px solid',
+            borderColor: sectorFilter === 'food' ? '#059669' : '#cbd5e1',
+            background: sectorFilter === 'food' ? '#059669' : '#f8fafc',
+            color: sectorFilter === 'food' ? '#ffffff' : '#475569',
+            cursor: 'pointer'
+          }}
+        >
+          🍏 רשתות מזון וסופרמרקטים (שופרסל, רמי לוי, יוחננוף, קרפור, אושר עד, ויקטורי)
+        </button>
+        <button
+          onClick={() => setSectorFilter('stock')}
+          style={{
+            paddingInline: '0.75rem',
+            paddingBlock: '0.35rem',
+            fontSize: '0.75rem',
+            fontWeight: 700,
+            borderRadius: '9999px',
+            border: '1px solid',
+            borderColor: sectorFilter === 'stock' ? '#e11d48' : '#cbd5e1',
+            background: sectorFilter === 'stock' ? '#e11d48' : '#f8fafc',
+            color: sectorFilter === 'stock' ? '#ffffff' : '#475569',
+            cursor: 'pointer'
+          }}
+        >
+          🍳 רשתות סטוק וכלי בית (מקס סטוק, הסטוק, מקס אונליין, סטוק אונליין)
+        </button>
+      </div>
 
       <div className="ranking-table-container">
         <table className="ranking-table" aria-label="טבלת דירוג חנות יחידה">
           <thead>
             <tr>
               <th style={{ inlineSize: '36px' }}>דירוג</th>
-              <th>רשת</th>
+              <th>רשת קמעונאית</th>
+              <th>סוג רשת</th>
               <th>סכום ביניים</th>
               <th>משלוח 2026</th>
               <th>סה״כ לתשלום</th>
@@ -37,6 +98,8 @@ export default function OneStopRankingTable({ rankings, isShippingEnabled }) {
               const rankClass =
                 index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : 'rank-other';
 
+              const isFood = r.store.sector === 'food';
+
               return (
                 <tr key={r.storeKey}>
                   <td>
@@ -47,6 +110,22 @@ export default function OneStopRankingTable({ rankings, isShippingEnabled }) {
                       <span style={{ fontWeight: 700, color: '#0f172a' }}>{r.store.name}</span>
                       <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{r.store.type}</span>
                     </div>
+                  </td>
+                  <td>
+                    <span
+                      style={{
+                        fontSize: '0.68rem',
+                        fontWeight: 700,
+                        paddingInline: '0.45rem',
+                        paddingBlock: '0.15rem',
+                        borderRadius: '6px',
+                        background: isFood ? '#ecfdf5' : '#fff1f2',
+                        color: isFood ? '#047857' : '#be123c',
+                        border: `1px solid ${isFood ? '#a7f3d0' : '#fecdd3'}`
+                      }}
+                    >
+                      {r.store.sectorLabel}
+                    </span>
                   </td>
                   <td>
                     <span style={{ fontWeight: 600 }}>₪{r.subtotal.toFixed(2)}</span>
@@ -73,7 +152,7 @@ export default function OneStopRankingTable({ rankings, isShippingEnabled }) {
                       </span>
                       {index === 0 && (
                         <span style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 700 }}>
-                          הזול ביותר לסל שלם
+                          הזול ביותר
                         </span>
                       )}
                     </div>

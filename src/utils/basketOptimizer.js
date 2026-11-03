@@ -92,7 +92,6 @@ export function matchProductToCatalog(rawName) {
   }
 
   // 3. יצירת מוצר דינמי במידה ולא נמצא בקטלוג המדויק
-  // מציב מחירים סבירים ממוצעים כדי שההשוואה תעבוד על כל טקסט
   const fallbackBasePrice = 24.9;
   return {
     id: 'custom_' + Math.random().toString(36).substring(2, 9),
@@ -101,14 +100,24 @@ export function matchProductToCatalog(rawName) {
     unit: 'יח׳',
     aliases: [rawName],
     prices: {
-      rami_levy: Number((fallbackBasePrice * 1.15).toFixed(2)),
-      max_stock: Number((fallbackBasePrice * 0.85).toFixed(2)),
+      rami_levy: Number((fallbackBasePrice * 1.05).toFixed(2)),
+      shufersal: Number((fallbackBasePrice * 1.20).toFixed(2)),
+      yohananof: Number((fallbackBasePrice * 1.02).toFixed(2)),
+      carrefour: Number((fallbackBasePrice * 1.10).toFixed(2)),
+      osher_ad: Number((fallbackBasePrice * 0.95).toFixed(2)),
+      victory: Number((fallbackBasePrice * 1.15).toFixed(2)),
+      max_stock: Number((fallbackBasePrice * 0.88).toFixed(2)),
       hastock: Number((fallbackBasePrice * 0.92).toFixed(2)),
-      max_stock_online: Number((fallbackBasePrice * 0.89).toFixed(2)),
-      stock_online: Number((fallbackBasePrice * 0.95).toFixed(2))
+      max_stock_online: Number((fallbackBasePrice * 0.95).toFixed(2)),
+      stock_online: Number((fallbackBasePrice * 0.98).toFixed(2))
     },
     inStock: {
       rami_levy: true,
+      shufersal: true,
+      yohananof: true,
+      carrefour: true,
+      osher_ad: true,
+      victory: true,
       max_stock: true,
       hastock: true,
       max_stock_online: true,
@@ -149,42 +158,56 @@ export function parseShoppingList(rawText) {
 
 /**
  * חישוב דמי משלוח לרשת מסוימת לפי סכום ביניים, כמויות ותעריפי 2026
- * @param {string} storeKey - מזהה הרשת
- * @param {number} subtotal - סך ביניים של המוצרים
- * @param {boolean} isShippingEnabled - האם שקלול משלוחים פעיל
- * @param {number} itemsCount - מספר סוגי הפריטים השונים
- * @param {number} totalQty - כמות הפריטים הכוללת ביחידות
  */
 export function calculateStoreShipping(storeKey, subtotal, isShippingEnabled, itemsCount = 1, totalQty = 1) {
   if (!isShippingEnabled || subtotal <= 0) return 0;
   const store = STORES_METADATA[storeKey];
   if (!store) return 0;
 
-  // 1. מקס סטוק סניפים פיזיים - 0 ₪ (איסוף עצמי בסניף בלבד)
-  if (storeKey === 'max_stock') {
+  // 1. מקס סטוק / אושר עד סניפים פיזיים - 0 ₪ (איסוף עצמי בסניף)
+  if (storeKey === 'max_stock' || storeKey === 'osher_ad') {
     return 0;
   }
 
-  // 2. מקס סטוק אונליין: 99 ₪ לפריט ראשון + 70 ₪ לכל פריט נוסף (ללא סף חינם עד הבית)
-  // נוסחה: itemsCount > 0 ? 99 + (totalQuantity - 1) * 70 : 0
+  // 2. מקס סטוק אונליין: 99 ₪ לפריט ראשון + 70 ₪ לכל פריט נוסף
   if (storeKey === 'max_stock_online') {
     const qty = totalQty > 0 ? totalQty : (itemsCount > 0 ? itemsCount : 1);
     return itemsCount > 0 ? 99 + Math.max(0, qty - 1) * 70 : 0;
   }
 
-  // 3. רמי לוי אונליין: 35.90 ₪ קבוע למשלוח (ללא סף משלוח חינם)
+  // 3. רמי לוי אונליין: 35.90 ₪ קבוע
   if (storeKey === 'rami_levy') {
     return 35.9;
   }
 
-  // 4. סטוק אונליין: 70 ₪, או משלוח חינם מעל 299 ₪
+  // 4. שופרסל אונליין: 35.00 ₪ קבוע
+  if (storeKey === 'shufersal') {
+    return 35.0;
+  }
+
+  // 5. יוחננוף: 32.00 ₪
+  if (storeKey === 'yohananof') {
+    return 32.0;
+  }
+
+  // 6. ויקטורי: 35.00 ₪
+  if (storeKey === 'victory') {
+    return 35.0;
+  }
+
+  // 7. סטוק אונליין: 70 ₪, או חינם מעל 299 ₪
   if (storeKey === 'stock_online') {
     return subtotal >= 299 ? 0 : 70.0;
   }
 
-  // 5. הסטוק (סניפים + משלוחים): 35 ₪ עד הבית, או חינם מעל 350 ₪ (איסוף עצמי בסניף 0 ₪)
+  // 8. הסטוק: 35 ₪, או חינם מעל 350 ₪
   if (storeKey === 'hastock') {
     return subtotal >= 350 ? 0 : 35.0;
+  }
+
+  // 9. קרפור: 34 ₪, חינם מעל 450 ₪
+  if (storeKey === 'carrefour') {
+    return subtotal >= 450 ? 0 : 34.0;
   }
 
   // בדיקת רף משלוח חינם כללי
@@ -196,12 +219,19 @@ export function calculateStoreShipping(storeKey, subtotal, isShippingEnabled, it
 }
 
 /**
- * דירוג חנות יחידה (One-Stop Shop)
+ * דירוג חנות יחידה (One-Stop Shop) עם תמיכה בסינון סקטור רשתות (הכל, מזון, סטוק)
  */
-export function calculateOneStopRankings(parsedItems, isShippingEnabled) {
+export function calculateOneStopRankings(parsedItems, isShippingEnabled, sectorFilter = 'all') {
   if (!parsedItems || parsedItems.length === 0) return [];
 
-  const rankings = Object.keys(STORES_METADATA).map((storeKey) => {
+  // סינון רשתות לפי הסקטור הנבחר
+  const eligibleStoreKeys = Object.keys(STORES_METADATA).filter((key) => {
+    if (sectorFilter === 'all') return true;
+    const store = STORES_METADATA[key];
+    return store.sector === sectorFilter;
+  });
+
+  const rankings = eligibleStoreKeys.map((storeKey) => {
     const store = STORES_METADATA[storeKey];
     let subtotal = 0;
     let availableCount = 0;
@@ -210,8 +240,8 @@ export function calculateOneStopRankings(parsedItems, isShippingEnabled) {
     const itemDetails = [];
 
     for (const item of parsedItems) {
-      const price = item.prices[storeKey];
-      const isAvailable = item.inStock[storeKey] && price !== null && price !== undefined;
+      const price = item.prices ? item.prices[storeKey] : null;
+      const isAvailable = item.inStock && item.inStock[storeKey] && price !== null && price !== undefined;
 
       if (isAvailable) {
         const lineTotal = price * item.quantity;
@@ -270,22 +300,29 @@ export function calculateOneStopRankings(parsedItems, isShippingEnabled) {
 }
 
 /**
- * חישוב פיצול קנייה אופטימלי (Optimal Split Basket)
- * מוצא את הרשת הזולה ביותר לכל פריט תוך שקלול עלויות משלוח
+ * חישוב פיצול קנייה אופטימלי (Optimal Split Basket) עם תמיכה בסינון סקטור רשתות
  */
-export function calculateOptimalSplit(parsedItems, isShippingEnabled) {
+export function calculateOptimalSplit(parsedItems, isShippingEnabled, sectorFilter = 'all') {
   if (!parsedItems || parsedItems.length === 0) {
     return null;
   }
 
-  // 1. שלב ראשון: מציאת החנות הזולה ביותר לכל פריט
+  const eligibleStoreKeys = Object.keys(STORES_METADATA).filter((key) => {
+    if (sectorFilter === 'all') return true;
+    const store = STORES_METADATA[key];
+    return store.sector === sectorFilter;
+  });
+
+  if (eligibleStoreKeys.length === 0) return null;
+
+  // 1. שלב ראשון: מציאת החנות הזולה ביותר לכל פריט מתוך הרשתות המאושרות
   const itemAssignments = parsedItems.map((item) => {
     let lowestPrice = Infinity;
     let bestStoreKey = null;
 
-    Object.keys(STORES_METADATA).forEach((storeKey) => {
-      const price = item.prices[storeKey];
-      const inStock = item.inStock[storeKey];
+    eligibleStoreKeys.forEach((storeKey) => {
+      const price = item.prices ? item.prices[storeKey] : null;
+      const inStock = item.inStock ? item.inStock[storeKey] : false;
       if (inStock && price !== null && price !== undefined && price < lowestPrice) {
         lowestPrice = price;
         bestStoreKey = storeKey;
@@ -294,7 +331,7 @@ export function calculateOptimalSplit(parsedItems, isShippingEnabled) {
 
     return {
       item,
-      bestStoreKey: bestStoreKey || 'rami_levy',
+      bestStoreKey: bestStoreKey || eligibleStoreKeys[0],
       unitPrice: lowestPrice !== Infinity ? lowestPrice : 0,
       lineTotal: (lowestPrice !== Infinity ? lowestPrice : 0) * item.quantity
     };
@@ -350,7 +387,7 @@ export function calculateOptimalSplit(parsedItems, isShippingEnabled) {
   const optimalGrandTotal = totalItemsCost + totalShippingCost;
 
   // 4. השוואה מול הרשת הטובה ביותר בקנייה מרוכזת (One-Stop Shop)
-  const oneStopRankings = calculateOneStopRankings(parsedItems, isShippingEnabled);
+  const oneStopRankings = calculateOneStopRankings(parsedItems, isShippingEnabled, sectorFilter);
   const bestOneStop = oneStopRankings[0] || { grandTotal: optimalGrandTotal };
 
   const savingsNis = Math.max(0, bestOneStop.grandTotal - optimalGrandTotal);
