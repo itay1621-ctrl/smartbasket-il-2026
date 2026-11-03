@@ -165,19 +165,23 @@ export const STORES_METADATA = {
 };
 
 export const CATEGORIES = [
-  { id: "all", name: "כל המוצרים", icon: "🛒" },
+  { id: "all", name: "כל המוצרים (630+)", icon: "🛒" },
   { id: "dairy_eggs", name: "חלב, גבינות וביצים", icon: "🥛" },
-  { id: "produce", name: "פירות וירקות טריים", icon: "🍎" },
+  { id: "produce", name: "פירות, ירקות ועשבי תיבול", icon: "🍎" },
   { id: "meat_fish", name: "בשר, עוף, דגים וקפואים", icon: "🍗" },
-  { id: "bakery", name: "לחם ומאפים", icon: "🥖" },
+  { id: "bakery", name: "לחם, מאפים ובצקים", icon: "🥖" },
   { id: "pantry", name: "מזווה, שימורים ושמנים", icon: "🥫" },
-  { id: "snacks_drinks", name: "שתייה, קפה וחטיפים", icon: "☕" },
+  { id: "spices_baking", name: "תבלינים ואפייה ביתית", icon: "🧂" },
+  { id: "salads_dips", name: "סלטים מוכנים וממרחים", icon: "🥗" },
+  { id: "snacks_drinks", name: "שתייה, קפה, אלכוהול וחטיפים", icon: "☕" },
+  { id: "frozen_sweets", name: "גלידות וקינוחים קפואים", icon: "🍦" },
   { id: "baby", name: "מוצרי תינוקות", icon: "👶" },
-  { id: "cleaning_bath", name: "ניקיון, פארם וטואלטיקה", icon: "🧼" },
-  { id: "kitchen", name: "מטבח ואירוח", icon: "🍳" },
-  { id: "furniture", name: "ריהוט ואחסון", icon: "🛋️" },
-  { id: "diy", name: "כלי עבודה ו-DIY", icon: "🔧" },
-  { id: "decor", name: "טקסטיל ועיצוב הבית", icon: "💡" }
+  { id: "cleaning_bath", name: "ניקיון, כביסה ופארם", icon: "🧼" },
+  { id: "disposable_party", name: "חד-פעמי, מנגל וחיות מחמד", icon: "🍽️" },
+  { id: "kitchen", name: "כלי בית, בישול ואירוח", icon: "🍳" },
+  { id: "furniture", name: "ריהוט, אחסון וארגון", icon: "🛋️" },
+  { id: "diy", name: "כלי עבודה, חשמל ו-DIY", icon: "🔧" },
+  { id: "decor", name: "טקסטיל, עיצוב ואמבטיה", icon: "💡" }
 ];
 
 export const CATALOG_PRODUCTS = [...GROCERY_PRODUCTS, ...STOCK_PRODUCTS];

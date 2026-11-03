@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import {
   CATALOG_PRODUCTS,
   CATEGORIES
@@ -30,6 +30,11 @@ export default function ProductCatalogBrowser({
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [sortBy, setSortBy] = useState('popular'); // 'popular' | 'price_asc' | 'price_desc' | 'alpha_asc' | 'category'
   const [sectorType, setSectorType] = useState('all'); // 'all' | 'food' | 'stock'
+  const [displayLimit, setDisplayLimit] = useState(48);
+
+  useEffect(() => {
+    setDisplayLimit(48);
+  }, [selectedCategory, searchTerm, sortBy, sectorType]);
 
   // מפת כמויות מהטקסט הגולמי
   const qtyMap = useMemo(() => getBasketQuantityMap(rawText), [rawText]);
@@ -63,7 +68,7 @@ export default function ProductCatalogBrowser({
       if (sectorType === 'food' && ['kitchen', 'furniture', 'diy', 'decor'].includes(product.category)) {
         return false;
       }
-      if (sectorType === 'stock' && ['dairy_eggs', 'produce', 'meat_fish', 'bakery', 'pantry'].includes(product.category)) {
+      if (sectorType === 'stock' && ['dairy_eggs', 'produce', 'meat_fish', 'bakery', 'pantry', 'spices_baking', 'salads_dips', 'frozen_sweets'].includes(product.category)) {
         return false;
       }
 
@@ -305,7 +310,7 @@ export default function ProductCatalogBrowser({
         gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
         gap: '0.75rem'
       }}>
-        {sortedAndFilteredProducts.map((product) => {
+        {sortedAndFilteredProducts.slice(0, displayLimit).map((product) => {
           const inBasketQty = qtyMap[product.id] || 0;
           const cat = getCategoryInfo(product.category);
           const minP = getMinPrice(product);
@@ -465,6 +470,30 @@ export default function ProductCatalogBrowser({
           );
         })}
       </div>
+
+      {/* כפתור טעינת מוצרים נוספים */}
+      {sortedAndFilteredProducts.length > displayLimit && (
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', marginBlock: '1.25rem' }}>
+          <button
+            onClick={() => setDisplayLimit((prev) => prev + 48)}
+            className="btn btn-primary"
+            style={{
+              padding: '0.65rem 1.5rem',
+              fontSize: '0.95rem',
+              fontWeight: 700,
+              borderRadius: '12px'
+            }}
+          >
+            הצג עוד 48 מוצרים (מוצגים {Math.min(displayLimit, sortedAndFilteredProducts.length)} מתוך {sortedAndFilteredProducts.length}) ⬇️
+          </button>
+          <button
+            onClick={() => setDisplayLimit(sortedAndFilteredProducts.length)}
+            style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline' }}
+          >
+            הצג את כל {sortedAndFilteredProducts.length} המוצרים
+          </button>
+        </div>
+      )}
 
       {/* סרגל סל צף בתחתית הדף במובייל ובמחשב */}
       {totalBasketItemsCount > 0 && (
