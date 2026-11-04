@@ -1,8 +1,7 @@
 /**
  * עזרי ניהול סל הקניות וסנכרון בין הרשימה הויזואלית לטקסט הגולמי
  */
-import { CATALOG_PRODUCTS } from '../data/mockStoresData.js';
-import { parseHebrewLine, matchProductToCatalog } from './basketOptimizer.js';
+import { parseHebrewLine, matchProductToCatalog, getActiveCatalog } from './basketOptimizer.js';
 
 export function getBasketQuantityMap(rawText) {
   if (!rawText) return {};

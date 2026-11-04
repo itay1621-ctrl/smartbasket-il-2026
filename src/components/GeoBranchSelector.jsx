@@ -25,12 +25,7 @@ export default function GeoBranchSelector({
   // בדיקה האם רשת של סניף נכללת ברשתות של הסל המפוצל
   const isBranchInOptimal = (branch) => {
     if (!optimalStoreKeys || optimalStoreKeys.length === 0) return true;
-    return optimalStoreKeys.some((key) => {
-      if (key === 'max_stock' || key === 'max_stock_online') return branch.chain === 'max_stock';
-      if (key === 'hastock' || key === 'stock_online') return branch.chain === 'hastock';
-      if (key === 'rami_levy') return branch.chain === 'rami_levy';
-      return branch.chain === key;
-    });
+    return optimalStoreKeys.includes(branch.chain);
   };
 
   // סינון סניפים להצגה

@@ -1,93 +1,44 @@
 import React from 'react';
-import { Store, Award, CheckCircle, AlertTriangle, Filter } from 'lucide-react';
+import { Store } from 'lucide-react';
 
-export default function OneStopRankingTable({
-  rankings,
-  isShippingEnabled,
-  sectorFilter,
-  setSectorFilter
-}) {
+export default function OneStopRankingTable({ rankings, isShippingEnabled }) {
   if (!rankings || rankings.length === 0) return null;
+
+  const bestStore = rankings[0];
+  const mostExpensive = rankings[rankings.length - 1];
+  const maxSavings = bestStore && mostExpensive ? Math.max(0, mostExpensive.grandTotal - bestStore.grandTotal) : 0;
+  const maxSavingsPercent = mostExpensive && mostExpensive.grandTotal > 0
+    ? Math.round((maxSavings / mostExpensive.grandTotal) * 100)
+    : 0;
 
   return (
     <div className="card">
-      <div className="card-header">
-        <h2 className="card-title">
-          <Store size={18} className="text-blue" />
-          <span>קנייה מרוכזת (One-Stop Shop)</span>
-        </h2>
-        <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-          השוואה בין כל הרשתות מהזולה ליקרה
-        </span>
-      </div>
+      <div className="card-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <div>
+          <h2 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', margin: 0 }}>
+            <Store size={18} className="text-blue" />
+            <span>דירוג 7 רשתות הסופרמרקט (One-Stop Shop)</span>
+          </h2>
+          <span style={{ fontSize: '0.78rem', color: '#64748b' }}>
+            השוואת מחיר הסל המלא ברכישה מרוכזת מרשת אחת בלבד
+          </span>
+        </div>
 
-      <p style={{ fontSize: '0.8rem', color: '#64748b', marginBlockStart: '-0.5rem' }}>
-        מציאת הרשת המשתלמת ביותר אם תרצו לרכוש את כל המוצרים ממקום אחד בלבד:
-      </p>
-
-      {/* מתג סינון סקטור רשתות: כל הרשתות / רק סופרמרקטים / רק רשתות סטוק */}
-      <div style={{ display: 'flex', gap: '0.4rem', flexWrap: 'wrap', marginBlockEnd: '0.5rem' }}>
-        <button
-          onClick={() => setSectorFilter('all')}
-          style={{
-            paddingInline: '0.75rem',
-            paddingBlock: '0.35rem',
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            borderRadius: '9999px',
-            border: '1px solid',
-            borderColor: sectorFilter === 'all' ? '#2563eb' : '#cbd5e1',
-            background: sectorFilter === 'all' ? '#2563eb' : '#f8fafc',
-            color: sectorFilter === 'all' ? '#ffffff' : '#475569',
-            cursor: 'pointer'
-          }}
-        >
-          ✨ כל הרשתות (מזון + סטוק)
-        </button>
-        <button
-          onClick={() => setSectorFilter('food')}
-          style={{
-            paddingInline: '0.75rem',
-            paddingBlock: '0.35rem',
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            borderRadius: '9999px',
-            border: '1px solid',
-            borderColor: sectorFilter === 'food' ? '#059669' : '#cbd5e1',
-            background: sectorFilter === 'food' ? '#059669' : '#f8fafc',
-            color: sectorFilter === 'food' ? '#ffffff' : '#475569',
-            cursor: 'pointer'
-          }}
-        >
-          🍏 רשתות מזון וסופרמרקטים (שופרסל, רמי לוי, יוחננוף, קרפור, אושר עד, ויקטורי)
-        </button>
-        <button
-          onClick={() => setSectorFilter('stock')}
-          style={{
-            paddingInline: '0.75rem',
-            paddingBlock: '0.35rem',
-            fontSize: '0.75rem',
-            fontWeight: 700,
-            borderRadius: '9999px',
-            border: '1px solid',
-            borderColor: sectorFilter === 'stock' ? '#e11d48' : '#cbd5e1',
-            background: sectorFilter === 'stock' ? '#e11d48' : '#f8fafc',
-            color: sectorFilter === 'stock' ? '#ffffff' : '#475569',
-            cursor: 'pointer'
-          }}
-        >
-          🍳 רשתות סטוק וכלי בית (מקס סטוק, הסטוק, מקס אונליין, סטוק אונליין)
-        </button>
+        {maxSavings > 0 && (
+          <div style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', padding: '0.35rem 0.75rem', borderRadius: '10px', fontSize: '0.8rem', color: '#065f46', fontWeight: 700 }}>
+            🎉 חיסכון של ₪{maxSavings.toFixed(2)} ({maxSavingsPercent}%) בין {bestStore.store.shortName} ל{mostExpensive.store.shortName}!
+          </div>
+        )}
       </div>
 
       <div className="ranking-table-container">
-        <table className="ranking-table" aria-label="טבלת דירוג חנות יחידה">
+        <table className="ranking-table" aria-label="טבלת דירוג 7 רשתות הסופרמרקטים">
           <thead>
             <tr>
-              <th style={{ inlineSize: '36px' }}>דירוג</th>
-              <th>רשת קמעונאית</th>
-              <th>סוג רשת</th>
-              <th>סכום ביניים</th>
+              <th style={{ inlineSize: '40px', textAlign: 'center' }}>דירוג</th>
+              <th>רשת סופרמרקט</th>
+              <th>סוג ערוץ</th>
+              <th>סכום מוצרים</th>
               <th>משלוח 2026</th>
               <th>סה״כ לתשלום</th>
               <th>כיסוי סל</th>
@@ -95,96 +46,94 @@ export default function OneStopRankingTable({
           </thead>
           <tbody>
             {rankings.map((r, index) => {
-              const rankClass =
-                index === 0 ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : 'rank-other';
-
-              const isFood = r.store.sector === 'food';
+              const isBest = index === 0;
+              const rankClass = isBest ? 'rank-1' : index === 1 ? 'rank-2' : index === 2 ? 'rank-3' : 'rank-other';
 
               return (
-                <tr key={r.storeKey}>
-                  <td>
-                    <span className={`rank-badge ${rankClass}`}>{index + 1}</span>
-                  </td>
-                  <td>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
-                      <span style={{ fontWeight: 700, color: '#0f172a' }}>{r.store.name}</span>
-                      <span style={{ fontSize: '0.7rem', color: '#64748b' }}>{r.store.type}</span>
-                    </div>
-                  </td>
-                  <td>
-                    <span
-                      style={{
-                        fontSize: '0.68rem',
-                        fontWeight: 700,
-                        paddingInline: '0.45rem',
-                        paddingBlock: '0.15rem',
-                        borderRadius: '6px',
-                        background: isFood ? '#ecfdf5' : '#fff1f2',
-                        color: isFood ? '#047857' : '#be123c',
-                        border: `1px solid ${isFood ? '#a7f3d0' : '#fecdd3'}`
-                      }}
-                    >
-                      {r.store.sectorLabel}
-                    </span>
-                  </td>
-                  <td>
-                    <span style={{ fontWeight: 600 }}>₪{r.subtotal.toFixed(2)}</span>
-                  </td>
-                  <td>
-                    {!isShippingEnabled ? (
-                      <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>לא שוקלל</span>
-                    ) : r.shipping === 0 ? (
-                      <span style={{ color: '#16a34a', fontWeight: 700, fontSize: '0.75rem' }}>חינם!</span>
+                <tr
+                  key={r.storeKey}
+                  className={rankClass}
+                  style={{
+                    background: isBest ? '#f0fdf4' : index % 2 === 0 ? '#ffffff' : '#f8fafc',
+                    fontWeight: isBest ? 700 : 400
+                  }}
+                >
+                  <td style={{ textAlign: 'center' }}>
+                    {isBest ? (
+                      <span style={{ display: 'inline-flex', alignItems: 'center', justifyContent: 'center', background: '#eab308', color: '#ffffff', width: '26px', height: '26px', borderRadius: '9999px', fontWeight: 900, fontSize: '0.85rem' }}>
+                        1
+                      </span>
                     ) : (
-                      <span style={{ color: '#d97706', fontWeight: 600 }}>₪{r.shipping.toFixed(2)}</span>
+                      <span style={{ color: '#64748b', fontWeight: 700 }}>{index + 1}</span>
                     )}
                   </td>
+
                   <td>
-                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
                       <span
                         style={{
-                          fontWeight: 800,
-                          fontSize: '0.95rem',
-                          color: index === 0 ? '#16a34a' : '#0f172a'
+                          display: 'inline-block',
+                          width: '10px',
+                          height: '10px',
+                          borderRadius: '9999px',
+                          background: r.store.color || '#2563eb'
                         }}
-                      >
-                        ₪{r.grandTotal.toFixed(2)}
-                      </span>
-                      {index === 0 && (
-                        <span style={{ fontSize: '0.65rem', color: '#16a34a', fontWeight: 700 }}>
-                          הזול ביותר
+                      />
+                      <span style={{ fontWeight: 800, color: '#0f172a' }}>{r.store.name}</span>
+                      {isBest && (
+                        <span style={{ fontSize: '0.68rem', background: '#22c55e', color: '#ffffff', padding: '0.15rem 0.45rem', borderRadius: '9999px', fontWeight: 800 }}>
+                          המשתלם ביותר!
                         </span>
                       )}
                     </div>
                   </td>
+
                   <td>
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-                      <span
-                        style={{
-                          fontSize: '0.75rem',
-                          fontWeight: 700,
-                          color: r.coveragePercent === 100 ? '#16a34a' : '#e11d48',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: '0.2rem'
-                        }}
-                      >
-                        {r.coveragePercent === 100 ? (
-                          <CheckCircle size={12} />
-                        ) : (
-                          <AlertTriangle size={12} />
-                        )}
-                        {r.availableCount}/{r.totalItemsCount} ({r.coveragePercent}%)
+                    <span style={{ fontSize: '0.75rem', color: '#475569', background: '#f1f5f9', padding: '0.2rem 0.5rem', borderRadius: '6px' }}>
+                      {r.store.type}
+                    </span>
+                  </td>
+
+                  <td style={{ fontWeight: 700 }}>
+                    ₪{r.subtotal.toFixed(2)}
+                  </td>
+
+                  <td>
+                    {isShippingEnabled ? (
+                      r.storeKey === 'osher_ad' ? (
+                        <span style={{ color: '#d97706', fontSize: '0.75rem', fontWeight: 700 }}>
+                          סניף פיזי בלבד (₪0)
+                        </span>
+                      ) : r.shipping === 0 ? (
+                        <span style={{ color: '#16a34a', fontWeight: 700, fontSize: '0.8rem' }}>
+                          חינם!
+                        </span>
+                      ) : (
+                        <span style={{ color: '#475569', fontWeight: 600 }}>
+                          ₪{r.shipping.toFixed(2)}
+                        </span>
+                      )
+                    ) : (
+                      <span style={{ color: '#94a3b8', fontSize: '0.75rem' }}>
+                        ₪0 (מדף / איסוף)
                       </span>
-                      <div className="coverage-bar-wrapper">
-                        <div
-                          className="coverage-bar-fill"
-                          style={{
-                            inlineSize: `${r.coveragePercent}%`,
-                            backgroundColor: r.coveragePercent === 100 ? '#10b981' : '#f59e0b'
-                          }}
-                        ></div>
+                    )}
+                  </td>
+
+                  <td>
+                    <span style={{ fontSize: '1.05rem', fontWeight: 900, color: isBest ? '#15803d' : '#0f172a' }}>
+                      ₪{r.grandTotal.toFixed(2)}
+                    </span>
+                  </td>
+
+                  <td>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                      <div style={{ width: '45px', height: '6px', background: '#e2e8f0', borderRadius: '9999px', overflow: 'hidden' }}>
+                        <div style={{ width: `${r.coveragePercent}%`, height: '100%', background: r.coveragePercent === 100 ? '#22c55e' : '#f59e0b' }} />
                       </div>
+                      <span style={{ fontSize: '0.75rem', fontWeight: 700, color: r.coveragePercent === 100 ? '#15803d' : '#d97706' }}>
+                        {r.coveragePercent}% ({r.availableCount}/{r.totalItemsCount})
+                      </span>
                     </div>
                   </td>
                 </tr>

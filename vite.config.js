@@ -18,8 +18,6 @@ export default defineConfig({
           'lucide-react': 'https://esm.sh/lucide-react@0.469.0'
         },
         manualChunks(id) {
-          if (id.includes('groceryCatalogData')) return 'cat-grocery';
-          if (id.includes('stockCatalogData')) return 'cat-stock';
           if (id.includes('regionsData')) return 'geo-regions';
           if (id.includes('basketOptimizer')) return 'optimizer';
         }

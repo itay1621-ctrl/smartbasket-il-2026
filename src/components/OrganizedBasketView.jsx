@@ -9,15 +9,11 @@ import {
   Edit3,
   ChevronDown,
   ChevronUp,
-  ArrowLeft,
-  CheckCircle2
+  ArrowLeft
 } from 'lucide-react';
 import {
-  CATALOG_PRODUCTS,
   CATEGORIES,
-  WEEKLY_GROCERY_BASKET,
-  RENTAL_APARTMENT_BASKET,
-  MEGA_COMBINED_BASKET
+  INITIAL_USER_LIST
 } from '../data/mockStoresData.js';
 import {
   getBasketQuantityMap,
@@ -32,7 +28,8 @@ export default function OrganizedBasketView({
   parsedItems,
   onSwitchToCatalog,
   onSwitchToComparison,
-  optimalSplit
+  optimalSplit,
+  catalog = []
 }) {
   const [quickSearch, setQuickSearch] = useState('');
   const [showRawEditor, setShowRawEditor] = useState(false);
@@ -40,16 +37,18 @@ export default function OrganizedBasketView({
   // מפת כמויות
   const qtyMap = useMemo(() => getBasketQuantityMap(rawText), [rawText]);
 
-  // סינון הצעות לחיפוש מהיר
+  // סינון הצעות לחיפוש מהיר מתוך הקטלוג המלא
   const quickSearchResults = useMemo(() => {
     if (!quickSearch.trim()) return [];
     const term = quickSearch.trim().toLowerCase();
-    return CATALOG_PRODUCTS.filter((p) => {
-      const matchName = p.name.toLowerCase().includes(term);
+    return catalog.filter((p) => {
+      const matchName = p.name && p.name.toLowerCase().includes(term);
+      const matchMfg = p.manufacturer && p.manufacturer.toLowerCase().includes(term);
+      const matchBarcode = p.barcode && p.barcode.includes(term);
       const matchAlias = p.aliases && p.aliases.some((a) => a.toLowerCase().includes(term));
-      return matchName || matchAlias;
+      return matchName || matchMfg || matchBarcode || matchAlias;
     }).slice(0, 6);
-  }, [quickSearch]);
+  }, [quickSearch, catalog]);
 
   // מציאת קטגוריה לפי ID
   const getCategoryInfo = (categoryId) => {
@@ -64,7 +63,7 @@ export default function OrganizedBasketView({
     return vals.length > 0 ? Math.min(...vals) : 0;
   };
 
-  // סה"כ מחיר משוער
+  // סה"כ מחיר מוערך (בסיס)
   const estimatedMinTotal = useMemo(() => {
     return parsedItems.reduce((acc, it) => {
       const minP = getMinPrice(it);
@@ -97,20 +96,19 @@ export default function OrganizedBasketView({
     }
   };
 
-  const handleLoadSample = (basketArray) => {
-    const list = Array.isArray(basketArray) ? basketArray.join('\n') : basketArray;
-    setRawText(list);
+  const handleLoadSample = (sampleText) => {
+    setRawText(sampleText);
   };
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-      {/* סרגל עליון: סיכום מהיר וסלים מוכנים */}
+      {/* סרגל עליון: סיכום מהיר וסל שבועי */}
       <div className="card" style={{ padding: '1.1rem' }}>
         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
               <h2 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: '#0f172a' }}>
-                רשימת הקניות שלי
+                רשימת הקניות שלי (סופרמרקט)
               </h2>
               <span style={{
                 background: '#e0f2fe',
@@ -125,10 +123,10 @@ export default function OrganizedBasketView({
             </div>
             {parsedItems.length > 0 && (
               <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0.25rem 0 0' }}>
-                מחיר בסיס מוערך לסל: <strong style={{ color: '#0f172a' }}>₪{estimatedMinTotal.toFixed(2)}</strong>
+                מחיר בסיס זול ביותר לסל: <strong style={{ color: '#0f172a' }}>₪{estimatedMinTotal.toFixed(2)}</strong>
                 {optimalSplit && optimalSplit.savingsVsSingle > 0 && (
                   <span style={{ color: '#16a34a', marginInlineStart: '0.5rem', fontWeight: 700 }}>
-                    (חיסכון של ₪{optimalSplit.savingsVsSingle.toFixed(2)} בפיצול!)
+                    (חיסכון של ₪{optimalSplit.savingsVsSingle.toFixed(2)} בפיצול 2 רשתות!)
                   </span>
                 )}
               </p>
@@ -158,32 +156,16 @@ export default function OrganizedBasketView({
         {/* כפתורי סלים מוכנים מראש */}
         <div style={{ marginBlockStart: '0.9rem', borderBlockStart: '1px solid #f1f5f9', paddingBlockStart: '0.75rem' }}>
           <div style={{ fontSize: '0.75rem', fontWeight: 700, color: '#64748b', marginBlockEnd: '0.4rem' }}>
-            טעינת סל מוכן בלחיצה אחת:
+            טעינת סל מוכן:
           </div>
           <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
             <button
-              onClick={() => handleLoadSample(WEEKLY_GROCERY_BASKET)}
+              onClick={() => handleLoadSample(INITIAL_USER_LIST)}
               className="btn btn-secondary"
               style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '10px' }}
             >
               <span>🛒</span>
-              <span>סל סופר שבועי (20 פריטים)</span>
-            </button>
-            <button
-              onClick={() => handleLoadSample(RENTAL_APARTMENT_BASKET)}
-              className="btn btn-secondary"
-              style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '10px' }}
-            >
-              <span>🛋️</span>
-              <span>סל מעבר דירה (25 פריטים)</span>
-            </button>
-            <button
-              onClick={() => handleLoadSample(MEGA_COMBINED_BASKET)}
-              className="btn btn-secondary"
-              style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '10px' }}
-            >
-              <span>⚡</span>
-              <span>סל משולב ענק (45 פריטים)</span>
+              <span>סל סופרמרקט שבועי בסיסי (20 פריטי יסוד)</span>
             </button>
             {parsedItems.length > 0 && (
               <button
@@ -199,7 +181,7 @@ export default function OrganizedBasketView({
         </div>
       </div>
 
-      {/* תיבת חיפוש והוספה מהירה של מוצר */}
+      {/* תיבת חיפוש והוספה מהירה של מוצר מתוך 1,000+ מוצרים */}
       <div className="card" style={{ padding: '0.9rem 1.1rem', position: 'relative' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
           <Search size={18} style={{ color: '#64748b' }} />
@@ -207,7 +189,7 @@ export default function OrganizedBasketView({
             type="text"
             className="input-text"
             style={{ flex: 1, border: 'none', padding: '0.4rem 0', fontSize: '0.95rem', outline: 'none' }}
-            placeholder="הוסף מוצר במהירות (הקלד למשל: חלב, ביצים, נייר טואלט, סיר...)"
+            placeholder="הוסף מוצר במהירות (הקלד: חלב, גבינה צהובה, עגבניות, עוף, קפה, פיירי...)"
             value={quickSearch}
             onChange={(e) => setQuickSearch(e.target.value)}
           />
@@ -237,7 +219,7 @@ export default function OrganizedBasketView({
             overflow: 'hidden'
           }}>
             <div style={{ padding: '0.5rem 0.75rem', background: '#f8fafc', fontSize: '0.75rem', color: '#64748b', fontWeight: 600 }}>
-              מוצרים תואמים בקטלוג (לחצו להוספה):
+              מוצרים תואמים בקטלוג הסופרמרקטים (לחצו להוספה):
             </div>
             {quickSearchResults.map((prod) => {
               const inQty = qtyMap[prod.id] || 0;
@@ -260,6 +242,7 @@ export default function OrganizedBasketView({
                     <div>
                       <div style={{ fontSize: '0.9rem', fontWeight: 600, color: '#0f172a' }}>{prod.name}</div>
                       <div style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                        {prod.manufacturer ? `${prod.manufacturer} • ` : ''}
                         {prod.unit} • החל מ-₪{minP.toFixed(2)}
                       </div>
                     </div>
@@ -300,7 +283,7 @@ export default function OrganizedBasketView({
                 gap: '0.25rem'
               }}
             >
-              <span>+ הוסף מוצרים מהקטלוג המלא</span>
+              <span>+ הוסף עוד מ-1,000+ מוצרי הקטלוג</span>
             </button>
           </div>
 
@@ -352,20 +335,9 @@ export default function OrganizedBasketView({
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap', marginTop: '0.15rem' }}>
                       <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
+                        {item.manufacturer ? `${item.manufacturer} • ` : ''}
                         {item.unit}
                       </span>
-                      {item.isRegulated && (
-                        <span style={{
-                          background: '#fef3c7',
-                          color: '#b45309',
-                          fontSize: '0.65rem',
-                          fontWeight: 700,
-                          padding: '0.1rem 0.35rem',
-                          borderRadius: '4px'
-                        }}>
-                          פיקוח
-                        </span>
-                      )}
                       <span style={{ fontSize: '0.75rem', color: '#16a34a', fontWeight: 600 }}>
                         החל מ-₪{minP.toFixed(2)}
                       </span>
@@ -480,7 +452,7 @@ export default function OrganizedBasketView({
             סל הקניות שלכם ריק
           </h3>
           <p style={{ fontSize: '0.9rem', maxWidth: '380px', marginInline: 'auto', marginBlockEnd: '1.5rem' }}>
-            בחרו מוצרים מתוך הקטלוג העשיר או טענו סל מוכן בלחיצה כדי להתחיל להשוות מחירים ולחסוך!
+            בחרו מוצרים מתוך קטלוג 1,000+ המוצרים או טענו סל סופר שבועי בלחיצה כדי להתחיל להשוות מחירים ולחסוך!
           </p>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
             <button
@@ -491,17 +463,17 @@ export default function OrganizedBasketView({
               <span>פתח קטלוג מוצרים לבחירה 📦</span>
             </button>
             <button
-              onClick={() => handleLoadSample(WEEKLY_GROCERY_BASKET)}
+              onClick={() => handleLoadSample(INITIAL_USER_LIST)}
               className="btn btn-secondary"
               style={{ padding: '0.7rem 1.25rem', fontSize: '0.95rem', borderRadius: '12px' }}
             >
-              <span>טען סל סופר שבועי לדוגמה 🛒</span>
+              <span>טען סל סופרמרקט שבועי לדוגמה 🛒</span>
             </button>
           </div>
         </div>
       )}
 
-      {/* אזור עריכת טקסט חופשי (מתקפל לוואטסאפ) */}
+      {/* אזור עריכת טקסט חופשי */}
       <div className="card" style={{ padding: '0.85rem 1.1rem' }}>
         <button
           onClick={() => setShowRawEditor(!showRawEditor)}
@@ -532,7 +504,7 @@ export default function OrganizedBasketView({
               className="list-textarea"
               value={rawText}
               onChange={(e) => setRawText(e.target.value)}
-              placeholder="הדבק כאן רשימת קניות, שורה לכל מוצר (לדוגמה: 2 חלב תנובה, עגבניות, סיר 24 ס״מ)..."
+              placeholder="הדבק כאן רשימת קניות, שורה לכל מוצר (לדוגמה: 2 חלב תנובה, עגבניות, חזה עוף)..."
               rows={6}
               style={{ width: '100%', padding: '0.6rem', fontSize: '0.9rem', borderRadius: '8px' }}
             />
@@ -562,7 +534,7 @@ export default function OrganizedBasketView({
               boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)'
             }}
           >
-            <span>המשך להשוואת מחירים בין 10 הרשתות ({parsedItems.length} מוצרים)</span>
+            <span>המשך להשוואת מחירים בין 7 הרשתות ({parsedItems.length} מוצרים)</span>
             <ArrowLeft size={18} />
           </button>
         </div>

@@ -1,22 +1,15 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import {
-  CATALOG_PRODUCTS,
-  CATEGORIES
-} from '../data/mockStoresData.js';
+import { CATEGORIES, STORES_METADATA } from '../data/mockStoresData.js';
 import {
   getBasketQuantityMap,
-  updateProductQuantity,
-  addProductToBasket
+  updateProductQuantity
 } from '../utils/basketHelpers.js';
 import {
   Search,
   Plus,
   Minus,
-  Check,
   ArrowUpDown,
-  ShoppingBag,
-  Sparkles,
-  ArrowLeft
+  ShoppingBag
 } from 'lucide-react';
 
 export default function ProductCatalogBrowser({
@@ -24,17 +17,17 @@ export default function ProductCatalogBrowser({
   setRawText,
   parsedItems,
   onSwitchToBasket,
-  onSwitchToComparison
+  onSwitchToComparison,
+  catalog = []
 }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
-  const [sortBy, setSortBy] = useState('popular'); // 'popular' | 'price_asc' | 'price_desc' | 'alpha_asc' | 'category'
-  const [sectorType, setSectorType] = useState('all'); // 'all' | 'food' | 'stock'
-  const [displayLimit, setDisplayLimit] = useState(48);
+  const [sortBy, setSortBy] = useState('popular'); // 'popular' | 'price_asc' | 'price_desc' | 'alpha_asc'
+  const [displayLimit, setDisplayLimit] = useState(50);
 
   useEffect(() => {
-    setDisplayLimit(48);
-  }, [selectedCategory, searchTerm, sortBy, sectorType]);
+    setDisplayLimit(50);
+  }, [selectedCategory, searchTerm, sortBy]);
 
   // מפת כמויות מהטקסט הגולמי
   const qtyMap = useMemo(() => getBasketQuantityMap(rawText), [rawText]);
@@ -46,6 +39,12 @@ export default function ProductCatalogBrowser({
     return vals.length > 0 ? Math.min(...vals) : 0;
   };
 
+  const getMaxPrice = (product) => {
+    if (!product.prices) return 0;
+    const vals = Object.values(product.prices).filter((p) => typeof p === 'number' && p > 0);
+    return vals.length > 0 ? Math.max(...vals) : 0;
+  };
+
   // מציאת קטגוריה
   const getCategoryInfo = (categoryId) => {
     const found = CATEGORIES.find((c) => c.id === categoryId);
@@ -54,35 +53,29 @@ export default function ProductCatalogBrowser({
 
   // ספירת מוצרים לפי קטגוריה
   const categoryCounts = useMemo(() => {
-    const counts = { all: CATALOG_PRODUCTS.length };
-    for (const p of CATALOG_PRODUCTS) {
+    const counts = { all: catalog.length };
+    for (const p of catalog) {
       counts[p.category] = (counts[p.category] || 0) + 1;
     }
     return counts;
-  }, []);
+  }, [catalog]);
 
   // סינון ומיון מוצרים
   const sortedAndFilteredProducts = useMemo(() => {
-    let result = CATALOG_PRODUCTS.filter((product) => {
-      // סינון סקטור (מזון מול סטוק)
-      if (sectorType === 'food' && ['kitchen', 'furniture', 'diy', 'decor'].includes(product.category)) {
-        return false;
-      }
-      if (sectorType === 'stock' && ['dairy_eggs', 'produce', 'meat_fish', 'bakery', 'pantry', 'spices_baking', 'salads_dips', 'frozen_sweets'].includes(product.category)) {
-        return false;
-      }
-
+    let result = catalog.filter((product) => {
       // סינון קטגוריה
       if (selectedCategory !== 'all' && product.category !== selectedCategory) {
         return false;
       }
 
-      // סינון חיפוש
+      // סינון חיפוש: שם מוצר, מותג/יצרן, ברקוד, כינויים
       if (searchTerm.trim()) {
         const term = searchTerm.trim().toLowerCase();
-        const matchName = product.name.toLowerCase().includes(term);
+        const matchName = product.name && product.name.toLowerCase().includes(term);
+        const matchMfg = product.manufacturer && product.manufacturer.toLowerCase().includes(term);
+        const matchBarcode = product.barcode && product.barcode.includes(term);
         const matchAliases = product.aliases && product.aliases.some((a) => a.toLowerCase().includes(term));
-        if (!matchName && !matchAliases) return false;
+        if (!matchName && !matchMfg && !matchBarcode && !matchAliases) return false;
       }
 
       return true;
@@ -99,10 +92,7 @@ export default function ProductCatalogBrowser({
       if (sortBy === 'alpha_asc') {
         return a.name.localeCompare(b.name, 'he');
       }
-      if (sortBy === 'category') {
-        return a.category.localeCompare(b.category);
-      }
-      // 'popular' - ברירת מחדל: מוצרים שנמצאים בסל קודם, אחר כך לפי מזהה
+      // 'popular' - ברירת מחדל: מוצרים שנמצאים בסל קודם
       const inBasketA = qtyMap[a.id] ? 1 : 0;
       const inBasketB = qtyMap[b.id] ? 1 : 0;
       if (inBasketA !== inBasketB) return inBasketB - inBasketA;
@@ -110,7 +100,7 @@ export default function ProductCatalogBrowser({
     });
 
     return result;
-  }, [selectedCategory, searchTerm, sortBy, sectorType, qtyMap]);
+  }, [catalog, selectedCategory, searchTerm, sortBy, qtyMap]);
 
   const handleUpdateQty = (product, delta) => {
     const current = qtyMap[product.id] || 0;
@@ -119,351 +109,412 @@ export default function ProductCatalogBrowser({
     setRawText(updated);
   };
 
-  const handleAddOne = (product) => {
-    const updated = addProductToBasket(rawText, product, 1);
-    setRawText(updated);
+  const handleQuickAdd = (product) => {
+    handleUpdateQty(product, 1);
   };
 
-  // סך פריטים בסל
-  const totalBasketItemsCount = parsedItems.length;
+  const visibleProducts = useMemo(() => {
+    return sortedAndFilteredProducts.slice(0, displayLimit);
+  }, [sortedAndFilteredProducts, displayLimit]);
+
+  const totalBasketItemsCount = useMemo(() => {
+    return Object.values(qtyMap).reduce((sum, q) => sum + q, 0);
+  }, [qtyMap]);
+
+  const storeKeys = Object.keys(STORES_METADATA);
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', paddingBottom: '5rem' }}>
-      {/* כותרת קטלוג וסרגל בקרה עליון */}
-      <div className="card" style={{ padding: '1.1rem' }}>
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.5rem', marginBottom: '0.75rem' }}>
+    <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      {/* סרגל עליון: חיפוש מהיר וסיכום */}
+      <div className="card" style={{ padding: '1rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBlockEnd: '0.75rem', flexWrap: 'wrap', gap: '0.5rem' }}>
           <div>
-            <h2 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, color: '#0f172a' }}>
-              קטלוג המוצרים המלא ({CATALOG_PRODUCTS.length} מוצרים)
+            <h2 style={{ fontSize: '1.2rem', fontWeight: 800, margin: 0, display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <span>🛒 קטלוג סופרמרקטים בישראל</span>
+              <span style={{ fontSize: '0.75rem', color: '#059669', background: '#ecfdf5', padding: '0.2rem 0.5rem', borderRadius: '9999px', fontWeight: 700 }}>
+                {catalog.length} מוצרים אמיתיים
+              </span>
             </h2>
-            <p style={{ fontSize: '0.85rem', color: '#64748b', margin: '0.2rem 0 0' }}>
-              סננו לפי קטגוריות ומיינו לפי מחיר או א-ב לבחירה מהירה ונוחה
+            <p style={{ fontSize: '0.8rem', color: '#64748b', margin: '0.2rem 0 0 0' }}>
+              השוואת מחירים מדויקת מול 7 רשתות המזון בישראל לפי ברקוד EAN-13 ויצרן
             </p>
           </div>
 
-          <div style={{ display: 'flex', gap: '0.4rem' }}>
+          {totalBasketItemsCount > 0 && (
             <button
-              onClick={() => setSectorType('all')}
-              className={`btn ${sectorType === 'all' ? 'btn-primary' : 'btn-outline'}`}
-              style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '8px' }}
-            >
-              הכל
-            </button>
-            <button
-              onClick={() => setSectorType('food')}
-              className={`btn ${sectorType === 'food' ? 'btn-primary' : 'btn-outline'}`}
-              style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '8px' }}
-            >
-              🛒 רק סופרמרקט
-            </button>
-            <button
-              onClick={() => setSectorType('stock')}
-              className={`btn ${sectorType === 'stock' ? 'btn-primary' : 'btn-outline'}`}
-              style={{ fontSize: '0.8rem', padding: '0.35rem 0.75rem', borderRadius: '8px' }}
-            >
-              🛋️ רק סטוק וכלי בית
-            </button>
-          </div>
-        </div>
-
-        {/* שורת חיפוש + בורר מיון (Sort) */}
-        <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap', alignItems: 'center' }}>
-          {/* תיבת חיפוש */}
-          <div style={{
-            flex: '1 1 240px',
-            position: 'relative',
-            display: 'flex',
-            alignItems: 'center',
-            background: '#f8fafc',
-            border: '1px solid #cbd5e1',
-            borderRadius: '12px',
-            padding: '0.45rem 0.75rem'
-          }}>
-            <Search size={18} style={{ color: '#64748b', flexShrink: 0 }} />
-            <input
-              type="text"
-              placeholder="חיפוש מהיר בקטלוג (למשל: ביצים, גבינה צהובה, סיר, עגבניות...)"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onClick={onSwitchToBasket}
+              className="btn btn-primary"
               style={{
-                border: 'none',
-                background: 'none',
-                outline: 'none',
-                fontSize: '0.9rem',
-                marginInlineStart: '0.5rem',
-                width: '100%',
-                fontFamily: 'inherit'
-              }}
-            />
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm('')}
-                style={{ border: 'none', background: 'none', color: '#94a3b8', cursor: 'pointer', fontSize: '0.85rem' }}
-              >
-                ✕
-              </button>
-            )}
-          </div>
-
-          {/* בורר מיון (Sort dropdown / controls) */}
-          <div style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '0.4rem',
-            background: '#f8fafc',
-            border: '1px solid #cbd5e1',
-            borderRadius: '12px',
-            padding: '0.45rem 0.75rem'
-          }}>
-            <ArrowUpDown size={16} style={{ color: '#2563eb' }} />
-            <span style={{ fontSize: '0.85rem', fontWeight: 700, color: '#334155' }}>מיון:</span>
-            <select
-              value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              style={{
-                border: 'none',
-                background: 'transparent',
-                outline: 'none',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.4rem',
                 fontSize: '0.85rem',
-                fontWeight: 600,
-                color: '#0f172a',
-                cursor: 'pointer',
-                fontFamily: 'inherit'
+                padding: '0.45rem 0.9rem',
+                borderRadius: '12px'
               }}
             >
-              <option value="popular">🌟 מומלץ / פופולריות</option>
-              <option value="price_asc">💰 מחיר: מהנמוך לגבוה</option>
-              <option value="price_desc">💎 מחיר: מהגבוה לנמוך</option>
-              <option value="alpha_asc">🔤 שם מוצר: א׳ - ת׳</option>
-              <option value="category">🏷️ לפי קטגוריה</option>
-            </select>
-          </div>
+              <ShoppingBag size={16} />
+              <span>לסל שלי ({totalBasketItemsCount})</span>
+            </button>
+          )}
         </div>
 
-        {/* סרגל קטגוריות בגלילה אופקית (Horizontal Category Chips) */}
-        <div style={{
-          display: 'flex',
-          gap: '0.4rem',
-          overflowX: 'auto',
-          paddingBlock: '0.75rem 0.25rem',
-          scrollbarWidth: 'none',
-          WebkitOverflowScrolling: 'touch'
-        }}>
+        {/* שורת חיפוש */}
+        <div style={{ position: 'relative', marginBlockEnd: '0.75rem' }}>
+          <Search
+            size={18}
+            style={{
+              position: 'absolute',
+              insetInlineStart: '12px',
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#94a3b8'
+            }}
+          />
+          <input
+            type="text"
+            className="input-field"
+            style={{
+              paddingInlineStart: '2.5rem',
+              fontSize: '0.95rem',
+              borderRadius: '12px',
+              width: '100%',
+              boxSizing: 'border-box'
+            }}
+            placeholder="חיפוש מיידי לפי שם מוצר, מותג (תנובה, אסם, שטראוס...), או ברקוד 729..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              style={{
+                position: 'absolute',
+                insetInlineEnd: '12px',
+                top: '50%',
+                transform: 'translateY(-50%)',
+                background: 'none',
+                border: 'none',
+                color: '#94a3b8',
+                cursor: 'pointer',
+                fontWeight: 700
+              }}
+            >
+              ✕
+            </button>
+          )}
+        </div>
+
+        {/* בחירת מחלקות (12 מחלקות סופרמרקט) */}
+        <div
+          style={{
+            display: 'flex',
+            gap: '0.4rem',
+            overflowX: 'auto',
+            paddingBlockEnd: '0.4rem',
+            scrollbarWidth: 'thin'
+          }}
+        >
           {CATEGORIES.map((cat) => {
-            const count = categoryCounts[cat.id] || 0;
             const isSelected = selectedCategory === cat.id;
+            const count = categoryCounts[cat.id] || 0;
             return (
               <button
                 key={cat.id}
                 onClick={() => setSelectedCategory(cat.id)}
                 style={{
-                  display: 'flex',
+                  display: 'inline-flex',
                   alignItems: 'center',
                   gap: '0.35rem',
-                  padding: '0.4rem 0.8rem',
-                  borderRadius: '999px',
+                  paddingInline: '0.75rem',
+                  paddingBlock: '0.4rem',
                   fontSize: '0.8rem',
-                  fontWeight: isSelected ? 700 : 500,
+                  fontWeight: isSelected ? 800 : 600,
+                  borderRadius: '9999px',
+                  border: isSelected ? '2px solid #0284c7' : '1px solid #e2e8f0',
+                  background: isSelected ? '#0284c7' : '#ffffff',
+                  color: isSelected ? '#ffffff' : '#334155',
                   whiteSpace: 'nowrap',
-                  border: isSelected ? '1px solid #2563eb' : '1px solid #e2e8f0',
-                  background: isSelected ? '#eff6ff' : '#ffffff',
-                  color: isSelected ? '#1d4ed8' : '#475569',
                   cursor: 'pointer',
-                  transition: 'all 0.15s ease'
+                  flexShrink: 0
                 }}
               >
                 <span>{cat.icon}</span>
                 <span>{cat.name}</span>
-                <span style={{
-                  fontSize: '0.7rem',
-                  opacity: 0.8,
-                  background: isSelected ? '#dbeafe' : '#f1f5f9',
-                  padding: '0.05rem 0.35rem',
-                  borderRadius: '999px'
-                }}>
+                <span
+                  style={{
+                    fontSize: '0.7rem',
+                    paddingInline: '0.35rem',
+                    borderRadius: '9999px',
+                    background: isSelected ? 'rgba(255,255,255,0.25)' : '#f1f5f9',
+                    color: isSelected ? '#ffffff' : '#64748b'
+                  }}
+                >
                   {count}
                 </span>
               </button>
             );
           })}
         </div>
+
+        {/* שורת סינון ומיון נוסף */}
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            marginBlockStart: '0.75rem',
+            paddingBlockStart: '0.75rem',
+            borderTop: '1px solid #f1f5f9',
+            fontSize: '0.8rem',
+            color: '#64748b',
+            flexWrap: 'wrap',
+            gap: '0.5rem'
+          }}
+        >
+          <div>
+            נמצאו <strong>{sortedAndFilteredProducts.length}</strong> מוצרים
+            {selectedCategory !== 'all' && ` במחלקת ${getCategoryInfo(selectedCategory).name}`}
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+            <ArrowUpDown size={14} />
+            <span>מיון:</span>
+            <select
+              value={sortBy}
+              onChange={(e) => setSortBy(e.target.value)}
+              style={{
+                fontSize: '0.8rem',
+                padding: '0.25rem 0.5rem',
+                borderRadius: '8px',
+                border: '1px solid #cbd5e1',
+                background: '#ffffff',
+                fontWeight: 600
+              }}
+            >
+              <option value="popular">מומלץ / בסל שלי קודם</option>
+              <option value="price_asc">מחיר: מהזול ליקר</option>
+              <option value="price_desc">מחיר: מהיקר לזול</option>
+              <option value="alpha_asc">שם מוצר: א - ת</option>
+            </select>
+          </div>
+        </div>
       </div>
 
-      {/* תצוגת מספר תוצאות */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingInline: '0.5rem' }}>
-        <span style={{ fontSize: '0.85rem', color: '#64748b', fontWeight: 600 }}>
-          מציג {sortedAndFilteredProducts.length} מוצרים בקטלוג
-        </span>
-        {searchTerm && (
-          <button
-            onClick={() => setSearchTerm('')}
-            style={{ fontSize: '0.8rem', color: '#2563eb', background: 'none', border: 'none', cursor: 'pointer' }}
-          >
-            איפוס חיפוש
-          </button>
-        )}
-      </div>
+      {/* רשת כרטיסי המוצרים (Grid) */}
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))',
+          gap: '0.75rem'
+        }}
+      >
+        {visibleProducts.map((product) => {
+          const qty = qtyMap[product.id] || 0;
+          const minPrice = getMinPrice(product);
+          const maxPrice = getMaxPrice(product);
+          const catInfo = getCategoryInfo(product.category);
 
-      {/* גריד כרטיסי מוצר */}
-      <div style={{
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(280px, 1fr))',
-        gap: '0.75rem'
-      }}>
-        {sortedAndFilteredProducts.slice(0, displayLimit).map((product) => {
-          const inBasketQty = qtyMap[product.id] || 0;
-          const cat = getCategoryInfo(product.category);
-          const minP = getMinPrice(product);
+          // מציאת הרשת הזולה ביותר למוצר זה
+          let cheapestStoreKey = 'rami_levy';
+          let cheapestPrice = Infinity;
+          if (product.prices) {
+            for (const [sk, pr] of Object.entries(product.prices)) {
+              if (typeof pr === 'number' && pr < cheapestPrice) {
+                cheapestPrice = pr;
+                cheapestStoreKey = sk;
+              }
+            }
+          }
+          const cheapestStore = STORES_METADATA[cheapestStoreKey];
 
           return (
             <div
               key={product.id}
-              className="card"
               style={{
-                padding: '0.85rem 1rem',
+                background: qty > 0 ? '#f0fdf4' : '#ffffff',
+                borderRadius: '14px',
+                border: qty > 0 ? '2px solid #22c55e' : '1px solid #e2e8f0',
+                padding: '0.85rem',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                border: inBasketQty > 0 ? '1.5px solid #16a34a' : '1px solid #e2e8f0',
-                background: inBasketQty > 0 ? '#f0fdf4' : '#ffffff',
-                borderRadius: '14px',
-                transition: 'box-shadow 0.15s ease, border-color 0.15s ease'
+                transition: 'all 0.15s ease',
+                boxShadow: qty > 0 ? '0 4px 12px rgba(34, 197, 94, 0.12)' : '0 1px 3px rgba(0,0,0,0.05)'
               }}
             >
               <div>
-                {/* קטגוריה ותגיות */}
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBlockEnd: '0.35rem' }}>
-                  <span style={{
-                    fontSize: '0.75rem',
-                    color: '#64748b',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '0.25rem'
-                  }}>
-                    <span>{cat.icon}</span>
-                    <span>{cat.name}</span>
+                {/* תגיות: מחלקה ויצרן */}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBlockEnd: '0.4rem', fontSize: '0.7rem' }}>
+                  <span style={{ color: '#64748b', display: 'flex', alignItems: 'center', gap: '0.2rem' }}>
+                    <span>{catInfo.icon}</span>
+                    <span>{catInfo.name}</span>
                   </span>
-
-                  {product.isRegulated && (
-                    <span style={{
-                      background: '#fef3c7',
-                      color: '#92400e',
-                      fontSize: '0.65rem',
-                      fontWeight: 700,
-                      padding: '0.1rem 0.4rem',
-                      borderRadius: '4px'
-                    }}>
-                      פיקוח
-                    </span>
-                  )}
+                  <span style={{ fontWeight: 700, color: '#0369a1', background: '#e0f2fe', padding: '0.15rem 0.4rem', borderRadius: '6px' }}>
+                    {product.manufacturer || 'יצרן ישראלי'}
+                  </span>
                 </div>
 
-                {/* שם המוצר */}
-                <h3 style={{
-                  fontSize: '0.95rem',
-                  fontWeight: 700,
-                  color: '#0f172a',
-                  lineHeight: 1.35,
-                  marginBlockEnd: '0.35rem'
-                }}>
+                {/* שם מוצר */}
+                <h3 style={{ fontSize: '0.95rem', fontWeight: 800, color: '#0f172a', margin: '0 0 0.35rem 0', lineHeight: 1.35 }}>
                   {product.name}
                 </h3>
 
-                {/* יחידה ומחיר */}
-                <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.4rem', marginBlockEnd: '0.75rem' }}>
-                  <span style={{ fontSize: '1.05rem', fontWeight: 800, color: '#16a34a' }}>
-                    ₪{minP.toFixed(2)}
-                  </span>
-                  <span style={{ fontSize: '0.75rem', color: '#64748b' }}>
-                    / {product.unit} (המחיר הזול ביותר)
-                  </span>
+                {/* ברקוד ויחידת מידה */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.72rem', color: '#94a3b8', marginBlockEnd: '0.6rem' }}>
+                  <span>{product.unit}</span>
+                  <span>•</span>
+                  <span style={{ fontFamily: 'monospace' }}>{product.barcode}</span>
+                </div>
+
+                {/* תצוגת טווח מחירים והרשת הזולה ביותר */}
+                <div
+                  style={{
+                    background: '#f8fafc',
+                    borderRadius: '8px',
+                    padding: '0.4rem 0.6rem',
+                    marginBlockEnd: '0.6rem',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center'
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: '0.7rem', color: '#64748b' }}>החל מ:</div>
+                    <div style={{ fontSize: '1.15rem', fontWeight: 900, color: '#16a34a' }}>
+                      ₪{minPrice.toFixed(2)}
+                    </div>
+                  </div>
+                  {cheapestStore && (
+                    <div style={{ textAlign: 'left', fontSize: '0.7rem' }}>
+                      <div style={{ color: '#64748b' }}>הכי זול ב:</div>
+                      <span
+                        style={{
+                          fontWeight: 700,
+                          color: cheapestStore.color,
+                          background: '#ffffff',
+                          padding: '0.15rem 0.4rem',
+                          borderRadius: '6px',
+                          border: '1px solid #e2e8f0',
+                          display: 'inline-block'
+                        }}
+                      >
+                        {cheapestStore.shortName}
+                      </span>
+                    </div>
+                  )}
+                </div>
+
+                {/* מחירים ב-7 הרשתות */}
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(4, 1fr)',
+                    gap: '0.25rem',
+                    fontSize: '0.68rem',
+                    marginBlockEnd: '0.75rem',
+                    background: '#ffffff',
+                    border: '1px solid #f1f5f9',
+                    borderRadius: '6px',
+                    padding: '0.3rem'
+                  }}
+                >
+                  {storeKeys.map((sk) => {
+                    const st = STORES_METADATA[sk];
+                    const price = product.prices ? product.prices[sk] : null;
+                    const isCheapest = price === minPrice;
+                    return (
+                      <div
+                        key={sk}
+                        style={{
+                          textAlign: 'center',
+                          padding: '0.2rem',
+                          borderRadius: '4px',
+                          background: isCheapest ? '#dcfce7' : '#f8fafc',
+                          color: isCheapest ? '#15803d' : '#475569',
+                          fontWeight: isCheapest ? 800 : 500
+                        }}
+                      >
+                        <div style={{ color: '#94a3b8', fontSize: '0.62rem' }}>{st.shortName}</div>
+                        <div>₪{price ? price.toFixed(2) : '-'}</div>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
-              {/* כפתור הוספה / בורר כמויות */}
-              <div style={{ borderBlockStart: '1px solid #f1f5f9', paddingBlockStart: '0.6rem' }}>
-                {inBasketQty > 0 ? (
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                    <span style={{ fontSize: '0.8rem', fontWeight: 700, color: '#16a34a', display: 'flex', alignItems: 'center', gap: '0.25rem' }}>
-                      <Check size={14} />
-                      <span>בסל הקניות:</span>
-                    </span>
-
-                    <div style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      background: '#ffffff',
-                      border: '1.5px solid #16a34a',
-                      borderRadius: '8px',
-                      padding: '2px'
-                    }}>
-                      <button
-                        onClick={() => handleUpdateQty(product, -1)}
-                        style={{
-                          inlineSize: '28px',
-                          blockSize: '28px',
-                          border: 'none',
-                          background: 'none',
-                          color: '#16a34a',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          borderRadius: '6px'
-                        }}
-                      >
-                        <Minus size={14} />
-                      </button>
-                      <span style={{
-                        inlineSize: '28px',
-                        textAlign: 'center',
-                        fontWeight: 800,
-                        fontSize: '0.95rem',
-                        color: '#0f172a'
-                      }}>
-                        {inBasketQty}
-                      </span>
-                      <button
-                        onClick={() => handleUpdateQty(product, 1)}
-                        style={{
-                          inlineSize: '28px',
-                          blockSize: '28px',
-                          border: 'none',
-                          background: 'none',
-                          color: '#16a34a',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          borderRadius: '6px'
-                        }}
-                      >
-                        <Plus size={14} />
-                      </button>
-                    </div>
-                  </div>
-                ) : (
+              {/* כפתורי הוספה / שינוי כמות */}
+              <div>
+                {qty === 0 ? (
                   <button
-                    onClick={() => handleAddOne(product)}
-                    className="btn btn-secondary"
+                    onClick={() => handleQuickAdd(product)}
+                    className="btn btn-primary"
                     style={{
                       width: '100%',
                       padding: '0.45rem',
                       fontSize: '0.85rem',
-                      fontWeight: 700,
-                      borderRadius: '8px',
+                      borderRadius: '10px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      gap: '0.35rem',
-                      color: '#2563eb',
-                      borderColor: '#bfdbfe',
-                      background: '#f8fafc'
+                      gap: '0.35rem'
                     }}
                   >
-                    <Plus size={14} />
+                    <Plus size={16} />
                     <span>הוסף לסל</span>
                   </button>
+                ) : (
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      background: '#22c55e',
+                      borderRadius: '10px',
+                      padding: '0.25rem 0.5rem',
+                      color: '#ffffff'
+                    }}
+                  >
+                    <button
+                      onClick={() => handleUpdateQty(product, -1)}
+                      style={{
+                        background: 'rgba(255,255,255,0.25)',
+                        border: 'none',
+                        color: '#ffffff',
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '6px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <Minus size={16} />
+                    </button>
+
+                    <div style={{ fontWeight: 800, fontSize: '0.9rem' }}>
+                      {qty} בסל
+                    </div>
+
+                    <button
+                      onClick={() => handleUpdateQty(product, 1)}
+                      style={{
+                        background: 'rgba(255,255,255,0.25)',
+                        border: 'none',
+                        color: '#ffffff',
+                        width: '28px',
+                        height: '28px',
+                        borderRadius: '6px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <Plus size={16} />
+                    </button>
+                  </div>
                 )}
               </div>
             </div>
@@ -471,106 +522,21 @@ export default function ProductCatalogBrowser({
         })}
       </div>
 
-      {/* כפתור טעינת מוצרים נוספים */}
-      {sortedAndFilteredProducts.length > displayLimit && (
-        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem', marginBlock: '1.25rem' }}>
+      {/* כפתור טעינת עוד 50 מוצרים */}
+      {visibleProducts.length < sortedAndFilteredProducts.length && (
+        <div style={{ textAlign: 'center', marginBlockStart: '1rem', marginBlockEnd: '1.5rem' }}>
           <button
-            onClick={() => setDisplayLimit((prev) => prev + 48)}
-            className="btn btn-primary"
+            onClick={() => setDisplayLimit((prev) => prev + 50)}
+            className="btn btn-secondary"
             style={{
-              padding: '0.65rem 1.5rem',
+              padding: '0.75rem 2rem',
               fontSize: '0.95rem',
-              fontWeight: 700,
+              fontWeight: 800,
               borderRadius: '12px'
             }}
           >
-            הצג עוד 48 מוצרים (מוצגים {Math.min(displayLimit, sortedAndFilteredProducts.length)} מתוך {sortedAndFilteredProducts.length}) ⬇️
+            טען 50 מוצרים נוספים (מוצגים {visibleProducts.length} מתוך {sortedAndFilteredProducts.length})
           </button>
-          <button
-            onClick={() => setDisplayLimit(sortedAndFilteredProducts.length)}
-            style={{ background: 'none', border: 'none', color: '#64748b', fontSize: '0.85rem', cursor: 'pointer', textDecoration: 'underline' }}
-          >
-            הצג את כל {sortedAndFilteredProducts.length} המוצרים
-          </button>
-        </div>
-      )}
-
-      {/* סרגל סל צף בתחתית הדף במובייל ובמחשב */}
-      {totalBasketItemsCount > 0 && (
-        <div style={{
-          position: 'fixed',
-          insetInline: 0,
-          insetBlockEnd: 0,
-          background: 'rgba(15, 23, 42, 0.95)',
-          backdropFilter: 'blur(12px)',
-          color: '#ffffff',
-          padding: '0.75rem 1rem',
-          zIndex: 60,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'space-between',
-          borderBlockStart: '1px solid rgba(255,255,255,0.1)',
-          boxShadow: '0 -4px 20px rgba(0,0,0,0.25)'
-        }}>
-          <div style={{ maxWidth: '768px', margin: '0 auto', width: '100%', display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
-              <div style={{
-                background: '#2563eb',
-                width: '36px',
-                height: '36px',
-                borderRadius: '50%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontWeight: 800,
-                fontSize: '0.9rem'
-              }}>
-                {totalBasketItemsCount}
-              </div>
-              <div>
-                <div style={{ fontSize: '0.9rem', fontWeight: 700 }}>
-                  {totalBasketItemsCount} פריטים נבחרו בסל
-                </div>
-                <div style={{ fontSize: '0.75rem', color: '#94a3b8' }}>
-                  מוכנים לבדיקת סלים וחיסכון
-                </div>
-              </div>
-            </div>
-
-            <div style={{ display: 'flex', gap: '0.5rem' }}>
-              <button
-                onClick={onSwitchToBasket}
-                className="btn btn-secondary"
-                style={{
-                  fontSize: '0.85rem',
-                  padding: '0.45rem 0.9rem',
-                  borderRadius: '10px',
-                  background: 'rgba(255,255,255,0.15)',
-                  color: '#ffffff',
-                  border: 'none'
-                }}
-              >
-                <span>הסל שלי</span>
-              </button>
-
-              <button
-                onClick={onSwitchToComparison}
-                className="btn btn-primary"
-                style={{
-                  fontSize: '0.85rem',
-                  padding: '0.45rem 1rem',
-                  borderRadius: '10px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '0.35rem',
-                  fontWeight: 700
-                }}
-              >
-                <span>השווה מחירים</span>
-                <ArrowLeft size={15} />
-              </button>
-            </div>
-          </div>
         </div>
       )}
     </div>

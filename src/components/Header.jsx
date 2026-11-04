@@ -44,7 +44,7 @@ export default function Header() {
               <h1 className="brand-title">SmartBasket IL</h1>
               <span className="year-tag">2026</span>
             </div>
-            <p className="brand-subtitle">משווה הסלים והסטוק החכם בישראל</p>
+            <p className="brand-subtitle">משווה מחירי הסופרמרקטים החכם בישראל (7 רשתות)</p>
           </div>
         </div>
 

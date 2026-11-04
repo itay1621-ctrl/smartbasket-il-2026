@@ -1,9 +1,23 @@
-import { STORES_METADATA, CATALOG_PRODUCTS } from '../data/mockStoresData.js';
+// src/utils/basketOptimizer.js
+import { STORES_METADATA } from '../data/mockStoresData.js';
+
+// Cache for the active loaded supermarket catalog
+let activeCatalog = [];
+
+export function setActiveCatalog(catalog) {
+  if (Array.isArray(catalog) && catalog.length > 0) {
+    activeCatalog = catalog;
+  }
+}
+
+export function getActiveCatalog() {
+  return activeCatalog;
+}
 
 /**
  * מנרמל מחרוזת עברית להסרת סימני פיסוק, רווחים כפולים ואותיות יחס
  */
-function normalizeHebrew(str) {
+export function normalizeHebrew(str) {
   if (!str) return '';
   return str
     .toLowerCase()
@@ -15,13 +29,12 @@ function normalizeHebrew(str) {
 /**
  * חילוץ כמות ושם מוצר משורת טקסט חופשית בעברית
  * לדוגמה: "2 חלב תנובה 3%" -> { quantity: 2, rawName: "חלב תנובה 3%" }
- * או "מארז 5 קופסאות" -> { quantity: 1, rawName: "מארז 5 קופסאות" }
  */
 export function parseHebrewLine(line) {
   const trimmed = line.trim();
   if (!trimmed) return null;
 
-  // בדיקת מספר בתחילת השורה (כגון: "2 חלב", "3.5 עגבניות", "4x קפה")
+  // בדיקת מספר בתחילת השורה
   const leadingNumberMatch = trimmed.match(/^(\d+(?:\.\d+)?)\s*(?:x|X|\*|\s)?\s*(.+)$/);
   
   if (leadingNumberMatch) {
@@ -45,83 +58,82 @@ export function parseHebrewLine(line) {
 }
 
 /**
- * התאמת פריט טקסט לקטלוג המוצרים של 2026
+ * התאמת פריט טקסט לקטלוג הסופרמרקטים
  */
-export function matchProductToCatalog(rawName) {
+export function matchProductToCatalog(rawName, catalog = activeCatalog) {
   const normInput = normalizeHebrew(rawName);
+  const products = catalog && catalog.length > 0 ? catalog : activeCatalog;
 
-  // 1. חיפוש מדויק או לפי כינויים (Aliases)
-  for (const product of CATALOG_PRODUCTS) {
-    if (normalizeHebrew(product.name) === normInput) {
-      return product;
+  if (products.length > 0) {
+    // 1. התאמת ברקוד אם הקלט ספרתי בלבד
+    if (/^\d{7,14}$/.test(rawName.trim())) {
+      const byBarcode = products.find(p => p.barcode === rawName.trim());
+      if (byBarcode) return byBarcode;
     }
-    for (const alias of product.aliases) {
-      const normAlias = normalizeHebrew(alias);
-      if (normInput.includes(normAlias) || normAlias.includes(normInput)) {
+
+    // 2. חיפוש מדויק או לפי כינויים (Aliases)
+    for (const product of products) {
+      if (normalizeHebrew(product.name) === normInput) {
         return product;
       }
-    }
-  }
-
-  // 2. חיפוש התאמת מילים (Token matching)
-  const inputTokens = normInput.split(' ').filter((t) => t.length > 1);
-  let bestProduct = null;
-  let bestScore = 0;
-
-  for (const product of CATALOG_PRODUCTS) {
-    const targetTokens = [
-      ...normalizeHebrew(product.name).split(' '),
-      ...product.aliases.flatMap((a) => normalizeHebrew(a).split(' '))
-    ];
-
-    let matchCount = 0;
-    for (const token of inputTokens) {
-      if (targetTokens.some((t) => t === token || t.includes(token) || token.includes(t))) {
-        matchCount++;
+      if (product.aliases && Array.isArray(product.aliases)) {
+        for (const alias of product.aliases) {
+          const normAlias = normalizeHebrew(alias);
+          if (normInput.includes(normAlias) || normAlias.includes(normInput)) {
+            return product;
+          }
+        }
       }
     }
 
-    if (matchCount > bestScore) {
-      bestScore = matchCount;
-      bestProduct = product;
+    // 3. חיפוש התאמת מילים (Token matching)
+    const inputTokens = normInput.split(' ').filter((t) => t.length > 1);
+    let bestProduct = null;
+    let bestScore = 0;
+
+    for (const product of products) {
+      const targetTokens = [
+        ...normalizeHebrew(product.name).split(' '),
+        ...(product.manufacturer ? normalizeHebrew(product.manufacturer).split(' ') : []),
+        ...((product.aliases || []).flatMap((a) => normalizeHebrew(a).split(' ')))
+      ];
+
+      let matchCount = 0;
+      for (const token of inputTokens) {
+        if (targetTokens.some((t) => t === token || t.includes(token) || token.includes(t))) {
+          matchCount++;
+        }
+      }
+
+      if (matchCount > bestScore) {
+        bestScore = matchCount;
+        bestProduct = product;
+      }
+    }
+
+    if (bestScore > 0 && bestProduct) {
+      return bestProduct;
     }
   }
 
-  if (bestScore > 0 && bestProduct) {
-    return bestProduct;
-  }
-
-  // 3. יצירת מוצר דינמי במידה ולא נמצא בקטלוג המדויק
-  const fallbackBasePrice = 24.9;
+  // 4. יצירת מוצר דינמי במידה ולא נמצא בקטלוג
+  const fallbackBasePrice = 14.90;
   return {
     id: 'custom_' + Math.random().toString(36).substring(2, 9),
+    barcode: '729000' + Math.floor(1000000 + Math.random() * 9000000),
     name: rawName,
-    category: 'kitchen',
+    manufacturer: 'כללי',
+    category: 'canned_cooking',
     unit: 'יח׳',
     aliases: [rawName],
     prices: {
-      rami_levy: Number((fallbackBasePrice * 1.05).toFixed(2)),
-      shufersal: Number((fallbackBasePrice * 1.20).toFixed(2)),
-      yohananof: Number((fallbackBasePrice * 1.02).toFixed(2)),
-      carrefour: Number((fallbackBasePrice * 1.10).toFixed(2)),
-      osher_ad: Number((fallbackBasePrice * 0.95).toFixed(2)),
-      victory: Number((fallbackBasePrice * 1.15).toFixed(2)),
-      max_stock: Number((fallbackBasePrice * 0.88).toFixed(2)),
-      hastock: Number((fallbackBasePrice * 0.92).toFixed(2)),
-      max_stock_online: Number((fallbackBasePrice * 0.95).toFixed(2)),
-      stock_online: Number((fallbackBasePrice * 0.98).toFixed(2))
-    },
-    inStock: {
-      rami_levy: true,
-      shufersal: true,
-      yohananof: true,
-      carrefour: true,
-      osher_ad: true,
-      victory: true,
-      max_stock: true,
-      hastock: true,
-      max_stock_online: true,
-      stock_online: true
+      rami_levy: Number((fallbackBasePrice * 0.98).toFixed(2)),
+      osher_ad: Number((fallbackBasePrice * 0.96).toFixed(2)),
+      yochananof: Number((fallbackBasePrice * 0.99).toFixed(2)),
+      shufersal_deal: Number((fallbackBasePrice * 1.08).toFixed(2)),
+      carrefour: Number((fallbackBasePrice * 1.04).toFixed(2)),
+      victory: Number((fallbackBasePrice * 1.05).toFixed(2)),
+      hazi_hinam: Number((fallbackBasePrice * 1.03).toFixed(2))
     },
     isCustom: true
   };
@@ -130,7 +142,7 @@ export function matchProductToCatalog(rawName) {
 /**
  * עיבוד רשימת קניות מלאה
  */
-export function parseShoppingList(rawText) {
+export function parseShoppingList(rawText, catalog = activeCatalog) {
   if (!rawText) return [];
   const lines = rawText.split('\n');
   const items = [];
@@ -139,17 +151,18 @@ export function parseShoppingList(rawText) {
     const parsed = parseHebrewLine(lines[i]);
     if (!parsed || !parsed.rawName) continue;
 
-    const matchedProduct = matchProductToCatalog(parsed.rawName);
+    const matchedProduct = matchProductToCatalog(parsed.rawName, catalog);
     items.push({
       id: matchedProduct.id + '_' + i,
       productId: matchedProduct.id,
+      barcode: matchedProduct.barcode,
       name: matchedProduct.name,
+      manufacturer: matchedProduct.manufacturer,
       originalText: parsed.rawName,
       quantity: parsed.quantity,
       unit: matchedProduct.unit,
       category: matchedProduct.category,
-      prices: matchedProduct.prices,
-      inStock: matchedProduct.inStock
+      prices: matchedProduct.prices
     });
   }
 
@@ -157,91 +170,57 @@ export function parseShoppingList(rawText) {
 }
 
 /**
- * חישוב דמי משלוח לרשת מסוימת לפי סכום ביניים, כמויות ותעריפי 2026
+ * חישוב דמי משלוח לסופרמרקט לפי סכום ביניים ותעריפי 2026
+ * רמי לוי: 35.90 ₪
+ * שופרסל דיל: 35.00 ₪
+ * יוחננוף: 32.00 ₪
+ * ויקטורי: 35.00 ₪
+ * קרפור: 34.00 ₪ (חינם מעל 450 ₪)
+ * חצי חינם: 35.00 ₪
+ * אושר עד: 0 ₪ (סניף פיזי בלבד - אין משלוחים)
+ * כאשר משלוח כבוי: 0 ₪ לכל הרשתות (מחירי מדף / איסוף עצמי בסניף)
  */
-export function calculateStoreShipping(storeKey, subtotal, isShippingEnabled, itemsCount = 1, totalQty = 1) {
+export function calculateStoreShipping(storeKey, subtotal, isShippingEnabled) {
   if (!isShippingEnabled || subtotal <= 0) return 0;
-  const store = STORES_METADATA[storeKey];
-  if (!store) return 0;
 
-  // 1. מקס סטוק / אושר עד סניפים פיזיים - 0 ₪ (איסוף עצמי בסניף)
-  if (storeKey === 'max_stock' || storeKey === 'osher_ad') {
-    return 0;
+  switch (storeKey) {
+    case 'osher_ad':
+      return 0; // סניף פיזי בלבד
+    case 'rami_levy':
+      return 35.90;
+    case 'shufersal_deal':
+      return 35.00;
+    case 'yochananof':
+      return 32.00;
+    case 'victory':
+      return 35.00;
+    case 'hazi_hinam':
+      return 35.00;
+    case 'carrefour':
+      return subtotal >= 450 ? 0 : 34.00;
+    default:
+      return 35.00;
   }
-
-  // 2. מקס סטוק אונליין: 99 ₪ לפריט ראשון + 70 ₪ לכל פריט נוסף
-  if (storeKey === 'max_stock_online') {
-    const qty = totalQty > 0 ? totalQty : (itemsCount > 0 ? itemsCount : 1);
-    return itemsCount > 0 ? 99 + Math.max(0, qty - 1) * 70 : 0;
-  }
-
-  // 3. רמי לוי אונליין: 35.90 ₪ קבוע
-  if (storeKey === 'rami_levy') {
-    return 35.9;
-  }
-
-  // 4. שופרסל אונליין: 35.00 ₪ קבוע
-  if (storeKey === 'shufersal') {
-    return 35.0;
-  }
-
-  // 5. יוחננוף: 32.00 ₪
-  if (storeKey === 'yohananof') {
-    return 32.0;
-  }
-
-  // 6. ויקטורי: 35.00 ₪
-  if (storeKey === 'victory') {
-    return 35.0;
-  }
-
-  // 7. סטוק אונליין: 70 ₪, או חינם מעל 299 ₪
-  if (storeKey === 'stock_online') {
-    return subtotal >= 299 ? 0 : 70.0;
-  }
-
-  // 8. הסטוק: 35 ₪, או חינם מעל 350 ₪
-  if (storeKey === 'hastock') {
-    return subtotal >= 350 ? 0 : 35.0;
-  }
-
-  // 9. קרפור: 34 ₪, חינם מעל 450 ₪
-  if (storeKey === 'carrefour') {
-    return subtotal >= 450 ? 0 : 34.0;
-  }
-
-  // בדיקת רף משלוח חינם כללי
-  if (store.freeDeliveryThreshold > 0 && subtotal >= store.freeDeliveryThreshold) {
-    return 0;
-  }
-
-  return store.baseDeliveryFee || 0;
 }
 
 /**
- * דירוג חנות יחידה (One-Stop Shop) עם תמיכה בסינון סקטור רשתות (הכל, מזון, סטוק)
+ * דירוג 7 רשתות הסופרמרקט (One-Stop Shop)
  */
-export function calculateOneStopRankings(parsedItems, isShippingEnabled, sectorFilter = 'all') {
+export function calculateOneStopRankings(parsedItems, isShippingEnabled) {
   if (!parsedItems || parsedItems.length === 0) return [];
 
-  // סינון רשתות לפי הסקטור הנבחר
-  const eligibleStoreKeys = Object.keys(STORES_METADATA).filter((key) => {
-    if (sectorFilter === 'all') return true;
-    const store = STORES_METADATA[key];
-    return store.sector === sectorFilter;
-  });
+  const storeKeys = Object.keys(STORES_METADATA);
 
-  const rankings = eligibleStoreKeys.map((storeKey) => {
+  const rankings = storeKeys.map((storeKey) => {
     const store = STORES_METADATA[storeKey];
     let subtotal = 0;
     let availableCount = 0;
     let totalQty = 0;
-    const missingItems = [];
     const itemDetails = [];
 
     for (const item of parsedItems) {
       const price = item.prices ? item.prices[storeKey] : null;
-      const isAvailable = item.inStock && item.inStock[storeKey] && price !== null && price !== undefined;
+      const isAvailable = typeof price === 'number' && price > 0;
 
       if (isAvailable) {
         const lineTotal = price * item.quantity;
@@ -257,7 +236,6 @@ export function calculateOneStopRankings(parsedItems, isShippingEnabled, sectorF
           isAvailable: true
         });
       } else {
-        missingItems.push(item);
         itemDetails.push({
           itemId: item.id,
           name: item.name,
@@ -269,7 +247,7 @@ export function calculateOneStopRankings(parsedItems, isShippingEnabled, sectorF
       }
     }
 
-    const shipping = calculateStoreShipping(storeKey, subtotal, isShippingEnabled, availableCount, totalQty);
+    const shipping = calculateStoreShipping(storeKey, subtotal, isShippingEnabled);
     const grandTotal = subtotal + shipping;
     const coveragePercent = Math.round((availableCount / parsedItems.length) * 100);
 
@@ -283,12 +261,11 @@ export function calculateOneStopRankings(parsedItems, isShippingEnabled, sectorF
       totalQty,
       totalItemsCount: parsedItems.length,
       coveragePercent,
-      missingItems,
       itemDetails
     };
   });
 
-  // מיון: קודם כל לפי כיסוי מלא (כיסוי גבוה יותר), ושנית לפי מחיר כולל נמוך יותר
+  // מיון: קודם כיסוי סל מלא, ולאחר מכן מחיר כולל נמוך יותר
   rankings.sort((a, b) => {
     if (a.coveragePercent !== b.coveragePercent) {
       return b.coveragePercent - a.coveragePercent;
@@ -300,112 +277,124 @@ export function calculateOneStopRankings(parsedItems, isShippingEnabled, sectorF
 }
 
 /**
- * חישוב פיצול קנייה אופטימלי (Optimal Split Basket) עם תמיכה בסינון סקטור רשתות
+ * חישוב פיצול קנייה אופטימלי (Optimal 2-Store Split Basket)
+ * מחפש את שילוב 2 הרשתות שנותן את הסל הזול ביותר, כולל משלוח כפול במידה ומשלוח דלוק.
  */
-export function calculateOptimalSplit(parsedItems, isShippingEnabled, sectorFilter = 'all') {
+export function calculateOptimalSplit(parsedItems, isShippingEnabled) {
   if (!parsedItems || parsedItems.length === 0) {
     return null;
   }
 
-  const eligibleStoreKeys = Object.keys(STORES_METADATA).filter((key) => {
-    if (sectorFilter === 'all') return true;
-    const store = STORES_METADATA[key];
-    return store.sector === sectorFilter;
-  });
+  const storeKeys = Object.keys(STORES_METADATA);
+  const oneStopRankings = calculateOneStopRankings(parsedItems, isShippingEnabled);
+  const bestOneStop = oneStopRankings[0];
+  const mostExpensiveOneStop = oneStopRankings[oneStopRankings.length - 1];
 
-  if (eligibleStoreKeys.length === 0) return null;
+  let bestSplit = null;
+  let minGrandTotal = Infinity;
 
-  // 1. שלב ראשון: מציאת החנות הזולה ביותר לכל פריט מתוך הרשתות המאושרות
-  const itemAssignments = parsedItems.map((item) => {
-    let lowestPrice = Infinity;
-    let bestStoreKey = null;
+  // בדיקת כל זוגות הרשתות (Combinations of 2 stores)
+  for (let i = 0; i < storeKeys.length; i++) {
+    for (let j = i + 1; j < storeKeys.length; j++) {
+      const s1 = storeKeys[i];
+      const s2 = storeKeys[j];
 
-    eligibleStoreKeys.forEach((storeKey) => {
-      const price = item.prices ? item.prices[storeKey] : null;
-      const inStock = item.inStock ? item.inStock[storeKey] : false;
-      if (inStock && price !== null && price !== undefined && price < lowestPrice) {
-        lowestPrice = price;
-        bestStoreKey = storeKey;
+      let subtotal1 = 0;
+      let subtotal2 = 0;
+      const items1 = [];
+      const items2 = [];
+      const assignments = [];
+
+      for (const item of parsedItems) {
+        const p1 = item.prices ? item.prices[s1] : Infinity;
+        const p2 = item.prices ? item.prices[s2] : Infinity;
+
+        if (p1 <= p2) {
+          const lineTotal = p1 * item.quantity;
+          subtotal1 += lineTotal;
+          items1.push({ ...item, assignedPrice: p1, assignedLineTotal: lineTotal });
+          assignments.push({ item, bestStoreKey: s1, unitPrice: p1, lineTotal });
+        } else {
+          const lineTotal = p2 * item.quantity;
+          subtotal2 += lineTotal;
+          items2.push({ ...item, assignedPrice: p2, assignedLineTotal: lineTotal });
+          assignments.push({ item, bestStoreKey: s2, unitPrice: p2, lineTotal });
+        }
       }
-    });
 
-    return {
-      item,
-      bestStoreKey: bestStoreKey || eligibleStoreKeys[0],
-      unitPrice: lowestPrice !== Infinity ? lowestPrice : 0,
-      lineTotal: (lowestPrice !== Infinity ? lowestPrice : 0) * item.quantity
-    };
-  });
+      const shipping1 = calculateStoreShipping(s1, subtotal1, isShippingEnabled);
+      const shipping2 = calculateStoreShipping(s2, subtotal2, isShippingEnabled);
+      const totalItemsCost = subtotal1 + subtotal2;
+      const totalShippingCost = (items1.length > 0 ? shipping1 : 0) + (items2.length > 0 ? shipping2 : 0);
+      const grandTotal = totalItemsCost + totalShippingCost;
 
-  // 2. קיבוץ פריטים לפי רשתות
-  const storeBaskets = {};
-  itemAssignments.forEach((assignment) => {
-    const key = assignment.bestStoreKey;
-    if (!storeBaskets[key]) {
-      storeBaskets[key] = {
-        storeKey: key,
-        store: STORES_METADATA[key],
-        items: [],
-        subtotal: 0
-      };
+      if (grandTotal < minGrandTotal) {
+        minGrandTotal = grandTotal;
+
+        const storeBreakdowns = [];
+        if (items1.length > 0) {
+          storeBreakdowns.push({
+            storeKey: s1,
+            store: STORES_METADATA[s1],
+            items: items1,
+            subtotal: subtotal1,
+            shipping: shipping1,
+            grandTotal: subtotal1 + shipping1,
+            totalQty: items1.reduce((sum, it) => sum + (it.quantity || 1), 0)
+          });
+        }
+        if (items2.length > 0) {
+          storeBreakdowns.push({
+            storeKey: s2,
+            store: STORES_METADATA[s2],
+            items: items2,
+            subtotal: subtotal2,
+            shipping: shipping2,
+            grandTotal: subtotal2 + shipping2,
+            totalQty: items2.reduce((sum, it) => sum + (it.quantity || 1), 0)
+          });
+        }
+
+        bestSplit = {
+          pair: [s1, s2],
+          itemAssignments: assignments,
+          storeBreakdowns: storeBreakdowns.sort((a, b) => b.subtotal - a.subtotal),
+          storesInvolvedCount: storeBreakdowns.length,
+          totalItemsCost,
+          totalShippingCost,
+          grandTotal
+        };
+      }
     }
-    storeBaskets[key].items.push({
-      ...assignment.item,
-      assignedPrice: assignment.unitPrice,
-      assignedLineTotal: assignment.lineTotal
-    });
-    storeBaskets[key].subtotal += assignment.lineTotal;
-  });
+  }
 
-  // 3. חישוב דמי משלוח וסך הכל לכל רשת בסל המפוצל
-  let totalItemsCost = 0;
-  let totalShippingCost = 0;
-  const storeBreakdowns = [];
+  if (!bestSplit) {
+    return null;
+  }
 
-  Object.values(storeBaskets).forEach((sb) => {
-    const totalQty = sb.items.reduce((sum, it) => sum + (it.quantity || 1), 0);
-    const shipping = calculateStoreShipping(
-      sb.storeKey,
-      sb.subtotal,
-      isShippingEnabled,
-      sb.items.length,
-      totalQty
-    );
-    const total = sb.subtotal + shipping;
+  // חיסכון מול הרשת הבודדת הטובה ביותר (One-Stop)
+  const savingsVsSingle = bestOneStop ? Math.max(0, bestOneStop.grandTotal - bestSplit.grandTotal) : 0;
+  const savingsVsSinglePercent = bestOneStop && bestOneStop.grandTotal > 0
+    ? Math.round((savingsVsSingle / bestOneStop.grandTotal) * 100)
+    : 0;
 
-    totalItemsCost += sb.subtotal;
-    totalShippingCost += shipping;
-
-    storeBreakdowns.push({
-      ...sb,
-      totalQty,
-      shipping,
-      grandTotal: total
-    });
-  });
-
-  const optimalGrandTotal = totalItemsCost + totalShippingCost;
-
-  // 4. השוואה מול הרשת הטובה ביותר בקנייה מרוכזת (One-Stop Shop)
-  const oneStopRankings = calculateOneStopRankings(parsedItems, isShippingEnabled, sectorFilter);
-  const bestOneStop = oneStopRankings[0] || { grandTotal: optimalGrandTotal };
-
-  const savingsNis = Math.max(0, bestOneStop.grandTotal - optimalGrandTotal);
-  const savingsPercent =
-    bestOneStop.grandTotal > 0
-      ? Math.min(99, Math.round((savingsNis / bestOneStop.grandTotal) * 100))
-      : 0;
+  // חיסכון מול הרשת היקרה ביותר
+  const savingsVsHighest = mostExpensiveOneStop ? Math.max(0, mostExpensiveOneStop.grandTotal - bestSplit.grandTotal) : 0;
+  const savingsVsHighestPercent = mostExpensiveOneStop && mostExpensiveOneStop.grandTotal > 0
+    ? Math.round((savingsVsHighest / mostExpensiveOneStop.grandTotal) * 100)
+    : 0;
 
   return {
-    itemAssignments,
-    storeBreakdowns: storeBreakdowns.sort((a, b) => b.subtotal - a.subtotal),
-    storesInvolvedCount: storeBreakdowns.length,
-    totalItemsCost,
-    totalShippingCost,
-    grandTotal: optimalGrandTotal,
-    bestOneStopGrandTotal: bestOneStop.grandTotal,
-    bestOneStopStoreName: bestOneStop.store ? bestOneStop.store.name : '',
-    savingsNis,
-    savingsPercent
+    ...bestSplit,
+    bestOneStopStoreName: bestOneStop ? bestOneStop.store.name : '',
+    bestOneStopGrandTotal: bestOneStop ? bestOneStop.grandTotal : bestSplit.grandTotal,
+    mostExpensiveStoreName: mostExpensiveOneStop ? mostExpensiveOneStop.store.name : '',
+    mostExpensiveGrandTotal: mostExpensiveOneStop ? mostExpensiveOneStop.grandTotal : 0,
+    savingsNis: savingsVsSingle,
+    savingsPercent: savingsVsSinglePercent,
+    savingsVsSingle,
+    savingsVsSinglePercent,
+    savingsVsHighest,
+    savingsVsHighestPercent
   };
 }

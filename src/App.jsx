@@ -7,22 +7,26 @@ import OptimalSplitCard from './components/OptimalSplitCard';
 import GeoBranchSelector from './components/GeoBranchSelector';
 import OneStopRankingTable from './components/OneStopRankingTable';
 import ItemPriceBreakdownTable from './components/ItemPriceBreakdownTable';
-import { INITIAL_USER_LIST, CATALOG_PRODUCTS } from './data/mockStoresData';
+import { INITIAL_USER_LIST, STORES_METADATA } from './data/mockStoresData';
 import { DEFAULT_REGION_ID } from './data/regionsData';
 import {
   parseShoppingList,
   calculateOptimalSplit,
-  calculateOneStopRankings
+  calculateOneStopRankings,
+  setActiveCatalog
 } from './utils/basketOptimizer';
 import {
   ShoppingBag,
   BookOpen,
   BarChart3,
-  ArrowRight,
-  Sparkles
+  ArrowRight
 } from 'lucide-react';
 
 export default function App() {
+  // קטלוג הסופרמרקטים המלא (1,000+ מוצרים) נטען מ-supermarket_catalog.json
+  const [catalog, setCatalog] = useState([]);
+  const [isLoadingCatalog, setIsLoadingCatalog] = useState(true);
+
   // טעינה וסנכרון רשימת הקניות מ-LocalStorage לתמיכת Offline PWA מלאה
   const [rawText, setRawText] = useState(() => {
     try {
@@ -33,7 +37,7 @@ export default function App() {
     }
   });
 
-  // ברירת מחדל: מחיר רגיל ללא משלוח (איסוף עצמי / מחירי מדף בחנויות)
+  // ברירת מחדל: מחיר רגיל ללא משלוח (איסוף עצמי בסניף / מחירי מדף בחנויות)
   const [isShippingEnabled, setIsShippingEnabled] = useState(() => {
     try {
       return localStorage.getItem('smartbasket_shipping_enabled') === 'true';
@@ -50,11 +54,36 @@ export default function App() {
     }
   });
 
-  // סינון סקטור רשתות: כל הרשתות, רק מזון וסופרמרקטים, או רק רשתות סטוק
-  const [sectorFilter, setSectorFilter] = useState('all');
-
   // ניווט טאבים ראשי: 'basket' (הסל שלי) | 'catalog' (קטלוג ומיון) | 'comparison' (השוואת מחירים)
   const [activeTab, setActiveTab] = useState('basket');
+
+  // טעינת קטלוג הסופרמרקטים מ-public/data/supermarket_catalog.json עם עליית האפליקציה
+  useEffect(() => {
+    let isMounted = true;
+    async function loadCatalog() {
+      setIsLoadingCatalog(true);
+      try {
+        const res = await fetch('./data/supermarket_catalog.json');
+        if (res.ok) {
+          const data = await res.json();
+          if (isMounted && Array.isArray(data) && data.length > 0) {
+            setCatalog(data);
+            setActiveCatalog(data);
+          }
+        }
+      } catch (err) {
+        console.warn('Failed to fetch supermarket_catalog.json dynamically, fallback active:', err);
+      } finally {
+        if (isMounted) {
+          setIsLoadingCatalog(false);
+        }
+      }
+    }
+    loadCatalog();
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // שמירה מתמשכת ל-LocalStorage בכל עדכון
   useEffect(() => {
@@ -81,15 +110,15 @@ export default function App() {
     }
   }, [selectedRegionId]);
 
-  // עיבוד רשימת המוצרים בזמן אמת
+  // עיבוד רשימת המוצרים בזמן אמת מול הקטלוג הפעיל
   const parsedItems = useMemo(() => {
-    return parseShoppingList(rawText);
-  }, [rawText]);
+    return parseShoppingList(rawText, catalog);
+  }, [rawText, catalog]);
 
-  // חישוב פיצול קנייה אופטימלי
+  // חישוב פיצול קנייה אופטימלי (2 רשתות)
   const optimalSplit = useMemo(() => {
-    return calculateOptimalSplit(parsedItems, isShippingEnabled, sectorFilter);
-  }, [parsedItems, isShippingEnabled, sectorFilter]);
+    return calculateOptimalSplit(parsedItems, isShippingEnabled);
+  }, [parsedItems, isShippingEnabled]);
 
   // מזהי הרשתות שנבחרו בסל המפוצל האופטימלי
   const optimalStoreKeys = useMemo(() => {
@@ -97,10 +126,10 @@ export default function App() {
     return optimalSplit.storeBreakdowns.map((sb) => sb.storeKey);
   }, [optimalSplit]);
 
-  // חישוב דירוג קנייה מרוכזת (חנות יחידה)
+  // חישוב דירוג קנייה מרוכזת (חנות יחידה מתוך 7 הרשתות)
   const oneStopRankings = useMemo(() => {
-    return calculateOneStopRankings(parsedItems, isShippingEnabled, sectorFilter);
-  }, [parsedItems, isShippingEnabled, sectorFilter]);
+    return calculateOneStopRankings(parsedItems, isShippingEnabled);
+  }, [parsedItems, isShippingEnabled]);
 
   return (
     <div style={{ minHeight: '100dvh', display: 'flex', flexDirection: 'column' }}>
@@ -131,9 +160,9 @@ export default function App() {
             onClick={() => setActiveTab('catalog')}
           >
             <BookOpen size={17} />
-            <span>קטלוג ומיון</span>
+            <span>קטלוג סופרמרקטים</span>
             <span className="tab-badge-pill neutral">
-              {CATALOG_PRODUCTS.length}
+              {catalog.length > 0 ? `${catalog.length}+` : 'טוען...'}
             </span>
           </button>
 
@@ -144,7 +173,7 @@ export default function App() {
             onClick={() => setActiveTab('comparison')}
           >
             <BarChart3 size={17} />
-            <span>השוואת מחירים</span>
+            <span>השוואת מחירים (7 רשתות)</span>
             {optimalSplit && optimalSplit.savingsVsSingle > 5 && (
               <span className="tab-badge-pill savings">
                 חסוך ₪{Math.round(optimalSplit.savingsVsSingle)}
@@ -164,10 +193,11 @@ export default function App() {
             onSwitchToCatalog={() => setActiveTab('catalog')}
             onSwitchToComparison={() => setActiveTab('comparison')}
             optimalSplit={optimalSplit}
+            catalog={catalog}
           />
         )}
 
-        {/* טאב 2: קטלוג ומיון מוצרים - בחירה קלה מתוך 345 מוצרים עם מיון מלא */}
+        {/* טאב 2: קטלוג ומיון מוצרים - מעל 1,000 מוצרי סופרמרקט אמיתיים */}
         {activeTab === 'catalog' && (
           <ProductCatalogBrowser
             rawText={rawText}
@@ -175,16 +205,17 @@ export default function App() {
             parsedItems={parsedItems}
             onSwitchToBasket={() => setActiveTab('basket')}
             onSwitchToComparison={() => setActiveTab('comparison')}
+            catalog={catalog}
           />
         )}
 
-        {/* טאב 3: השוואת מחירים, פיצול אופטימלי ורשתות */}
+        {/* טאב 3: השוואת מחירים בין 7 רשתות המזון בישראל */}
         {activeTab === 'comparison' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1.25rem' }}>
             {parsedItems.length > 0 ? (
               <>
                 {/* כפתור חזרה מהיר לעריכת הסל */}
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
                   <button
                     onClick={() => setActiveTab('basket')}
                     className="btn btn-secondary"
@@ -202,7 +233,7 @@ export default function App() {
                   </button>
 
                   <span style={{ fontSize: '0.8rem', color: '#64748b', fontWeight: 600 }}>
-                    השוואת אמת בין 10 רשתות מזון וסטוק
+                    השוואת אמת בין 7 רשתות המזון בישראל
                   </span>
                 </div>
 
@@ -212,30 +243,28 @@ export default function App() {
                   setIsShippingEnabled={setIsShippingEnabled}
                 />
 
-                {/* כרטיס פיצול קנייה אופטימלי עם הדגשת מחיר רגיל ללא משלוח ואופציית משלוח */}
+                {/* כרטיס פיצול קנייה אופטימלי (2 רשתות) */}
                 <OptimalSplitCard
                   optimalSplit={optimalSplit}
                   isShippingEnabled={isShippingEnabled}
                   setIsShippingEnabled={setIsShippingEnabled}
                 />
 
-                {/* בורר אזור גיאוגרפי וכרטיסיות סניפים קרובים (סופרמרקטים + סטוק פיזי) */}
+                {/* דירוג 7 רשתות הסופרמרקט (One-Stop Shop) */}
+                <OneStopRankingTable
+                  rankings={oneStopRankings}
+                  isShippingEnabled={isShippingEnabled}
+                />
+
+                {/* השוואה מפורטת פריט-אחר-פריט לכל מוצר שנבחר */}
+                <ItemPriceBreakdownTable parsedItems={parsedItems} />
+
+                {/* בורר סניפים פיזיים ואיסוף עצמי */}
                 <GeoBranchSelector
                   selectedRegionId={selectedRegionId}
                   onSelectRegion={setSelectedRegionId}
                   optimalStoreKeys={optimalStoreKeys}
                 />
-
-                {/* טבלת דירוג חנות יחידה עם מתג סינון: מזון, סטוק או הכל */}
-                <OneStopRankingTable
-                  rankings={oneStopRankings}
-                  isShippingEnabled={isShippingEnabled}
-                  sectorFilter={sectorFilter}
-                  setSectorFilter={setSectorFilter}
-                />
-
-                {/* טבלה מתקפלת להשוואת פריט-אחר-פריט בין כל 10 הרשתות (כולל רשתות פיזיות) */}
-                <ItemPriceBreakdownTable parsedItems={parsedItems} />
               </>
             ) : (
               <div
@@ -258,7 +287,7 @@ export default function App() {
                   className="btn btn-primary"
                   style={{ borderRadius: '12px', padding: '0.6rem 1.25rem' }}
                 >
-                  מעבר לקטלוג המוצרים לבחירה 📦
+                  מעבר לקטלוג 1,000+ המוצרים לבחירה 📦
                 </button>
               </div>
             )}
@@ -276,13 +305,13 @@ export default function App() {
           }}
         >
           <div>
-            <strong>SmartBasket IL 2026</strong> • משווה הסלים והסטוק החכם בישראל
+            <strong>SmartBasket IL 2026</strong> • משווה מחירי הסופרמרקטים הרשמי בישראל
           </div>
           <div>
-            השוואת מחירים רוחבית: <strong>רשתות מזון</strong> (שופרסל, יוחננוף, רמי לוי, קרפור, אושר עד, ויקטורי) לצד <strong>רשתות סטוק וכלי בית</strong> (מקס סטוק, הסטוק, מקס אונליין, סטוק אונליין).
+            השוואת מחירים בין 7 רשתות המזון המובילות: <strong>רמי לוי שיווק השקמה, אושר עד, יוחננוף, שופרסל דיל, קרפור היפר, ויקטורי, וחצי חינם</strong>.
           </div>
           <div>
-            מחירים רגילים בחנויות מוצגים כברירת מחדל. תעריפי המשלוח לשנת 2026 ניתנים להפעלה בלחיצת כפתור.
+            מחירים רגילים בחנויות מוצגים כברירת מחדל ללא משלוח. תעריפי המשלוח לשנת 2026 ניתנים להפעלה בלחיצת כפתור.
           </div>
         </footer>
       </main>
