@@ -1,0 +1,349 @@
+// scripts/dept_deli_cheese.cjs
+// מחלקת מעדנייה וגבינות במשקל (מתומחר לפי 100 גרם / 200 גרם)
+const { calcPrices } = require('./supermarketDataGenerator.cjs');
+
+function getDeliCheese() {
+  const items = [
+    {
+      id: "deli_01",
+      barcode: "7290000081001",
+      name: "גבינה צהובה עמק תנובה 28% במשקל",
+      manufacturer: "תנובה",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 5.60,
+      aliases: ["עמק במשקל", "צהובה עמק", "גבינה צהובה מעדניה", "עמק 28%", "100 גרם עמק"]
+    },
+    {
+      id: "deli_02",
+      barcode: "7290000081002",
+      name: "גבינה צהובה גלבוע תנובה 28% במשקל",
+      manufacturer: "תנובה",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 5.40,
+      aliases: ["גלבוע במשקל", "צהובה גלבוע", "גלבוע 28%", "גבינה צהובה גלבוע מעדניה"]
+    },
+    {
+      id: "deli_03",
+      barcode: "7290000081003",
+      name: "גבינת גאודה הולנדית מובחרת במשקל",
+      manufacturer: "יבוא הולנדי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 7.90,
+      aliases: ["גאודה במשקל", "גאודה הולנדית", "גאודה צהובה", "גבינת גאודה"]
+    },
+    {
+      id: "deli_04",
+      barcode: "7290000081004",
+      name: "גבינת גאודה עיזים הולנדית במשקל",
+      manufacturer: "משק צוריאל",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 11.90,
+      aliases: ["גאודה עיזים", "גאודה עזים במשקל", "גבינת עיזים קשה", "גאודה הולנדית עיזים"]
+    },
+    {
+      id: "deli_05",
+      barcode: "7290000081005",
+      name: "גבינה בולגרית פיראוס 24% במשקל",
+      manufacturer: "פיראוס",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 6.90,
+      aliases: ["בולגרית במשקל", "בולגרית פיראוס", "בולגרית 24%", "גבינה בולגרית מעדניה"]
+    },
+    {
+      id: "deli_06",
+      barcode: "7290000081006",
+      name: "גבינה בולגרית מעודנת מחלבות גד 5% במשקל",
+      manufacturer: "מחלבות גד",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 6.80,
+      aliases: ["בולגרית 5%", "בולגרית גד", "בולגרית מעודנת במשקל", "בולגרית דיאט"]
+    },
+    {
+      id: "deli_07",
+      barcode: "7290000081007",
+      name: "גבינת פטה כבשים יוונית אותנטית במשקל",
+      manufacturer: "פיראוס",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 8.90,
+      aliases: ["פטה כבשים", "פטה יוונית", "גבינת פטה במשקל", "פטה אמיתית"]
+    },
+    {
+      id: "deli_08",
+      barcode: "7290000081008",
+      name: "גבינת קשקבל גלבוע מסורתית במשקל",
+      manufacturer: "תנובה",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 8.50,
+      aliases: ["קשקבל במשקל", "גבינת קשקבל", "קשקבל תנובה", "קשקבל מעדניה"]
+    },
+    {
+      id: "deli_09",
+      barcode: "7290000081009",
+      name: "גבינת צ'דר אנגלי כתום מיושן במשקל",
+      manufacturer: "יבוא אנגלי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 9.90,
+      aliases: ["צ'דר", "צ'דר כתום", "צ'דר אנגלי במשקל", "גבינת צ'דר"]
+    },
+    {
+      id: "deli_10",
+      barcode: "7290000081010",
+      name: "גבינת מוצרלה כדורים טרייה במשקל",
+      manufacturer: "מחלבות גד",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 7.20,
+      aliases: ["מוצרלה במשקל", "מוצרלה טרייה", "בייבי מוצרלה", "כדורי מוצרלה"]
+    },
+    {
+      id: "deli_11",
+      barcode: "7290000081011",
+      name: "גבינת פרמז'ן גרנה פדאנו איטלקית מקורית במשקל",
+      manufacturer: "יבוא איטלקי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 12.90,
+      aliases: ["פרמזן במשקל", "גרנה פדאנו", "פרמז'ן איטלקי", "פרמיג'אנו רג'אנו"]
+    },
+    {
+      id: "deli_12",
+      barcode: "7290000081012",
+      name: "גבינת פקורינו רומנו כבשים איטלקית במשקל",
+      manufacturer: "יבוא איטלקי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 13.90,
+      aliases: ["פקורינו", "פקורינו רומנו", "גבינת פקורינו במשקל", "פקורינו כבשים"]
+    },
+    {
+      id: "deli_13",
+      barcode: "7290000081013",
+      name: "גבינת רוקפור כחולה צרפתית מיושנת במשקל",
+      manufacturer: "סוסייטה צרפת",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 14.50,
+      aliases: ["רוקפור", "גבינה כחולה", "גורגונזולה", "רוקפור צרפתית במשקל"]
+    },
+    {
+      id: "deli_14",
+      barcode: "7290000081014",
+      name: "גבינת ברי צרפתית חגיגית במשקל",
+      manufacturer: "מחלבות גד",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 10.90,
+      aliases: ["ברי במשקל", "גבינת ברי", "ברי צרפתית", "קממבר במשקל"]
+    },
+    {
+      id: "deli_15",
+      barcode: "7290000081015",
+      name: "גבינת קממבר צרפתית קלאסית במשקל",
+      manufacturer: "מחלבות גד",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 10.90,
+      aliases: ["קממבר", "קממבר צרפתית", "גבינת קממבר מעדניה"]
+    },
+    {
+      id: "deli_16",
+      barcode: "7290000081016",
+      name: "גבינת מנצ'גו ספרדית מיושנת במשקל",
+      manufacturer: "יבוא ספרדי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 14.90,
+      aliases: ["מנצ'גו", "מנצ'גו ספרדית", "מנצ'גו כבשים", "גבינת מנצ'גו"]
+    },
+    {
+      id: "deli_17",
+      barcode: "7290000081017",
+      name: "גבינת אמנטל שוויצרית עם חורים במשקל",
+      manufacturer: "יבוא שוויצרי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 11.50,
+      aliases: ["אמנטל", "שוויצרית עם חורים", "גבינת אמנטל במשקל"]
+    },
+    {
+      id: "deli_18",
+      barcode: "7290000081018",
+      name: "גבינת גרוייר שוויצרית מסורתית במשקל",
+      manufacturer: "יבוא שוויצרי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 15.90,
+      aliases: ["גרוייר", "גרויר", "גבינת גרוייר במשקל"]
+    },
+    {
+      id: "deli_19",
+      barcode: "7290000081019",
+      name: "גבינת חלומי קפריסאית לטיגון וצלייה במשקל",
+      manufacturer: "מחלבות גד",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 8.50,
+      aliases: ["חלומי", "גבינת חלומי", "חלומי לטיגון", "חלומי לצלייה במשקל"]
+    },
+    {
+      id: "deli_20",
+      barcode: "7290000081020",
+      name: "לאבנה דרוזית אותנטית עם שמן זית וזעתר במשקל",
+      manufacturer: "משק צוריאל",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 5.90,
+      aliases: ["לאבנה במשקל", "לבנה דרוזית", "לאבנה עם שמן זית", "לאבנה עיזים"]
+    },
+    {
+      id: "deli_21",
+      barcode: "7290000081021",
+      name: "גבינת שמנת נפוליאון 30% טבעית במשקל מהמעדנייה",
+      manufacturer: "תנובה",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 5.90,
+      aliases: ["שמנת נפוליאון במשקל", "נפוליאון מעדניה", "גבינת שמנת 30% במשקל"]
+    },
+    {
+      id: "deli_22",
+      barcode: "7290000081022",
+      name: "חמאה צרפתית מובחרת ללא מלח במשקל",
+      manufacturer: "יבוא צרפתי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 6.50,
+      aliases: ["חמאה במשקל", "חמאה צרפתית", "חמאה הולנדית במשקל", "חמאת מעדניה"]
+    },
+    {
+      id: "deli_23",
+      barcode: "7290000081023",
+      name: "זיתי קלמטה יווניים אמיתיים במשקל מהמעדנייה",
+      manufacturer: "בית השיטה",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 4.90,
+      aliases: ["קלמטה", "זיתי קלמטה במשקל", "זיתים שחורים קלמטה", "זיתי מעדניה"]
+    },
+    {
+      id: "deli_24",
+      barcode: "7290000081024",
+      name: "זיתים סוריים מבוקעים מתובלים במשקל מהמעדנייה",
+      manufacturer: "בית השיטה",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 4.50,
+      aliases: ["זיתים סוריים במשקל", "סורי מבוקע", "זיתים מתובלים מעדניה"]
+    },
+    {
+      id: "deli_25",
+      barcode: "7290000081025",
+      name: "פסטרמה הודו על גחלים מובחרת במשקל",
+      manufacturer: "טירת צבי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 7.90,
+      aliases: ["פסטרמה במשקל", "הודו על גחלים", "פסטרמה טירת צבי מעדניה", "פסטרמה הודו"]
+    },
+    {
+      id: "deli_26",
+      barcode: "7290000081026",
+      name: "רוסטביף בקר עסיסי מובחר במשקל מהמעדנייה",
+      manufacturer: "טירת צבי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 12.90,
+      aliases: ["רוסטביף", "בשר בקר מעדניה", "רוסטביף במשקל", "בקר מעושן במשקל"]
+    },
+    {
+      id: "deli_27",
+      barcode: "7290000081027",
+      name: "סלמון נורבגי מעושן פרוס דק במשקל מהמעדנייה",
+      manufacturer: "דלידג",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 18.90,
+      aliases: ["סלמון מעושן במשקל", "סלמון מעדניה", "לקס", "פילה סלמון מעושן"]
+    }
+  ];
+
+  return items.map((it, idx) => ({
+    id: it.id,
+    barcode: it.barcode,
+    name: it.name,
+    manufacturer: it.manufacturer,
+    unit: it.unit,
+    isWeight: it.isWeight,
+    weightStep: it.weightStep,
+    weightUnit: it.weightUnit,
+    category: "deli_cheese",
+    isRegulated: false,
+    aliases: it.aliases,
+    prices: calcPrices(it.basePrice, false, idx + 1)
+  }));
+}
+
+module.exports = { getDeliCheese };

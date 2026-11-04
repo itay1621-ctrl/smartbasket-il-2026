@@ -4,7 +4,6 @@ import {
   Navigation,
   Clock,
   Phone,
-  Store,
   ExternalLink,
   Sparkles,
   ChevronDown,

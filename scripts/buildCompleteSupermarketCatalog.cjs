@@ -7,9 +7,11 @@ const d1 = require('./dept_dairy_bakery_produce.cjs');
 const d2 = require('./dept_meat_frozen_canned.cjs');
 const d3 = require('./dept_grains_snacks_drinks.cjs');
 const d4 = require('./dept_coffee_baby_cleaning.cjs');
+const d_deli = require('./dept_deli_cheese.cjs');
 
-// Base 392 curated items from modular files
+// Base curated items from modular files including 27 deli & weighted cheeses
 const baseItems = [
+  ...d_deli.getDeliCheese(),
   ...d1.getDairyEggs(),
   ...d1.getBakery(),
   ...d1.getProduce(),
@@ -413,8 +415,36 @@ for (const b of brandLongTail) {
 
 console.log(`Generated expansion items: ${generatedExpansionItems.length}`);
 
-// Combine all items
-const fullCatalog = [...baseItems, ...generatedExpansionItems];
+// Combine all items and normalize fields
+const rawCatalog = [...baseItems, ...generatedExpansionItems];
+
+const fullCatalog = rawCatalog.map((item, index) => {
+  const isWeightItem = item.isWeight || 
+    item.category === 'deli_cheese' || 
+    (item.unit && (item.unit.includes('משקל') || item.unit.includes('ק"ג') || item.unit.includes('ק״ג') || item.unit.includes('100 גרם')));
+
+  let weightStep = item.weightStep;
+  let weightUnit = item.weightUnit;
+
+  if (isWeightItem && !weightStep) {
+    if (item.unit && (item.unit.includes('100 גרם') || item.category === 'deli_cheese')) {
+      weightStep = 100;
+      weightUnit = 'גרם';
+    } else {
+      weightStep = 1;
+      weightUnit = 'ק"ג';
+    }
+  }
+
+  return {
+    ...item,
+    id: item.id || `prod_${String(index + 1).padStart(4, '0')}`,
+    isWeight: !!isWeightItem,
+    weightStep: weightStep || null,
+    weightUnit: weightUnit || null
+  };
+});
+
 console.log(`\n========================================`);
 console.log(`TOTAL ISRAELI SUPERMARKET CATALOG: ${fullCatalog.length} PRODUCTS`);
 console.log(`========================================`);

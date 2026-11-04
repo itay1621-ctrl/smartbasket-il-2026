@@ -111,21 +111,22 @@ export const STORES_METADATA = {
 
 export const SUPERMARKET_CHAINS = Object.keys(STORES_METADATA);
 
-// 12 מחלקות הסופרמרקט הרשמיות בישראל
+// 14 מחלקות סופרמרקט רשמיות
 export const CATEGORIES = [
-  { id: "all", name: "כל המוצרים (1,000+)", icon: "🛒" },
+  { id: "all", name: "הכל (1,035+ מוצרים)", icon: "✨" },
+  { id: "deli_cheese", name: "מעדנייה וגבינות במשקל", icon: "🧀" },
   { id: "dairy_eggs", name: "חלב וביצים", icon: "🥛" },
+  { id: "produce", name: "פירות וירקות", icon: "🍅" },
+  { id: "meat_fish", name: "בשר ודגים", icon: "🍗" },
   { id: "bakery", name: "לחם ומאפים", icon: "🥖" },
-  { id: "produce", name: "פירות וירקות", icon: "🍎" },
-  { id: "meat_fish", name: "בשר עוף ודגים", icon: "🍗" },
-  { id: "frozen", name: "קפואים", icon: "❄️" },
-  { id: "canned_cooking", name: "שימורים ובישול", icon: "🥫" },
+  { id: "canned_cooking", name: "מזווה ובישול", icon: "🍝" },
   { id: "grains_pasta", name: "דגנים ופסטות", icon: "🌾" },
+  { id: "frozen", name: "קפואים", icon: "❄️" },
   { id: "snacks_sweets", name: "חטיפים ומתוקים", icon: "🍫" },
-  { id: "beverages_alcohol", name: "שתייה קלה ואלכוהול", icon: "🥤" },
+  { id: "beverages_alcohol", name: "שתייה", icon: "🥤" },
   { id: "coffee_tea", name: "קפה ותה", icon: "☕" },
   { id: "baby_pharm", name: "תינוקות ופארם", icon: "👶" },
-  { id: "cleaning_disposable", name: "ניקיון וחד-פעמי", icon: "🧼" }
+  { id: "cleaning_disposable", name: "ניקיון ופארם", icon: "🧼" }
 ];
 
 export const INITIAL_USER_LIST = [
