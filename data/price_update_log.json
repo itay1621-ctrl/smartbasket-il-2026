@@ -1,0 +1,135 @@
+{
+  "timestamp": "2026-11-04T05:52:39.534Z",
+  "status": "success",
+  "scrapedSources": [
+    "max_stock_online",
+    "stock_online",
+    "transparency_feeds"
+  ],
+  "storesScanned": {
+    "max_stock_online": {
+      "url": "https://online.maxstock.co.il/products.json",
+      "itemsSampled": 0
+    },
+    "stock_online": {
+      "url": "https://stock-online.co.il/products.json",
+      "itemsSampled": 50
+    },
+    "transparency_xml": {
+      "status": "connected"
+    }
+  },
+  "liveSamples": [
+    {
+      "chain": "stock_online",
+      "id": 15709016391791,
+      "name": "סט פינת אוכל שולחן זכוכית כהה רגליים בצבע אגוז 180*90 ס\"מ VERO + 4 כיסאות מרופדים בגוון חול רגל אגוז דגם שירז",
+      "price": 3190,
+      "comparePrice": null,
+      "inStock": true
+    },
+    {
+      "chain": "stock_online",
+      "id": 15705648660591,
+      "name": "סט פינת אוכל שולחן טרוורטין בשילוב רגל אגוז 200*100 ס\"מ דגם מרי+ 4 כיסאות מרופדים בגוון שמנת דגם הילרי",
+      "price": 3099,
+      "comparePrice": null,
+      "inStock": true
+    },
+    {
+      "chain": "stock_online",
+      "id": 15696803922031,
+      "name": "סט פינת אוכל שולחן טרוורטין בשילוב רגל אגוז 200*100 ס\"מ דגם מרי+ 4 כיסאות דמוי עור אבן דגם טיטי",
+      "price": 3290,
+      "comparePrice": null,
+      "inStock": true
+    },
+    {
+      "chain": "stock_online",
+      "id": 15705474236527,
+      "name": "סט פינת אוכל שולחן טרוורטין בשילוב רגל אגוז 200*100 ס\"מ דגם מרי+ 4 כיסאות מרופדים בגוון חול ורגל אגוז דגם CELIO",
+      "price": 3390,
+      "comparePrice": null,
+      "inStock": true
+    },
+    {
+      "chain": "stock_online",
+      "id": 15696808247407,
+      "name": "סט פינת אוכל שולחן טרוורטין בשילוב רגל אגוז 200*100 ס\"מ דגם מרי+ 4 כיסאות מרופדים בשילוב רגל אגוז דגם שירז",
+      "price": 3490,
+      "comparePrice": null,
+      "inStock": true
+    },
+    {
+      "chain": "stock_online",
+      "id": 15705264259183,
+      "name": "סט פינת אוכל שולחן טרוורטין בשילוב רגל אגוז 200*100 ס\"מ דגם מרי+ 4 כיסאות מרופדים בגוון חול ורגל אגוז דגם אלין",
+      "price": 3890,
+      "comparePrice": null,
+      "inStock": true
+    },
+    {
+      "chain": "stock_online",
+      "id": 15696162422895,
+      "name": "סט פינת אוכל שולחן מלבני נפתח צבע עץ אגוז 220–340×90 ס״מ בתוספת 6 כיסאות דמוי עור צבע אבן דגם טיטי",
+      "price": 4939,
+      "comparePrice": 5490,
+      "inStock": false
+    },
+    {
+      "chain": "stock_online",
+      "id": 15696418340975,
+      "name": "סט פינת אוכל שולחן מלבני נפתח צבע עץ אגוז 220–340×90 ס״מ בתוספת 6 כיסאות דמוי עור צבע סהרה דגם TIFFANY",
+      "price": 4609,
+      "comparePrice": 5590,
+      "inStock": true
+    },
+    {
+      "chain": "stock_online",
+      "id": 15696302801007,
+      "name": "סט פינת אוכל שולחן מלבני נפתח צבע עץ אגוז 220–340×90 ס״מ דגם LEOPARD בתוספת 6 כיסאות עץ מלא בשילוב ריפוד שמנת דגם ג'ורדן",
+      "price": 5209,
+      "comparePrice": 6690,
+      "inStock": true
+    },
+    {
+      "chain": "stock_online",
+      "id": 15695665954927,
+      "name": "סט פינת אוכל שולחן מלבני נפתח צבע עץ אגוז  220–340×90 ס״מ דגם LEOPARD בתוספת 6 כיסאות מרופדים צבע חול ורגל אגוז דגם CELIO",
+      "price": 4679,
+      "comparePrice": 5690,
+      "inStock": true
+    }
+  ],
+  "detectedPromotions": [
+    {
+      "chain": "stock_online",
+      "name": "סט פינת אוכל שולחן מלבני נפתח צבע עץ אגוז 220–340×90 ס״מ בתוספת 6 כיסאות דמוי עור צבע אבן דגם טיטי",
+      "currentPrice": 4939,
+      "originalPrice": 5490,
+      "discountPct": "10%"
+    },
+    {
+      "chain": "stock_online",
+      "name": "סט פינת אוכל שולחן מלבני נפתח צבע עץ אגוז 220–340×90 ס״מ בתוספת 6 כיסאות דמוי עור צבע סהרה דגם TIFFANY",
+      "currentPrice": 4609,
+      "originalPrice": 5590,
+      "discountPct": "18%"
+    },
+    {
+      "chain": "stock_online",
+      "name": "סט פינת אוכל שולחן מלבני נפתח צבע עץ אגוז 220–340×90 ס״מ דגם LEOPARD בתוספת 6 כיסאות עץ מלא בשילוב ריפוד שמנת דגם ג'ורדן",
+      "currentPrice": 5209,
+      "originalPrice": 6690,
+      "discountPct": "22%"
+    },
+    {
+      "chain": "stock_online",
+      "name": "סט פינת אוכל שולחן מלבני נפתח צבע עץ אגוז  220–340×90 ס״מ דגם LEOPARD בתוספת 6 כיסאות מרופדים צבע חול ורגל אגוז דגם CELIO",
+      "currentPrice": 4679,
+      "originalPrice": 5690,
+      "discountPct": "18%"
+    }
+  ],
+  "durationMs": 525
+}

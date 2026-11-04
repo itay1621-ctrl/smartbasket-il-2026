@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Header from './components/Header';
 import OrganizedBasketView from './components/OrganizedBasketView';
 import ProductCatalogBrowser from './components/ProductCatalogBrowser';
@@ -23,15 +23,63 @@ import {
 } from 'lucide-react';
 
 export default function App() {
-  const [rawText, setRawText] = useState(INITIAL_USER_LIST);
+  // טעינה וסנכרון רשימת הקניות מ-LocalStorage לתמיכת Offline PWA מלאה
+  const [rawText, setRawText] = useState(() => {
+    try {
+      const saved = localStorage.getItem('smartbasket_user_list');
+      return saved !== null && saved.trim() !== '' ? saved : INITIAL_USER_LIST;
+    } catch {
+      return INITIAL_USER_LIST;
+    }
+  });
+
   // ברירת מחדל: מחיר רגיל ללא משלוח (איסוף עצמי / מחירי מדף בחנויות)
-  const [isShippingEnabled, setIsShippingEnabled] = useState(false);
-  const [selectedRegionId, setSelectedRegionId] = useState(DEFAULT_REGION_ID);
+  const [isShippingEnabled, setIsShippingEnabled] = useState(() => {
+    try {
+      return localStorage.getItem('smartbasket_shipping_enabled') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const [selectedRegionId, setSelectedRegionId] = useState(() => {
+    try {
+      return localStorage.getItem('smartbasket_region') || DEFAULT_REGION_ID;
+    } catch {
+      return DEFAULT_REGION_ID;
+    }
+  });
+
   // סינון סקטור רשתות: כל הרשתות, רק מזון וסופרמרקטים, או רק רשתות סטוק
   const [sectorFilter, setSectorFilter] = useState('all');
 
   // ניווט טאבים ראשי: 'basket' (הסל שלי) | 'catalog' (קטלוג ומיון) | 'comparison' (השוואת מחירים)
   const [activeTab, setActiveTab] = useState('basket');
+
+  // שמירה מתמשכת ל-LocalStorage בכל עדכון
+  useEffect(() => {
+    try {
+      localStorage.setItem('smartbasket_user_list', rawText);
+    } catch (e) {
+      console.warn('LocalStorage save failed:', e);
+    }
+  }, [rawText]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('smartbasket_shipping_enabled', String(isShippingEnabled));
+    } catch (e) {
+      console.warn('LocalStorage save failed:', e);
+    }
+  }, [isShippingEnabled]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('smartbasket_region', selectedRegionId);
+    } catch (e) {
+      console.warn('LocalStorage save failed:', e);
+    }
+  }, [selectedRegionId]);
 
   // עיבוד רשימת המוצרים בזמן אמת
   const parsedItems = useMemo(() => {
