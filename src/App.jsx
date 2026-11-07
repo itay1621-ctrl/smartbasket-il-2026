@@ -49,6 +49,15 @@ export default function App() {
     }
   });
 
+  const [isClubPromotionsEnabled, setIsClubPromotionsEnabled] = useState(() => {
+    try {
+      const saved = localStorage.getItem('smartbasket_v3_club_promos');
+      return saved !== null ? saved === 'true' : true;
+    } catch {
+      return true;
+    }
+  });
+
   const [selectedRegionId, setSelectedRegionId] = useState(() => {
     try {
       return localStorage.getItem('smartbasket_v3_region') || DEFAULT_REGION_ID;
@@ -126,6 +135,14 @@ export default function App() {
       console.warn('LocalStorage save failed:', e);
     }
   }, [isShippingEnabled]);
+
+  useEffect(() => {
+    try {
+      localStorage.setItem('smartbasket_v3_club_promos', String(isClubPromotionsEnabled));
+    } catch (e) {
+      console.warn('LocalStorage save failed:', e);
+    }
+  }, [isClubPromotionsEnabled]);
 
   useEffect(() => {
     try {
@@ -290,12 +307,12 @@ export default function App() {
 
   // חישוב דירוגי סופרמרקטים ופיצול
   const oneStopRankings = useMemo(() => {
-    return calculateOneStopRankings(cart, isShippingEnabled);
-  }, [cart, isShippingEnabled]);
+    return calculateOneStopRankings(cart, isShippingEnabled, isClubPromotionsEnabled);
+  }, [cart, isShippingEnabled, isClubPromotionsEnabled]);
 
   const optimalSplit = useMemo(() => {
-    return calculateOptimalSplit(cart, isShippingEnabled);
-  }, [cart, isShippingEnabled]);
+    return calculateOptimalSplit(cart, isShippingEnabled, isClubPromotionsEnabled);
+  }, [cart, isShippingEnabled, isClubPromotionsEnabled]);
 
   const cartTotalCheapest = useMemo(() => {
     return oneStopRankings[0] ? oneStopRankings[0].grandTotal : 0;
@@ -313,6 +330,8 @@ export default function App() {
         setSearchTerm={setSearchTerm}
         isShippingEnabled={isShippingEnabled}
         setIsShippingEnabled={setIsShippingEnabled}
+        isClubPromotionsEnabled={isClubPromotionsEnabled}
+        setIsClubPromotionsEnabled={setIsClubPromotionsEnabled}
         cartCount={totalCartCount}
         cartTotal={cartTotalCheapest}
         onOpenMobileCart={() => setIsMobileCartOpen(true)}
@@ -417,6 +436,7 @@ export default function App() {
                       onAddToCart={addToCart}
                       onUpdateQuantity={updateQuantity}
                       onRemoveFromCart={removeFromCart}
+                      isClubPromotionsEnabled={isClubPromotionsEnabled}
                     />
                   );
                 })}
@@ -451,6 +471,7 @@ export default function App() {
               oneStopRankings={oneStopRankings}
               optimalSplit={optimalSplit}
               isShippingEnabled={isShippingEnabled}
+              isClubPromotionsEnabled={isClubPromotionsEnabled}
             />
           </aside>
         </div>
@@ -509,6 +530,7 @@ export default function App() {
               oneStopRankings={oneStopRankings}
               optimalSplit={optimalSplit}
               isShippingEnabled={isShippingEnabled}
+              isClubPromotionsEnabled={isClubPromotionsEnabled}
               onCloseMobileDrawer={() => setIsMobileCartOpen(false)}
             />
           </div>
@@ -520,6 +542,7 @@ export default function App() {
         isOpen={isMatrixModalOpen}
         onClose={() => setIsMatrixModalOpen(false)}
         cart={cart}
+        isClubPromotionsEnabled={isClubPromotionsEnabled}
       />
 
       {/* פוטר שקיפות */}

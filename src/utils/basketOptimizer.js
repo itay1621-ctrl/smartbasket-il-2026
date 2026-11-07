@@ -204,9 +204,29 @@ export function calculateStoreShipping(storeKey, subtotal, isShippingEnabled) {
 }
 
 /**
- * דירוג 7 רשתות הסופרמרקט (One-Stop Shop)
+ * שליפת מבצע מועדון עבור פריט ברשת מסוימת
  */
-export function calculateOneStopRankings(parsedItems, isShippingEnabled) {
+export function getItemClubPromotion(item, storeKey) {
+  if (!item || !Array.isArray(item.clubPromotions)) return null;
+  return item.clubPromotions.find((p) => p.storeKey === storeKey) || null;
+}
+
+/**
+ * שליפת מבצע המועדון המשתלם ביותר לפריט מבין כל הרשתות
+ */
+export function getBestClubPromotion(item) {
+  if (!item || !Array.isArray(item.clubPromotions) || item.clubPromotions.length === 0) return null;
+  return item.clubPromotions.reduce((best, curr) => {
+    if (!best || (curr.savingsNis || 0) > (best.savingsNis || 0)) return curr;
+    return best;
+  }, null);
+}
+
+/**
+ * דירוג 7 רשתות הסופרמרקט (One-Stop Shop)
+ * תומך בשקלול מחירי מועדון לקוחות (isClubPromotionsEnabled) ודמי משלוח
+ */
+export function calculateOneStopRankings(parsedItems, isShippingEnabled, isClubPromotionsEnabled = true) {
   if (!parsedItems || parsedItems.length === 0) return [];
 
   const storeKeys = Object.keys(STORES_METADATA);
@@ -214,35 +234,64 @@ export function calculateOneStopRankings(parsedItems, isShippingEnabled) {
   const rankings = storeKeys.map((storeKey) => {
     const store = STORES_METADATA[storeKey];
     let subtotal = 0;
+    let regularSubtotal = 0;
+    let clubSavingsTotal = 0;
     let availableCount = 0;
     let totalQty = 0;
     const itemDetails = [];
 
     for (const item of parsedItems) {
-      const price = item.prices ? item.prices[storeKey] : null;
-      const isAvailable = typeof price === 'number' && price > 0;
+      const regularPrice = item.prices ? item.prices[storeKey] : null;
+      const isAvailable = typeof regularPrice === 'number' && regularPrice > 0;
 
       if (isAvailable) {
-        const lineTotal = price * item.quantity;
+        let effectivePrice = regularPrice;
+        let activeClubPromo = null;
+        let itemClubSavings = 0;
+
+        if (isClubPromotionsEnabled && Array.isArray(item.clubPromotions)) {
+          activeClubPromo = item.clubPromotions.find((p) => p.storeKey === storeKey);
+          if (activeClubPromo && typeof activeClubPromo.clubPrice === 'number' && activeClubPromo.clubPrice < regularPrice) {
+            effectivePrice = activeClubPromo.clubPrice;
+            itemClubSavings = (regularPrice - activeClubPromo.clubPrice) * item.quantity;
+          }
+        }
+
+        const lineTotal = effectivePrice * item.quantity;
+        const regularLineTotal = regularPrice * item.quantity;
+
         subtotal += lineTotal;
+        regularSubtotal += regularLineTotal;
+        clubSavingsTotal += itemClubSavings;
         availableCount++;
         totalQty += item.quantity;
+
         itemDetails.push({
           itemId: item.id,
           name: item.name,
-          unitPrice: price,
+          unitPrice: effectivePrice,
+          regularUnitPrice: regularPrice,
           quantity: item.quantity,
           lineTotal,
-          isAvailable: true
+          regularLineTotal,
+          isAvailable: true,
+          isClubDiscounted: !!activeClubPromo,
+          clubPromo: activeClubPromo,
+          clubSavings: itemClubSavings
         });
       } else {
         itemDetails.push({
           itemId: item.id,
           name: item.name,
           unitPrice: null,
+          regularUnitPrice: null,
           quantity: item.quantity,
           lineTotal: 0,
-          isAvailable: false
+          regularLineTotal: 0,
+          isAvailable: false,
+          isClubDiscounted: false,
+          clubPromo: null,
+          clubSavings: 0
         });
       }
     }
@@ -254,9 +303,12 @@ export function calculateOneStopRankings(parsedItems, isShippingEnabled) {
     return {
       storeKey,
       store,
-      subtotal,
+      subtotal: Number(subtotal.toFixed(2)),
+      regularSubtotal: Number(regularSubtotal.toFixed(2)),
+      clubSavingsTotal: Number(clubSavingsTotal.toFixed(2)),
+      hasClubSavings: clubSavingsTotal > 0.05,
       shipping,
-      grandTotal,
+      grandTotal: Number(grandTotal.toFixed(2)),
       availableCount,
       totalQty,
       totalItemsCount: parsedItems.length,
@@ -278,15 +330,15 @@ export function calculateOneStopRankings(parsedItems, isShippingEnabled) {
 
 /**
  * חישוב פיצול קנייה אופטימלי (Optimal 2-Store Split Basket)
- * מחפש את שילוב 2 הרשתות שנותן את הסל הזול ביותר, כולל משלוח כפול במידה ומשלוח דלוק.
+ * מחפש את שילוב 2 הרשתות שנותן את הסל הזול ביותר, כולל מחירי מועדון ומשלוח כפול.
  */
-export function calculateOptimalSplit(parsedItems, isShippingEnabled) {
+export function calculateOptimalSplit(parsedItems, isShippingEnabled, isClubPromotionsEnabled = true) {
   if (!parsedItems || parsedItems.length === 0) {
     return null;
   }
 
   const storeKeys = Object.keys(STORES_METADATA);
-  const oneStopRankings = calculateOneStopRankings(parsedItems, isShippingEnabled);
+  const oneStopRankings = calculateOneStopRankings(parsedItems, isShippingEnabled, isClubPromotionsEnabled);
   const bestOneStop = oneStopRankings[0];
   const mostExpensiveOneStop = oneStopRankings[oneStopRankings.length - 1];
 
@@ -301,22 +353,42 @@ export function calculateOptimalSplit(parsedItems, isShippingEnabled) {
 
       let subtotal1 = 0;
       let subtotal2 = 0;
+      let splitClubSavings = 0;
       const items1 = [];
       const items2 = [];
       const assignments = [];
 
       for (const item of parsedItems) {
-        const p1 = item.prices ? item.prices[s1] : Infinity;
-        const p2 = item.prices ? item.prices[s2] : Infinity;
+        let p1 = item.prices ? item.prices[s1] : Infinity;
+        let p2 = item.prices ? item.prices[s2] : Infinity;
+        let regularP1 = p1;
+        let regularP2 = p2;
+
+        if (isClubPromotionsEnabled && Array.isArray(item.clubPromotions)) {
+          const promo1 = item.clubPromotions.find((p) => p.storeKey === s1);
+          if (promo1 && typeof promo1.clubPrice === 'number' && promo1.clubPrice < p1) {
+            p1 = promo1.clubPrice;
+          }
+          const promo2 = item.clubPromotions.find((p) => p.storeKey === s2);
+          if (promo2 && typeof promo2.clubPrice === 'number' && promo2.clubPrice < p2) {
+            p2 = promo2.clubPrice;
+          }
+        }
 
         if (p1 <= p2) {
           const lineTotal = p1 * item.quantity;
           subtotal1 += lineTotal;
+          if (regularP1 > p1) {
+            splitClubSavings += (regularP1 - p1) * item.quantity;
+          }
           items1.push({ ...item, assignedPrice: p1, assignedLineTotal: lineTotal });
           assignments.push({ item, bestStoreKey: s1, unitPrice: p1, lineTotal });
         } else {
           const lineTotal = p2 * item.quantity;
           subtotal2 += lineTotal;
+          if (regularP2 > p2) {
+            splitClubSavings += (regularP2 - p2) * item.quantity;
+          }
           items2.push({ ...item, assignedPrice: p2, assignedLineTotal: lineTotal });
           assignments.push({ item, bestStoreKey: s2, unitPrice: p2, lineTotal });
         }
@@ -360,9 +432,11 @@ export function calculateOptimalSplit(parsedItems, isShippingEnabled) {
           itemAssignments: assignments,
           storeBreakdowns: storeBreakdowns.sort((a, b) => b.subtotal - a.subtotal),
           storesInvolvedCount: storeBreakdowns.length,
-          totalItemsCost,
-          totalShippingCost,
-          grandTotal
+          totalItemsCost: Number(totalItemsCost.toFixed(2)),
+          totalShippingCost: Number(totalShippingCost.toFixed(2)),
+          grandTotal: Number(grandTotal.toFixed(2)),
+          clubSavingsTotal: Number(splitClubSavings.toFixed(2)),
+          hasClubSavings: splitClubSavings > 0.05
         };
       }
     }

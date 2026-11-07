@@ -108,6 +108,59 @@ async function runLiveScraper() {
     results.missingPricesCount = missingCount;
     results.categoriesCount = categoriesSet.size;
 
+    // 2.1 ניתוח מבצעי מועדון לקוחות פעילים
+    const clubPromoStats = {
+      totalPromotionsCount: 0,
+      itemsWithPromotionsCount: 0,
+      promotionsByChain: {},
+      totalPotentialSavingsNis: 0,
+      averageDiscountPercent: 0,
+      featuredActiveDeals: []
+    };
+
+    CHAINS.forEach(ch => {
+      clubPromoStats.promotionsByChain[ch] = 0;
+    });
+
+    let discountPercentSum = 0;
+
+    catalog.forEach(item => {
+      if (Array.isArray(item.clubPromotions) && item.clubPromotions.length > 0) {
+        clubPromoStats.itemsWithPromotionsCount++;
+        item.clubPromotions.forEach(promo => {
+          clubPromoStats.totalPromotionsCount++;
+          if (clubPromoStats.promotionsByChain[promo.storeKey] !== undefined) {
+            clubPromoStats.promotionsByChain[promo.storeKey]++;
+          }
+          clubPromoStats.totalPotentialSavingsNis += (promo.savingsNis || 0);
+          if (promo.originalPrice > 0) {
+            discountPercentSum += ((promo.savingsNis / promo.originalPrice) * 100);
+          }
+
+          // איסוף מבצעים נבחרים לדוח (עד 2 לכל רשת)
+          const storeDeals = clubPromoStats.featuredActiveDeals.filter(d => d.storeKey === promo.storeKey);
+          if (storeDeals.length < 2 && promo.savingsNis >= 2.0) {
+            clubPromoStats.featuredActiveDeals.push({
+              storeKey: promo.storeKey,
+              clubName: promo.clubName,
+              productName: item.name,
+              originalPrice: promo.originalPrice,
+              clubPrice: promo.clubPrice,
+              savingsNis: promo.savingsNis,
+              description: promo.description
+            });
+          }
+        });
+      }
+    });
+
+    if (clubPromoStats.totalPromotionsCount > 0) {
+      clubPromoStats.averageDiscountPercent = Number((discountPercentSum / clubPromoStats.totalPromotionsCount).toFixed(1));
+      clubPromoStats.totalPotentialSavingsNis = Number(clubPromoStats.totalPotentialSavingsNis.toFixed(2));
+    }
+
+    results.clubPromotionsSummary = clubPromoStats;
+
     // 3. שמירת הקטלוג העדכני לתיקיית public
     const publicDataDir = path.join(__dirname, '..', 'public', 'data');
     if (!fs.existsSync(publicDataDir)) {
@@ -121,6 +174,7 @@ async function runLiveScraper() {
     console.log(`   - סך מוצרים בקטלוג: ${results.totalProducts}`);
     console.log(`   - מוצרים תקינים בכל 7 הרשתות: ${results.validPriceProducts} (100%)`);
     console.log(`   - מחלקות סופרמרקט: ${results.categoriesCount}`);
+    console.log(`   - מבצעי מועדון פעילים: ${clubPromoStats.totalPromotionsCount} ב-${clubPromoStats.itemsWithPromotionsCount} מוצרים (הנחה ממוצעת ${clubPromoStats.averageDiscountPercent}%)`);
 
     // 4. שמירת דוח הסריקה היומי
     const logDir = path.join(__dirname, '..', 'data');

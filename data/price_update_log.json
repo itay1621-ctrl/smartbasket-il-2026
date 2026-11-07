@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-07T04:00:46.479Z",
+  "timestamp": "2026-11-07T09:50:04.063Z",
   "status": "success",
   "chains": [
     "rami_levy",
@@ -27,9 +27,152 @@
       "status": "getaddrinfo ENOTFOUND matrixcatalog.co.il"
     }
   },
-  "totalProducts": 1035,
-  "validPriceProducts": 1035,
+  "totalProducts": 1042,
+  "validPriceProducts": 1042,
   "missingPricesCount": 0,
   "categoriesCount": 13,
-  "durationMs": 3640
+  "durationMs": 3467,
+  "clubPromotionsSummary": {
+    "totalPromotionsCount": 844,
+    "itemsWithPromotionsCount": 601,
+    "promotionsByChain": {
+      "rami_levy": 140,
+      "osher_ad": 107,
+      "yochananof": 117,
+      "shufersal_deal": 154,
+      "carrefour": 125,
+      "victory": 106,
+      "hazi_hinam": 95
+    },
+    "totalPotentialSavingsNis": 3726.4,
+    "averageDiscountPercent": 21,
+    "featuredActiveDeals": [
+      {
+        "storeKey": "shufersal_deal",
+        "clubName": "שופרסל Supreme",
+        "productName": "גבינת גאודה עיזים הולנדית במשקל",
+        "originalPrice": 13.7,
+        "clubPrice": 10.5,
+        "savingsNis": 3.2,
+        "description": "מבצע מועדון שופרסל Supreme: רק ₪10.50 (חיסכון ₪3.20)"
+      },
+      {
+        "storeKey": "carrefour",
+        "clubName": "Carrefour Club",
+        "productName": "גבינת גאודה עיזים הולנדית במשקל",
+        "originalPrice": 12.8,
+        "clubPrice": 9.9,
+        "savingsNis": 2.9,
+        "description": "מבצע Carrefour Club: רק ₪9.90 (חיסכון ₪2.90)"
+      },
+      {
+        "storeKey": "yochananof",
+        "clubName": "מועדון יוחננוף",
+        "productName": "גבינת פטה כבשים יוונית אותנטית במשקל",
+        "originalPrice": 9.1,
+        "clubPrice": 6.9,
+        "savingsNis": 2.2,
+        "description": "מבצע מועדון יוחננוף: רק ₪6.90 (חיסכון ₪2.20)"
+      },
+      {
+        "storeKey": "shufersal_deal",
+        "clubName": "שופרסל Supreme",
+        "productName": "גבינת צ'דר אנגלי כתום מיושן במשקל",
+        "originalPrice": 11.6,
+        "clubPrice": 8.9,
+        "savingsNis": 2.7,
+        "description": "מבצע מועדון שופרסל Supreme: רק ₪8.90 (חיסכון ₪2.70)"
+      },
+      {
+        "storeKey": "carrefour",
+        "clubName": "Carrefour Club",
+        "productName": "גבינת צ'דר אנגלי כתום מיושן במשקל",
+        "originalPrice": 10.3,
+        "clubPrice": 7.9,
+        "savingsNis": 2.4,
+        "description": "מבצע Carrefour Club: רק ₪7.90 (חיסכון ₪2.40)"
+      },
+      {
+        "storeKey": "hazi_hinam",
+        "clubName": "מועדון חצי חינם",
+        "productName": "גבינת רוקפור כחולה צרפתית מיושנת במשקל",
+        "originalPrice": 17.3,
+        "clubPrice": 13.5,
+        "savingsNis": 3.8,
+        "description": "הטבת מועדון חצי חינם: רק ₪13.50 (חיסכון ₪3.80)"
+      },
+      {
+        "storeKey": "victory",
+        "clubName": "מועדון ויקטורי",
+        "productName": "גבינת גרוייר שוויצרית מסורתית במשקל",
+        "originalPrice": 17.5,
+        "clubPrice": 13.5,
+        "savingsNis": 4,
+        "description": "הטבת מועדון ויקטורי: רק ₪13.50 (חיסכון ₪4.00)"
+      },
+      {
+        "storeKey": "hazi_hinam",
+        "clubName": "מועדון חצי חינם",
+        "productName": "גבינת גרוייר שוויצרית מסורתית במשקל",
+        "originalPrice": 17.8,
+        "clubPrice": 14,
+        "savingsNis": 3.8,
+        "description": "הטבת מועדון חצי חינם: רק ₪14.00 (חיסכון ₪3.80)"
+      },
+      {
+        "storeKey": "yochananof",
+        "clubName": "מועדון יוחננוף",
+        "productName": "פסטרמה הודו בדבש מובחרת במשקל מהמעדנייה",
+        "originalPrice": 8.5,
+        "clubPrice": 4.8,
+        "savingsNis": 3.7,
+        "description": "מבצע מועדון יוחננוף: ₪4.80 ל-100 גרם"
+      },
+      {
+        "storeKey": "victory",
+        "clubName": "מועדון ויקטורי",
+        "productName": "משקה שקדים תנובה Alternative ללא תוספת סוכר 1 ליטר",
+        "originalPrice": 14,
+        "clubPrice": 10.5,
+        "savingsNis": 3.5,
+        "description": "הטבת מועדון ויקטורי: רק ₪10.50 (חיסכון ₪3.50)"
+      },
+      {
+        "storeKey": "rami_levy",
+        "clubName": "מועדון רמי לוי",
+        "productName": "תבנית 12 ביצים L (פיקוח)",
+        "originalPrice": 15.25,
+        "clubPrice": 12.9,
+        "savingsNis": 2.35,
+        "description": "הטבת מועדון רמי לוי: ₪12.90 לתבנית"
+      },
+      {
+        "storeKey": "rami_levy",
+        "clubName": "מועדון רמי לוי",
+        "productName": "גבינה צהובה גלבוע 22% תנובה פרוסה 200 גרם",
+        "originalPrice": 15.2,
+        "clubPrice": 12,
+        "savingsNis": 3.2,
+        "description": "הטבת מועדון רמי לוי: רק ₪12.00 (חיסכון ₪3.20)"
+      },
+      {
+        "storeKey": "osher_ad",
+        "clubName": "מועדון אשראי אושר עד",
+        "productName": "יוגורט יופלה שטוזים תות בננה מארז 8 גביעים (8*100 גרם)",
+        "originalPrice": 18.7,
+        "clubPrice": 15.5,
+        "savingsNis": 3.2,
+        "description": "הטבת מארז מועדון אשראי אושר עד: רק ₪15.50 (חיסכון ₪3.20)"
+      },
+      {
+        "storeKey": "osher_ad",
+        "clubName": "מועדון אשראי אושר עד",
+        "productName": "משקה יוגורט אקטימל תות בננה שטראוס מארז 8 בקבוקונים",
+        "originalPrice": 21.2,
+        "clubPrice": 18,
+        "savingsNis": 3.2,
+        "description": "הטבת מארז מועדון אשראי אושר עד: רק ₪18.00 (חיסכון ₪3.20)"
+      }
+    ]
+  }
 }

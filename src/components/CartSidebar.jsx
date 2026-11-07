@@ -7,7 +7,8 @@ import {
   Sparkles,
   Trophy,
   Scale,
-  Table
+  Table,
+  Crown
 } from 'lucide-react';
 import { STORES_METADATA } from '../data/mockStoresData';
 
@@ -20,6 +21,7 @@ export default function CartSidebar({
   oneStopRankings = [],
   optimalSplit = null,
   isShippingEnabled,
+  isClubPromotionsEnabled = true,
   onCloseMobileDrawer
 }) {
   const totalItemsCount = cart.reduce((sum, it) => sum + (it.quantity || 1), 0);
@@ -131,6 +133,11 @@ export default function CartSidebar({
                       {item.manufacturer && (
                         <span className="cart-mfg-text">• {item.manufacturer}</span>
                       )}
+                      {isClubPromotionsEnabled && Array.isArray(item.clubPromotions) && item.clubPromotions.length > 0 && (
+                        <span className="cart-club-tag" title={item.clubPromotions[0].description}>
+                          👑 {item.clubPromotions[0].clubName}
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -224,6 +231,16 @@ export default function CartSidebar({
                 </span>
               </div>
             )}
+
+            {/* באנר חיסכון מועדון לקוחות */}
+            {isClubPromotionsEnabled && bestStore.clubSavingsTotal > 0 && (
+              <div className="winner-club-savings-banner">
+                <Crown size={15} className="text-amber-500" />
+                <span>
+                  חיסכון מועדון לקוחות ({bestStore.store.shortName}): <strong>₪{bestStore.clubSavingsTotal.toFixed(2)}</strong> בסל זה!
+                </span>
+              </div>
+            )}
           </div>
 
           {/* כרטיס פיצול אופטימלי (אם קיים חיסכון בפיצול 2 רשתות) */}
@@ -254,6 +271,7 @@ export default function CartSidebar({
               </span>
               <span style={{ fontSize: '0.72rem', color: '#64748b' }}>
                 {isShippingEnabled ? 'כולל משלוח' : 'מחירי מדף בחנות'}
+                {isClubPromotionsEnabled ? ' • מחירי מועדון' : ''}
               </span>
             </div>
 
@@ -284,6 +302,11 @@ export default function CartSidebar({
 
                     <div className="ranking-price-box">
                       <span className="rank-final-price">₪{r.grandTotal.toFixed(2)}</span>
+                      {isClubPromotionsEnabled && r.clubSavingsTotal > 0 && (
+                        <span className="rank-club-savings-tag" title={`חיסכון מועדון ${r.store.shortName}: ₪${r.clubSavingsTotal.toFixed(2)}`}>
+                          👑 -₪{r.clubSavingsTotal.toFixed(0)} מועדון
+                        </span>
+                      )}
                       {isShippingEnabled && r.shipping > 0 && (
                         <span className="rank-shipping-note">+{r.shipping.toFixed(0)}₪ משלוח</span>
                       )}

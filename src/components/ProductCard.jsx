@@ -1,5 +1,5 @@
 import React from 'react';
-import { Plus, Minus, Trash2, Scale } from 'lucide-react';
+import { Plus, Minus, Trash2, Scale, Crown } from 'lucide-react';
 import { STORES_METADATA } from '../data/mockStoresData';
 
 export default function ProductCard({
@@ -7,7 +7,8 @@ export default function ProductCard({
   quantity = 0,
   onAddToCart,
   onUpdateQuantity,
-  onRemoveFromCart
+  onRemoveFromCart,
+  isClubPromotionsEnabled = true
 }) {
   // חישוב מחיר מינימלי, מקסימלי והרשת הזולה ביותר
   const prices = product.prices || {};
@@ -26,6 +27,11 @@ export default function ProductCard({
       }
     }
   }
+
+  // מציאת הטבת המועדון המשתלמת ביותר
+  const bestClubPromo = (isClubPromotionsEnabled && Array.isArray(product.clubPromotions) && product.clubPromotions.length > 0)
+    ? product.clubPromotions.reduce((best, curr) => (!best || (curr.savingsNis || 0) > (best.savingsNis || 0) ? curr : best), null)
+    : null;
 
   const cheapestStore = STORES_METADATA[cheapestStoreKey] || { shortName: 'רמי לוי', color: '#0284c7' };
   const hasRange = maxPrice > minPrice && minPrice !== Infinity;
@@ -50,7 +56,7 @@ export default function ProductCard({
 
   return (
     <div className={`modern-product-card ${quantity > 0 ? 'card-in-cart' : ''}`}>
-      {/* תגיות עליונות: יצרן ומשקל מעדנייה */}
+      {/* תגיות עליונות: יצרן, משקל מעדנייה והטבת מועדון */}
       <div className="card-top-badges">
         <span className="mfg-pill">
           {product.manufacturer || 'סופרמרקט'}
@@ -59,6 +65,12 @@ export default function ProductCard({
           <span className="weight-deli-badge" title="מוצר הנמכר במשקל במעדנייה">
             <Scale size={12} />
             <span>במשקל</span>
+          </span>
+        )}
+        {bestClubPromo && (
+          <span className="card-club-top-tag" title={bestClubPromo.description}>
+            <Crown size={11} className="text-amber-500" />
+            <span>מועדון</span>
           </span>
         )}
       </div>
@@ -96,6 +108,16 @@ export default function ProductCard({
             <span className="per-weight-label">לק״ג</span>
           )}
         </div>
+
+        {/* באנר מועדון נוצץ עם מחיר מועדון */}
+        {bestClubPromo && (
+          <div className="product-club-highlight-pill" title={bestClubPromo.description}>
+            <Crown size={13} className="text-amber-500 club-icon-bounce" />
+            <span className="club-pill-text">
+              👑 <strong>₪{bestClubPromo.clubPrice.toFixed(2)}</strong> לחברי {bestClubPromo.clubName}
+            </span>
+          </div>
+        )}
 
         <div className="cheapest-store-pill" style={{ borderColor: `${cheapestStore.color}30` }}>
           <span className="store-dot" style={{ backgroundColor: cheapestStore.color }} />

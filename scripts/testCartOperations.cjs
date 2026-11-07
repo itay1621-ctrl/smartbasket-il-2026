@@ -116,4 +116,33 @@ assert(split, 'Optimal split must return an object');
 assert.strictEqual(split.pair.length, 2, 'Split must choose 2 stores');
 assert(split.grandTotal <= rankingsNoShipping[0].grandTotal, 'Split total must be <= best single store');
 
-console.log('✅ ALL CART OPERATIONS & COMPARISON CALCULATIONS PASSED 100%!');
+// Test Club Promotions Engine
+console.log('Testing Club Promotions Engine & Savings Calculations...');
+const rankingsClubOn = calculateOneStopRankings(cart, false, true);
+const rankingsClubOff = calculateOneStopRankings(cart, false, false);
+
+assert.strictEqual(rankingsClubOn.length, 7);
+assert.strictEqual(rankingsClubOff.length, 7);
+
+// Check that club savings are tracked and that total with club is <= total without club
+rankingsClubOn.forEach((r, idx) => {
+  const offRank = rankingsClubOff.find(o => o.storeKey === r.storeKey);
+  assert(offRank, `Matching store ${r.storeKey} must exist in club-off rankings`);
+  assert(r.grandTotal <= offRank.grandTotal, `Club price for ${r.storeKey} (${r.grandTotal}) must be <= regular price (${offRank.grandTotal})`);
+  assert(typeof r.clubSavingsTotal === 'number', 'clubSavingsTotal must be numeric');
+  assert.strictEqual(Number((offRank.grandTotal - r.grandTotal).toFixed(2)), r.clubSavingsTotal, 'Savings must equal difference between regular and club price');
+});
+
+// Verify catalog contains clubPromotions field
+assert(Array.isArray(cheese100g.clubPromotions), 'cheese100g must have clubPromotions array');
+assert(cheese100g.clubPromotions.length > 0, 'cheese100g must have at least one club promo');
+const promoSample = cheese100g.clubPromotions[0];
+assert(promoSample.storeKey, 'Promotion must have storeKey');
+assert(promoSample.clubName, 'Promotion must have clubName');
+assert(typeof promoSample.originalPrice === 'number', 'Promotion must have numeric originalPrice');
+assert(typeof promoSample.clubPrice === 'number', 'Promotion must have numeric clubPrice');
+assert(typeof promoSample.savingsNis === 'number', 'Promotion must have numeric savingsNis');
+assert(promoSample.savingsNis > 0, 'Promotion savingsNis must be positive');
+assert(promoSample.description, 'Promotion must have description');
+
+console.log('✅ ALL CART OPERATIONS & CLUB PROMOTIONS CALCULATIONS PASSED 100%!');

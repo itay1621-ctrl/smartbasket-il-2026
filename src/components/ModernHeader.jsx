@@ -1,11 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Search, Truck, Download, CheckCircle2, X } from 'lucide-react';
+import { ShoppingBag, Search, Truck, Download, CheckCircle2, X, Crown } from 'lucide-react';
 
 export default function ModernHeader({
   searchTerm,
   setSearchTerm,
   isShippingEnabled,
   setIsShippingEnabled,
+  isClubPromotionsEnabled = true,
+  setIsClubPromotionsEnabled,
   cartCount,
   cartTotal,
   onOpenMobileCart
@@ -81,6 +83,26 @@ export default function ModernHeader({
 
         {/* פקדי צד עליונים: מתג משלוח, כפתור סל מהיר, כפתור התקנה */}
         <div className="header-actions">
+          {/* מתג מועדון לקוחות */}
+          {setIsClubPromotionsEnabled && (
+            <button
+              type="button"
+              className={`club-promo-quick-pill ${isClubPromotionsEnabled ? 'club-promo-on' : 'club-promo-off'}`}
+              onClick={() => setIsClubPromotionsEnabled(!isClubPromotionsEnabled)}
+              title="שקלל מבצעי מועדון שופרסל Supreme, רמי לוי, קרפור Club ועוד"
+            >
+              <Crown size={16} />
+              <div style={{ textAlign: 'right', lineHeight: 1.15 }}>
+                <span style={{ fontSize: '0.72rem', display: 'block', opacity: 0.85 }}>
+                  {isClubPromotionsEnabled ? 'מבצעי מועדון' : 'מחירי מועדון'}
+                </span>
+                <span style={{ fontSize: '0.8rem', fontWeight: 800 }}>
+                  {isClubPromotionsEnabled ? '👑 מופעל' : 'ללא מועדון'}
+                </span>
+              </div>
+            </button>
+          )}
+
           {/* מתג מהיר למשלוח עד הבית */}
           <button
             type="button"

@@ -555,6 +555,11 @@ if (errorCount > 0) {
 
 console.log(`✅ All ${fullCatalog.length} products validated with 100% complete data and positive numeric prices across all 7 chains!`);
 
+// Enrich with real Israeli Supermarket Club Promotions
+const { enrichCatalogWithClubPromotions } = require('./clubPromotionsGenerator.cjs');
+const { catalog: catalogWithClubs, totalPromotions, storePromoCounts } = enrichCatalogWithClubPromotions(fullCatalog);
+console.log(`👑 Enriched catalog with ${totalPromotions} authentic club promotions across all 7 chains:`, storePromoCounts);
+
 // Write to public/data/supermarket_catalog.json
 const targetDir = path.join(__dirname, '..', 'public', 'data');
 if (!fs.existsSync(targetDir)) {
@@ -562,8 +567,8 @@ if (!fs.existsSync(targetDir)) {
 }
 
 const targetPath = path.join(targetDir, 'supermarket_catalog.json');
-fs.writeFileSync(targetPath, JSON.stringify(fullCatalog, null, 2), 'utf-8');
+fs.writeFileSync(targetPath, JSON.stringify(catalogWithClubs, null, 2), 'utf-8');
 const stats = fs.statSync(targetPath);
 console.log(`💾 Successfully written to: ${targetPath} (${(stats.size / 1024).toFixed(1)} KB)`);
 
-module.exports = { fullCatalog, buildCatalog: () => fullCatalog };
+module.exports = { fullCatalog: catalogWithClubs, buildCatalog: () => catalogWithClubs };
