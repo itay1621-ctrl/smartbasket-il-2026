@@ -356,8 +356,15 @@ const brandLongTail = [
   { cat: 'snacks_sweets', mfg: 'עלית שטראוס', name: 'חטיף אגוזי נוגט ושוקולד עלית 45 גרם', unit: '45 גרם', price: 4.50 },
   { cat: 'snacks_sweets', mfg: 'עלית שטראוס', name: 'חטיף טוויסט שוקולד וקרמל עלית 35 גרם', unit: '35 גרם', price: 4.00 },
   { cat: 'snacks_sweets', mfg: 'אסם', name: 'במבה אסם שקית ענקית 100 גרם', unit: '100 גרם', price: 6.90 },
-  { cat: 'snacks_sweets', mfg: 'אסם', name: 'ביסלי גריל אסם שקית ענקית חסכונית 200 גרם', unit: '200 גרם', price: 10.90 }
+  { cat: 'snacks_sweets', mfg: 'אסם', name: 'ביסלי גריל אסם שקית ענקית חסכונית 200 גרם', unit: '200 גרם', price: 10.90 },
 
+  // מוצרים מבוקשים נוספים ברשתות המזון בישראל (השלמת קטלוג מלאה)
+  { cat: 'meat_fish', mfg: 'קצביות הרשת', name: 'סטייק אנטרקוט בקר ישראלי טרי מיושן (מחיר לק"ג)', unit: '1 ק"ג', price: 139.90, isWeight: true },
+  { cat: 'dairy_eggs', mfg: 'טרה', name: 'חמאת טרה טהורה ללא תוספת מלח 100 גרם', unit: '100 גרם', price: 5.40 },
+  { cat: 'dairy_eggs', mfg: 'טרה', name: 'קוטג׳ טרה 5% גביע 250 גרם', unit: '250 גרם', price: 6.90 },
+  { cat: 'bakery', mfg: 'אסם', name: 'קרקר זהב פריך קלאסי אסם 300 גרם', unit: '300 גרם', price: 11.90 },
+  { cat: 'bakery', mfg: 'אסם', name: 'לחמית אסם 5 דגנים פריכה 250 גרם', unit: '250 גרם', price: 12.90 },
+  { cat: 'canned_cooking', mfg: 'יד מרדכי', name: 'שמן זית כתית מעולה חמיצות עד 0.5% יד מרדכי 750 מ"ל', unit: '750 מ"ל', price: 44.90 }
 ];
 
 let barcodeCounter = 7290000060000;
@@ -373,17 +380,63 @@ for (const group of expansionCategories) {
     for (const itemTitle of tpl.items) {
       barcodeCounter++;
       idCounter++;
-      const mfg = group.mfg[mfgIndex % group.mfg.length];
+
+      // ניקוי כותרות קטגוריה שמשתרבבות לשם המוצר
+      const isCategoryDescriptor = tpl.prefix.includes('מובחר') || 
+                                   tpl.prefix.includes('מיוחד') || 
+                                   tpl.prefix.includes('מסורתי') || 
+                                   tpl.prefix.includes('טריים') || 
+                                   tpl.prefix.includes('איכותיים') || 
+                                   tpl.prefix.includes('פרימיום');
+
+      let fullName;
+      if (isCategoryDescriptor && itemTitle.length >= 7) {
+        fullName = itemTitle;
+      } else if (tpl.prefix) {
+        fullName = `${tpl.prefix} ${itemTitle}`;
+      } else {
+        fullName = itemTitle;
+      }
+
+      // זיהוי יצרן חכם לפי שם המוצר
+      let itemMfg = group.mfg[mfgIndex % group.mfg.length];
       mfgIndex++;
 
-      const fullName = `${tpl.prefix} ${itemTitle}`;
+      const lowerTitle = (itemTitle + ' ' + fullName).toLowerCase();
+      if (lowerTitle.includes('מוטי') || lowerTitle.includes('mutti')) itemMfg = 'מוטי Mutti';
+      else if (lowerTitle.includes('היינץ') || lowerTitle.includes('heinz')) itemMfg = 'היינץ Heinz';
+      else if (lowerTitle.includes('הלמנס')) itemMfg = 'יוניליוור (הלמנס)';
+      else if (lowerTitle.includes('ברילה')) itemMfg = 'ברילה Barilla';
+      else if (lowerTitle.includes('סנפרוסט')) itemMfg = 'סנפרוסט';
+      else if (lowerTitle.includes('טבעול')) itemMfg = 'טבעול';
+      else if (lowerTitle.includes('מעדנות')) itemMfg = 'מעדנות';
+      else if (lowerTitle.includes('תנובה')) itemMfg = 'תנובה';
+      else if (lowerTitle.includes('טרה')) itemMfg = 'טרה';
+      else if (lowerTitle.includes('גד')) itemMfg = 'מחלבות גד';
+      else if (lowerTitle.includes('שטראוס')) itemMfg = 'שטראוס';
+      else if (lowerTitle.includes('צוריאל')) itemMfg = 'משק צוריאל';
+      else if (lowerTitle.includes('טירת צבי')) itemMfg = 'טירת צבי';
+      else if (lowerTitle.includes('זוגלובק')) itemMfg = 'זוגלובק';
+      else if (lowerTitle.includes('יחיעם')) itemMfg = 'יחיעם';
+      else if (lowerTitle.includes('אסם')) itemMfg = 'אסם';
+      else if (lowerTitle.includes('סוגת')) itemMfg = 'סוגת';
+      else if (lowerTitle.includes('אנג\'ל')) itemMfg = 'מאפיות אנג\'ל';
+      else if (lowerTitle.includes('ברמן')) itemMfg = 'מאפיות ברמן';
+      else if (lowerTitle.includes('בית השיטה')) itemMfg = 'בית השיטה';
+      else if (lowerTitle.includes('הר ברכה')) itemMfg = 'הר ברכה';
+      else if (lowerTitle.includes('אל ארז')) itemMfg = 'אל ארז';
+      else if (lowerTitle.includes('היונה')) itemMfg = 'היונה';
+      else if (lowerTitle.includes('יכין')) itemMfg = 'יכין';
+      else if (lowerTitle.includes('דלידג')) itemMfg = 'דלידג';
+      else if (lowerTitle.includes('בן אנד ג\'ריס')) itemMfg = 'בן אנד ג\'ריס';
+
       const basePrice = round1(tpl.price * (0.95 + ((barcodeCounter % 7) * 0.02)));
 
       generatedExpansionItems.push({
         id: `${cat}_exp_${idCounter}`,
         barcode: String(barcodeCounter),
         name: fullName,
-        manufacturer: mfg,
+        manufacturer: itemMfg,
         unit: tpl.unit,
         category: cat,
         isRegulated: false,
@@ -408,6 +461,7 @@ for (const b of brandLongTail) {
     unit: b.unit,
     category: b.cat,
     isRegulated: false,
+    isWeight: !!b.isWeight,
     aliases: [b.name],
     prices: calcPrices(basePrice, false, idCounter)
   });
@@ -415,10 +469,21 @@ for (const b of brandLongTail) {
 
 console.log(`Generated expansion items: ${generatedExpansionItems.length}`);
 
-// Combine all items and normalize fields
+// Combine all items and deduplicate
 const rawCatalog = [...baseItems, ...generatedExpansionItems];
+const seenNames = new Set();
+const dedupedCatalog = [];
 
-const fullCatalog = rawCatalog.map((item, index) => {
+for (const item of rawCatalog) {
+  const normName = item.name.trim();
+  if (seenNames.has(normName)) {
+    continue;
+  }
+  seenNames.add(normName);
+  dedupedCatalog.push(item);
+}
+
+const fullCatalog = dedupedCatalog.map((item, index) => {
   const isWeightItem = item.isWeight || 
     item.category === 'deli_cheese' || 
     (item.unit && (item.unit.includes('משקל') || item.unit.includes('ק"ג') || item.unit.includes('ק״ג') || item.unit.includes('100 גרם')));

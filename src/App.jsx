@@ -77,14 +77,14 @@ export default function App() {
             const savedCart = localStorage.getItem('smartbasket_v3_cart');
             if (!savedCart || JSON.parse(savedCart).length === 0) {
               const starterIds = [
-                'dairy_eggs_1', // חלב 3%
-                'dairy_eggs_2', // ביצים L
-                'deli_01',      // גבינה צהובה עמק במשקל 100 גרם
-                'deli_07',      // פטה כבשים במשקל
-                'produce_1',    // עגבניות
-                'produce_2',    // מלפפונים
-                'meat_1',       // חזה עוף שניצל
-                'canned_1'      // טונה
+                'dairy_eggs_1',      // חלב תנובה 3%
+                'dairy_eggs_18',     // תבנית 12 ביצים L
+                'deli_01',           // גבינה צהובה עמק במשקל 100 גרם
+                'deli_28',           // פסטרמה הודו בדבש במשקל 100 גרם
+                'produce_1',         // עגבניות
+                'produce_2',         // מלפפונים
+                'meat_fish_1',       // חזה עוף שניצל
+                'canned_cooking_13'  // טונה סטארקיסט
               ];
               const starterItems = data
                 .filter(p => starterIds.includes(p.id))
@@ -183,20 +183,32 @@ export default function App() {
     }
   };
 
+  // נעילת גלילת רקע כאשר מגירת המובייל פתוחה
+  useEffect(() => {
+    if (isMobileCartOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = '';
+    }
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [isMobileCartOpen]);
+
   const loadSampleBasket = () => {
     if (catalog.length === 0) return;
     const sampleIds = [
-      'dairy_eggs_1', // חלב
-      'dairy_eggs_2', // ביצים
-      'deli_01',      // גבינת עמק במשקל
-      'deli_05',      // בולגרית פיראוס במשקל
-      'deli_23',      // זיתי קלמטה במשקל
-      'produce_1',    // עגבניות
-      'produce_2',    // מלפפונים
-      'bakery_1',     // לחם אחיד
-      'meat_1',       // חזה עוף
-      'canned_1',     // טונה
-      'coffee_1'      // קפה נמס
+      'dairy_eggs_1',      // חלב תנובה 3%
+      'dairy_eggs_18',     // תבנית 12 ביצים L
+      'deli_01',           // גבינת עמק במשקל
+      'deli_05',           // בולגרית פיראוס במשקל
+      'deli_28',           // פסטרמה הודו בדבש במשקל
+      'produce_1',         // עגבניות
+      'produce_2',         // מלפפונים
+      'bakery_1',          // לחם אחיד
+      'meat_fish_1',       // חזה עוף טרי
+      'canned_cooking_13', // טונה סטארקיסט
+      'coffee_tea_3'       // קפה נמס טסטרס צ'ויס
     ];
     const sampleItems = catalog
       .filter(p => sampleIds.includes(p.id))
@@ -373,22 +385,43 @@ export default function App() {
               )}
             </div>
 
-            {/* גריד כרטיסי המוצרים */}
-            <div className="products-responsive-grid">
-              {visibleProducts.map((product) => {
-                const qty = cartQuantityMap[product.id] || 0;
-                return (
-                  <ProductCard
-                    key={product.id}
-                    product={product}
-                    quantity={qty}
-                    onAddToCart={addToCart}
-                    onUpdateQuantity={updateQuantity}
-                    onRemoveFromCart={removeFromCart}
-                  />
-                );
-              })}
-            </div>
+            {/* גריד כרטיסי המוצרים או מצב ריק בחיפוש */}
+            {filteredAndSortedProducts.length === 0 ? (
+              <div className="catalog-empty-state">
+                <div className="empty-search-icon">🔍</div>
+                <h3 className="empty-search-title">לא נמצאו מוצרים התואמים לחיפוש</h3>
+                <p className="empty-search-text">
+                  לא מצאנו תוצאות עבור <strong>"{searchTerm}"</strong> {selectedCategory !== 'all' ? 'במחלקה זו' : ''}.
+                  בדקו שגיאות הקלדה או נסו לחפש מילה קצרה יותר (לדוגמה: "חלב", "גבינה", "עגבניות").
+                </p>
+                <button
+                  type="button"
+                  className="btn-clear-search-action"
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSelectedCategory('all');
+                  }}
+                >
+                  נקה חיפוש והצג את כל המוצרים
+                </button>
+              </div>
+            ) : (
+              <div className="products-responsive-grid">
+                {visibleProducts.map((product) => {
+                  const qty = cartQuantityMap[product.id] || 0;
+                  return (
+                    <ProductCard
+                      key={product.id}
+                      product={product}
+                      quantity={qty}
+                      onAddToCart={addToCart}
+                      onUpdateQuantity={updateQuantity}
+                      onRemoveFromCart={removeFromCart}
+                    />
+                  );
+                })}
+              </div>
+            )}
 
             {/* כפתור טעינת מוצרים נוספים */}
             {visibleProducts.length < filteredAndSortedProducts.length && (

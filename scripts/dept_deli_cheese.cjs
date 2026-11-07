@@ -327,6 +327,90 @@ function getDeliCheese() {
       weightUnit: "גרם",
       basePrice: 18.90,
       aliases: ["סלמון מעושן במשקל", "סלמון מעדניה", "לקס", "פילה סלמון מעושן"]
+    },
+    {
+      id: "deli_28",
+      barcode: "7290000081028",
+      name: "פסטרמה הודו בדבש מובחרת במשקל מהמעדנייה",
+      manufacturer: "טירת צבי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 8.20,
+      aliases: ["פסטרמה בדבש", "פסטרמה בדבש במשקל", "פסטרמה טירת צבי דבש"]
+    },
+    {
+      id: "deli_29",
+      barcode: "7290000081029",
+      name: "פסטרמה הודו מעושנת פרימיום במשקל מהמעדנייה",
+      manufacturer: "יחיעם",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 8.50,
+      aliases: ["פסטרמה יחיעם", "הודו מעושן במשקל", "פסטרמה מעושנת"]
+    },
+    {
+      id: "deli_30",
+      barcode: "7290000081030",
+      name: "נקניק סלמי איטלקי יבש במשקל מהמעדנייה",
+      manufacturer: "זוגלובק",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 11.90,
+      aliases: ["סלמי איטלקי במשקל", "סלמי יבש", "סלמי מעדניה"]
+    },
+    {
+      id: "deli_31",
+      barcode: "7290000081031",
+      name: "נקניק סלמי תה מסורתי במשקל מהמעדנייה",
+      manufacturer: "טירת צבי",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 6.90,
+      aliases: ["נקניק תה", "סלמי תה במשקל", "סלמי תה טירת צבי"]
+    },
+    {
+      id: "deli_32",
+      barcode: "7290000081032",
+      name: "קורנדביף חזה בקר מעושן פרוס במעדנייה",
+      manufacturer: "יחיעם",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 13.90,
+      aliases: ["קורנדביף", "קורנביף במשקל", "בקר מעושן קורנדביף"]
+    },
+    {
+      id: "deli_33",
+      barcode: "7290000081033",
+      name: "חזה עוף מעושן ועסיסי פרוס במעדנייה",
+      manufacturer: "זוגלובק",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 7.90,
+      aliases: ["חזה עוף מעושן", "עוף מעושן במשקל", "פסטרמה עוף"]
+    },
+    {
+      id: "deli_34",
+      barcode: "7290000081034",
+      name: "נקניק קבנוס קלאסי יבש במשקל מהמעדנייה",
+      manufacturer: "יחיעם",
+      unit: "100 גרם במשקל",
+      isWeight: true,
+      weightStep: 100,
+      weightUnit: "גרם",
+      basePrice: 9.90,
+      aliases: ["קבנוס במשקל", "קבנוס יחיעם מעדניה", "קבנוס יבש"]
     }
   ];
 

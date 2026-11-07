@@ -30,19 +30,22 @@ export default function ProductCard({
   const cheapestStore = STORES_METADATA[cheapestStoreKey] || { shortName: 'רמי לוי', color: '#0284c7' };
   const hasRange = maxPrice > minPrice && minPrice !== Infinity;
   const isWeightItem = product.isWeight || product.category === 'deli_cheese';
+  const isDeli100g = product.category === 'deli_cheese' || product.weightStep === 100 || (product.unit && product.unit.includes('100 גרם'));
+  const isKg = !isDeli100g && (product.isWeight || (product.unit && (product.unit.includes('ק"ג') || product.unit.includes('ק״ג'))));
 
   // תצוגת משקל כאשר הפריט בסל
   const renderInCartWeight = () => {
-    if (!isWeightItem) return `${quantity} יח׳ בסל`;
-    const step = product.weightStep || 100;
-    if (step === 100) {
+    if (isDeli100g) {
       const totalG = quantity * 100;
       if (totalG >= 1000) {
         return `${(totalG / 1000).toFixed(1)} ק״ג (${quantity} × 100 ג׳)`;
       }
       return `${totalG} גרם (${quantity} × 100 ג׳)`;
     }
-    return `${quantity} ק״ג`;
+    if (isKg) {
+      return `${quantity} ק״ג בסל`;
+    }
+    return `${quantity} ${product.unit || 'יח׳'} בסל`;
   };
 
   return (
@@ -86,8 +89,11 @@ export default function ProductCard({
           <span className="cheapest-price-number">
             ₪{minPrice !== Infinity ? minPrice.toFixed(2) : '-'}
           </span>
-          {isWeightItem && (
+          {isDeli100g && (
             <span className="per-weight-label">ל-100ג׳</span>
+          )}
+          {isKg && (
+            <span className="per-weight-label">לק״ג</span>
           )}
         </div>
 
@@ -113,7 +119,7 @@ export default function ProductCard({
           </button>
         ) : (
           <div className="card-stepper-container">
-            {/* כפתור הפחתה או מחיקה */}
+            {/* כפתור הפחתה */}
             <button
               type="button"
               className="stepper-btn stepper-btn-minus"
@@ -123,7 +129,7 @@ export default function ProductCard({
               }}
               title={quantity === 1 ? 'הסר מהסל' : 'הפחת כמות'}
             >
-              {quantity === 1 ? <Trash2 size={15} className="text-red-500" /> : <Minus size={15} />}
+              <Minus size={15} />
             </button>
 
             {/* כמות ותצוגת משקל */}

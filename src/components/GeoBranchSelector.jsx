@@ -281,24 +281,29 @@ export default function GeoBranchSelector({
                           backgroundColor: '#f8fafc',
                           border: '1px solid #e2e8f0',
                           borderRadius: '8px',
-                          padding: '0.5rem',
+                          padding: '0.6rem',
                           marginBlockStart: '0.35rem',
-                          fontSize: '0.72rem',
+                          fontSize: '0.75rem',
                           display: 'flex',
                           flexDirection: 'column',
-                          gap: '0.2rem',
+                          gap: '0.25rem',
                           color: '#334155'
                         }}
                       >
-                        <div>
-                          <strong>א׳-ה׳:</strong> {branch.hours.weekdays}
-                        </div>
-                        <div>
-                          <strong>ו׳ וערבי חג:</strong> {branch.hours.friday}
-                        </div>
-                        <div>
-                          <strong>מוצ"ש:</strong> {branch.hours.saturday}
-                        </div>
+                        {branch.hours ? (
+                          <>
+                            <div><strong>א׳-ה׳:</strong> {branch.hours.weekdays}</div>
+                            <div><strong>ו׳ וערבי חג:</strong> {branch.hours.friday}</div>
+                            <div><strong>מוצ"ש:</strong> {branch.hours.saturday}</div>
+                          </>
+                        ) : (
+                          (branch.hoursDisplay || '').split('|').map((part, pIdx) => (
+                            <div key={pIdx} style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                              <span>•</span>
+                              <span>{part.trim()}</span>
+                            </div>
+                          ))
+                        )}
                       </div>
                     ) : (
                       <div style={{ fontSize: '0.72rem', color: '#64748b', marginBlockStart: '0.15rem' }}>

@@ -859,8 +859,8 @@ html, body {
 }
 
 .cart-btn-stepper {
-  width: 24px;
-  height: 24px;
+  width: 30px;
+  height: 30px;
   border-radius: 6px;
   border: none;
   background: #ffffff;
@@ -873,15 +873,15 @@ html, body {
 }
 
 .cart-qty-number {
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   font-weight: 800;
-  min-width: 20px;
+  min-width: 24px;
   text-align: center;
 }
 
 .cart-btn-trash-direct {
-  width: 26px;
-  height: 26px;
+  width: 32px;
+  height: 32px;
   border-radius: 6px;
   border: none;
   background: #fee2e2;
@@ -890,7 +890,7 @@ html, body {
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  margin-right: 2px;
+  margin-inline-start: 4px;
 }
 
 .cart-btn-trash-direct:hover {
@@ -1151,6 +1151,15 @@ html, body {
   box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 }
 
+@keyframes slideInRtlDrawer {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
 .mobile-drawer-overlay {
   position: fixed;
   inset: 0;
@@ -1158,7 +1167,7 @@ html, body {
   backdrop-filter: blur(4px);
   z-index: 80;
   display: flex;
-  justify-content: flex-end;
+  justify-content: flex-start;
 }
 
 .mobile-drawer-sheet {
@@ -1167,8 +1176,14 @@ html, body {
   background: #f8fafc;
   height: 100%;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 1rem;
   box-shadow: var(--shadow-modal);
+  animation: slideInRtlDrawer 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.mobile-drawer-sheet .cart-items-scroll-area {
+  max-height: none;
 }
 
 /* ========================================================
@@ -1345,4 +1360,135 @@ html, body {
   .cheapest-price-number {
     font-size: 1.15rem;
   }
+}
+
+/* ========================================================
+   EMPTY SEARCH STATE & MATRIX MODAL STYLES
+======================================================== */
+.catalog-empty-state {
+  background: #ffffff;
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--radius-xl);
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  margin: 1.5rem 0;
+  box-shadow: var(--shadow-card);
+}
+
+.empty-search-icon {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+  opacity: 0.85;
+}
+
+.empty-search-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--text-main);
+  margin-bottom: 0.5rem;
+}
+
+.empty-search-text {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  max-width: 480px;
+  margin: 0 auto 1.25rem;
+  line-height: 1.5;
+}
+
+.btn-clear-search-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.65rem 1.4rem;
+  border-radius: var(--radius-md);
+  background: var(--primary);
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 0.9rem;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 10px rgba(2, 132, 199, 0.25);
+}
+
+.btn-clear-search-action:hover {
+  background: var(--primary-hover);
+  transform: translateY(-1px);
+}
+
+.matrix-close-btn-styled {
+  padding: 0.55rem 1.25rem;
+  border-radius: var(--radius-md);
+  background: #f1f5f9;
+  color: #334155;
+  font-weight: 700;
+  font-size: 0.85rem;
+  border: 1px solid #cbd5e1;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.matrix-close-btn-styled:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+/* ========================================================
+   UTILITY & COLOR CLASSES
+======================================================== */
+.text-white { color: #ffffff !important; }
+.text-red-500 { color: #ef4444 !important; }
+.text-emerald-500 { color: #10b981 !important; }
+.text-emerald-600 { color: #059669 !important; }
+.text-amber-500 { color: #f59e0b !important; }
+.text-amber-600 { color: #d97706 !important; }
+.text-sky-500 { color: #0ea5e9 !important; }
+.text-sky-600 { color: #0284c7 !important; }
+.text-blue-600 { color: #2563eb !important; }
+.text-slate-400 { color: #94a3b8 !important; }
+.text-slate-600 { color: #475569 !important; }
+
+.card {
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--border-light);
+  box-shadow: var(--shadow-card);
+  padding: 1.25rem;
+}
+
+.card-header {
+  margin-bottom: 1rem;
+}
+
+.card-title {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--text-main);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  font-family: inherit;
+  font-weight: 700;
+  font-size: 0.88rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-secondary {
+  background: #f1f5f9;
+  color: #334155;
+  border-color: #cbd5e1;
+}
+
+.btn-secondary:hover {
+  background: #e2e8f0;
+  color: #0f172a;
 }
