@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-07T14:33:57.345Z",
+  "timestamp": "2026-11-08T04:48:50.245Z",
   "status": "success",
   "chains": [
     "rami_levy",
@@ -31,7 +31,7 @@
   "validPriceProducts": 1092,
   "missingPricesCount": 0,
   "categoriesCount": 13,
-  "durationMs": 3435,
+  "durationMs": 3680,
   "clubPromotionsSummary": {
     "totalPromotionsCount": 898,
     "itemsWithPromotionsCount": 645,
