@@ -19,17 +19,19 @@
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800;900&family=Rubik:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <script type="module" crossorigin src="./assets/index-BMZhU8Xa.js"></script>
-    <link rel="modulepreload" crossorigin href="./assets/optimizer-B7bMxaSx.js">
+    <script type="module" crossorigin src="./assets/index-CZYYoPcf.js"></script>
+    <link rel="modulepreload" crossorigin href="./assets/optimizer-DPRrMVxR.js">
     <link rel="modulepreload" crossorigin href="./assets/geo-regions-aix3_kQc.js">
-    <link rel="stylesheet" crossorigin href="./assets/index-Cu8x8d-p.css">
+    <link rel="stylesheet" crossorigin href="./assets/index-BPe_p-Su.css">
   </head>
   <body>
     <div id="root"></div>
     <script>
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js').catch(err => console.log('SW registration error:', err));
+          navigator.serviceWorker.register('./sw.js').then((reg) => {
+            reg.update();
+          }).catch(err => console.log('SW registration error:', err));
         });
       }
     </script>

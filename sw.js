@@ -1,11 +1,11 @@
 // SmartBasket IL 2026 - Service Worker
-const CACHE_NAME = 'smartbasket-v1-2026';
+const CACHE_NAME = 'smartbasket-v4-2026';
 const ASSETS = [
-  '/',
-  '/index.html',
-  '/manifest.json',
-  '/icons/icon-192.svg',
-  '/icons/icon-512.svg'
+  './',
+  './index.html',
+  './manifest.json',
+  './icons/icon-192.svg',
+  './icons/icon-512.svg'
 ];
 
 self.addEventListener('install', (event) => {
@@ -30,6 +30,24 @@ self.addEventListener('activate', (event) => {
 
 self.addEventListener('fetch', (event) => {
   if (event.request.method !== 'GET') return;
+
+  // עבור קובצי נתונים ו-JSON - תמיד Network-First כדי שהמחירים והקטלוג יהיו מעודכנים ב-100%!
+  if (event.request.url.includes('.json') || event.request.url.includes('/data/')) {
+    event.respondWith(
+      fetch(event.request)
+        .then((response) => {
+          if (response && response.status === 200) {
+            const cacheCopy = response.clone();
+            caches.open(CACHE_NAME).then((cache) => cache.put(event.request, cacheCopy));
+          }
+          return response;
+        })
+        .catch(() => caches.match(event.request))
+    );
+    return;
+  }
+
+  // עבור קבצים סטטיים אחרים
   event.respondWith(
     caches.match(event.request).then((cached) => {
       const networked = fetch(event.request)
