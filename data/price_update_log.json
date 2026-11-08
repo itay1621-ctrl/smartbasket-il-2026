@@ -1,5 +1,5 @@
 {
-  "timestamp": "2026-11-08T04:48:50.245Z",
+  "timestamp": "2026-11-08T06:19:40.924Z",
   "status": "success",
   "chains": [
     "rami_levy",
@@ -27,24 +27,24 @@
       "status": "getaddrinfo ENOTFOUND matrixcatalog.co.il"
     }
   },
-  "totalProducts": 1092,
-  "validPriceProducts": 1092,
+  "totalProducts": 1140,
+  "validPriceProducts": 1140,
   "missingPricesCount": 0,
   "categoriesCount": 13,
-  "durationMs": 3680,
+  "durationMs": 3460,
   "clubPromotionsSummary": {
-    "totalPromotionsCount": 898,
-    "itemsWithPromotionsCount": 645,
+    "totalPromotionsCount": 953,
+    "itemsWithPromotionsCount": 682,
     "promotionsByChain": {
-      "rami_levy": 146,
-      "osher_ad": 125,
-      "yochananof": 120,
-      "shufersal_deal": 167,
-      "carrefour": 128,
-      "victory": 112,
-      "hazi_hinam": 100
+      "rami_levy": 150,
+      "osher_ad": 141,
+      "yochananof": 125,
+      "shufersal_deal": 182,
+      "carrefour": 124,
+      "victory": 127,
+      "hazi_hinam": 104
     },
-    "totalPotentialSavingsNis": 4092.5,
+    "totalPotentialSavingsNis": 4301.4,
     "averageDiscountPercent": 21.1,
     "featuredActiveDeals": [
       {

@@ -83,6 +83,26 @@ export default function ProductCatalogBrowser({
 
     // מיון לפי בחירת המשתמש
     result.sort((a, b) => {
+      // אם יש חיפוש פעיל, תעדוף התאמה רלוונטית מדויקת
+      if (searchTerm.trim() && sortBy === 'popular') {
+        const t = searchTerm.trim().toLowerCase();
+        const score = (prod) => {
+          const nm = (prod.name || '').toLowerCase();
+          const mf = (prod.manufacturer || '').toLowerCase();
+          if (nm === t) return 100;
+          if (nm.startsWith(t)) return 80;
+          if (nm.includes(' ' + t) || nm.includes(t + ' ')) return 70;
+          if (prod.aliases && prod.aliases.some((al) => al.toLowerCase() === t)) return 65;
+          if (prod.aliases && prod.aliases.some((al) => al.toLowerCase().startsWith(t))) return 60;
+          if (prod.aliases && prod.aliases.some((al) => al.toLowerCase().includes(t))) return 50;
+          if (mf.includes(t)) return 40;
+          if (nm.includes(t)) return 30;
+          return 0;
+        };
+        const scoreDiff = score(b) - score(a);
+        if (scoreDiff !== 0) return scoreDiff;
+      }
+
       if (sortBy === 'price_asc') {
         return getMinPrice(a) - getMinPrice(b);
       }

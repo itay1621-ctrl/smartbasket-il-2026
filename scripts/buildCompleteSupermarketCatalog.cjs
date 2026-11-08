@@ -387,7 +387,10 @@ for (const group of expansionCategories) {
                                    tpl.prefix.includes('מסורתי') || 
                                    tpl.prefix.includes('טריים') || 
                                    tpl.prefix.includes('איכותיים') || 
-                                   tpl.prefix.includes('פרימיום');
+                                   tpl.prefix.includes('פרימיום') ||
+                                   tpl.prefix.includes('אירוח') ||
+                                   tpl.prefix.includes('חומרי ניקוי') ||
+                                   tpl.prefix.includes('מוצרי נייר');
 
       let fullName;
       if (isCategoryDescriptor && itemTitle.length >= 7) {
@@ -429,6 +432,26 @@ for (const group of expansionCategories) {
       else if (lowerTitle.includes('יכין')) itemMfg = 'יכין';
       else if (lowerTitle.includes('דלידג')) itemMfg = 'דלידג';
       else if (lowerTitle.includes('בן אנד ג\'ריס')) itemMfg = 'בן אנד ג\'ריס';
+      else if (lowerTitle.includes('וניש') || lowerTitle.includes('קליה') || lowerTitle.includes('vanish')) itemMfg = 'וניש קליה Vanish';
+      else if (lowerTitle.includes('קלגון') || lowerTitle.includes('calgon')) itemMfg = 'קלגון Calgon';
+      else if (lowerTitle.includes('ברף') || lowerTitle.includes('bref')) itemMfg = 'ברף Bref';
+      else if (lowerTitle.includes('סומט') || lowerTitle.includes('somat')) itemMfg = 'סומט Somat';
+      else if (lowerTitle.includes('סקוץ\'') || lowerTitle.includes('scotch')) itemMfg = 'סקוץ\' ברייט 3M';
+      else if (lowerTitle.includes('אסטוניש') || lowerTitle.includes('astonish')) itemMfg = 'אסטוניש Astonish';
+      else if (lowerTitle.includes('דטול') || lowerTitle.includes('dettol')) itemMfg = 'דטול Dettol';
+      else if (lowerTitle.includes('סיליט') || lowerTitle.includes('cillit')) itemMfg = 'סיליט באנג Cillit Bang';
+      else if (lowerTitle.includes('אג\'קס') || lowerTitle.includes('ajax')) itemMfg = 'אג\'קס Ajax';
+      else if (lowerTitle.includes('דורסל') || lowerTitle.includes('duracell')) itemMfg = 'דורסל Duracell';
+      else if (lowerTitle.includes('בונזו')) itemMfg = 'בונזו ביופט';
+      else if (lowerTitle.includes('לה קט')) itemMfg = 'לה קט ביופט';
+      else if (lowerTitle.includes('פיירי') || lowerTitle.includes('fairy')) itemMfg = 'פיירי Fairy';
+      else if (lowerTitle.includes('פיניש') || lowerTitle.includes('finish')) itemMfg = 'פיניש Finish';
+      else if (lowerTitle.includes('אריאל') || lowerTitle.includes('ariel')) itemMfg = 'אריאל Ariel';
+      else if (lowerTitle.includes('פרסיל') || lowerTitle.includes('persil')) itemMfg = 'פרסיל Persil';
+      else if (lowerTitle.includes('לנור') || lowerTitle.includes('lenor')) itemMfg = 'לנור Lenor';
+      else if (lowerTitle.includes('בדין')) itemMfg = 'בדין יוניליוור';
+      else if (lowerTitle.includes('סנו')) itemMfg = 'סנו';
+      else if (lowerTitle.includes('לילי') || lowerTitle.includes('ניקול') || lowerTitle.includes('האגיס')) itemMfg = 'קימברלי קלארק';
 
       const basePrice = round1(tpl.price * (0.95 + ((barcodeCounter % 7) * 0.02)));
 

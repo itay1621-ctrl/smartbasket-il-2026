@@ -132,7 +132,7 @@ const FLAGSHIP_CLUB_PROMOTIONS = {
     }
   ],
   // פיירי לימון 650 מ"ל
-  'cleaning_disposable_1': [
+  '7290000056006': [
     {
       storeKey: 'victory',
       clubName: 'מועדון ויקטורי',
@@ -144,6 +144,14 @@ const FLAGSHIP_CLUB_PROMOTIONS = {
       clubName: 'שופרסל Supreme',
       clubPrice: 9.50,
       description: 'מבצע מועדון שופרסל Supreme: רק ₪9.50'
+    }
+  ],
+  'cleaning_disposable_1': [
+    {
+      storeKey: 'shufersal_deal',
+      clubName: 'שופרסל Supreme',
+      clubPrice: 22.90,
+      description: 'מבצע מועדון שופרסל Supreme: אבקת כביסה 5 ק"ג ב-₪22.90'
     }
   ],
   // חזה עוף טרי פרוס לשניצל
@@ -177,7 +185,7 @@ const FLAGSHIP_CLUB_PROMOTIONS = {
     }
   ],
   // נייר טואלט לילי 32 גלילים
-  'cleaning_disposable_2': [
+  '7290000056167': [
     {
       storeKey: 'osher_ad',
       clubName: 'מועדון אשראי אושר עד',
@@ -198,6 +206,128 @@ const FLAGSHIP_CLUB_PROMOTIONS = {
       clubName: 'Carrefour Club',
       clubPrice: 5.50,
       description: 'מבצע Carrefour Club: ₪5.50 בלבד'
+    }
+  ],
+
+  // מסירי כתמים ומוצרי ניקיון מובילים (וניש קליה, סנו אוקסיג'ן, קלגון, ברף, פיניש)
+  // אבקה להסרת כתמים וניש קליה אוקסי אקשן 1 ק"ג
+  '7290000057001': [
+    {
+      storeKey: 'shufersal_deal',
+      clubName: 'שופרסל Supreme',
+      clubPrice: 28.90,
+      description: 'מבצע מועדון שופרסל Supreme: וניש קליה 1 ק"ג ב-₪28.90 בלבד'
+    },
+    {
+      storeKey: 'rami_levy',
+      clubName: 'מועדון רמי לוי',
+      clubPrice: 27.90,
+      description: 'הטבת מועדון רמי לוי: וניש קליה 1 ק"ג ב-₪27.90 בלבד'
+    }
+  ],
+  // ג'ל להסרת כתמים וניש קליה מרוכז 1.5 ליטר
+  '7290000057003': [
+    {
+      storeKey: 'victory',
+      clubName: 'מועדון ויקטורי',
+      clubPrice: 25.90,
+      description: 'הטבת מועדון ויקטורי: ג\'ל וניש קליה 1.5 ליטר ב-₪25.90'
+    },
+    {
+      storeKey: 'carrefour',
+      clubName: 'Carrefour Club',
+      clubPrice: 26.90,
+      description: 'מבצע Carrefour Club: ג\'ל וניש קליה ב-₪26.90'
+    }
+  ],
+  // תרסיס קדם כביסה להסרת כתמים וניש קליה 750 מ"ל
+  '7290000057005': [
+    {
+      storeKey: 'shufersal_deal',
+      clubName: 'שופרסל Supreme',
+      clubPrice: 14.90,
+      description: 'מבצע מועדון שופרסל Supreme: מרסס וניש קליה ב-₪14.90'
+    },
+    {
+      storeKey: 'rami_levy',
+      clubName: 'מועדון רמי לוי',
+      clubPrice: 13.90,
+      description: 'הטבת מועדון רמי לוי: מרסס וניש קליה ב-₪13.90'
+    }
+  ],
+  // תרסיס סנו אוקסיג'ן פאוור מרסס 750 מ"ל
+  '7290000057009': [
+    {
+      storeKey: 'victory',
+      clubName: 'מועדון ויקטורי',
+      clubPrice: 11.90,
+      description: 'הטבת מועדון ויקטורי: ספריי סנו אוקסיג\'ן ב-₪11.90'
+    },
+    {
+      storeKey: 'yochananof',
+      clubName: 'מועדון יוחננוף',
+      clubPrice: 12.50,
+      description: 'מבצע מועדון יוחננוף: תרסיס סנו אוקסיג\'ן ב-₪12.50'
+    }
+  ],
+  // ג'ל להגנה מאבנית קלגון 750 מ"ל
+  '7290000057014': [
+    {
+      storeKey: 'shufersal_deal',
+      clubName: 'שופרסל Supreme',
+      clubPrice: 19.90,
+      description: 'מבצע מועדון שופרסל Supreme: קלגון ג\'ל ב-₪19.90'
+    },
+    {
+      storeKey: 'osher_ad',
+      clubName: 'מועדון אשראי אושר עד',
+      clubPrice: 18.90,
+      description: 'הטבת מועדון אשראי אושר עד: קלגון ג\'ל ב-₪18.90'
+    }
+  ],
+  // גרגרי בושם לכביסה לנור Unstoppables 210 גרם
+  '7290000057016': [
+    {
+      storeKey: 'shufersal_deal',
+      clubName: 'שופרסל Supreme',
+      clubPrice: 22.90,
+      description: 'מבצע מועדון שופרסל Supreme: חרוזי לנור ב-₪22.90'
+    },
+    {
+      storeKey: 'hazi_hinam',
+      clubName: 'מועדון חצי חינם',
+      clubPrice: 23.90,
+      description: 'הטבת מועדון חצי חינם: חרוזי לנור ב-₪23.90'
+    }
+  ],
+  // סבון אסלה ברף Bref Power Active שלישייה
+  '7290000057025': [
+    {
+      storeKey: 'shufersal_deal',
+      clubName: 'שופרסל Supreme',
+      clubPrice: 16.90,
+      description: 'מבצע מועדון שופרסל Supreme: ברף שלישייה ב-₪16.90'
+    },
+    {
+      storeKey: 'rami_levy',
+      clubName: 'מועדון רמי לוי',
+      clubPrice: 15.90,
+      description: 'הטבת מועדון רמי לוי: שלישיית ברף ב-₪15.90'
+    }
+  ],
+  // נוזל הברקה למדיח פיניש 800 מ"ל
+  '7290000057020': [
+    {
+      storeKey: 'victory',
+      clubName: 'מועדון ויקטורי',
+      clubPrice: 13.90,
+      description: 'הטבת מועדון ויקטורי: מבריק פיניש 800 מ"ל ב-₪13.90'
+    },
+    {
+      storeKey: 'carrefour',
+      clubName: 'Carrefour Club',
+      clubPrice: 14.50,
+      description: 'מבצע Carrefour Club: מבריק פיניש 800 מ"ל ב-₪14.50'
     }
   ]
 };
@@ -224,9 +354,10 @@ function enrichCatalogWithClubPromotions(catalog) {
     const itemPromotions = [];
     const itemPrices = item.prices || {};
 
-    // 1. בדיקת מבצעי דגל ייעודיים
-    if (FLAGSHIP_CLUB_PROMOTIONS[item.id]) {
-      for (const flagPromo of FLAGSHIP_CLUB_PROMOTIONS[item.id]) {
+    // 1. בדיקת מבצעי דגל ייעודיים (לפי barcode או id)
+    const flagshipList = FLAGSHIP_CLUB_PROMOTIONS[item.barcode] || FLAGSHIP_CLUB_PROMOTIONS[item.id];
+    if (flagshipList) {
+      for (const flagPromo of flagshipList) {
         const storeKey = flagPromo.storeKey;
         const originalPrice = itemPrices[storeKey];
         if (typeof originalPrice === 'number' && originalPrice > flagPromo.clubPrice) {
