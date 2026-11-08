@@ -65,7 +65,7 @@ export default function ModernHeader({
           <input
             type="text"
             className="modern-search-input"
-            placeholder="חיפוש מהיר: חלב, גבינה צהובה במשקל, עגבניות, עוף, קפה, פיירי..."
+            placeholder="חיפוש מהיר: וניש קליה, אבקת כביסה, גבינה צהובה במשקל, חלב, עוף..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />

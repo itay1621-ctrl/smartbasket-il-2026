@@ -69,34 +69,41 @@ export default function App() {
   const [isMobileCartOpen, setIsMobileCartOpen] = useState(false);
   const [isMatrixModalOpen, setIsMatrixModalOpen] = useState(false);
 
-  // טעינת קטלוג 1,035+ מוצרי הסופרמרקט
+  // טעינת קטלוג 1,140 מוצרי הסופרמרקט
   useEffect(() => {
     let isMounted = true;
     async function loadCatalog() {
       setIsLoadingCatalog(true);
       try {
-        const res = await fetch('./data/supermarket_catalog.json');
+        // Cache-busting כדי להבטיח קבלת הקטלוג המעודכן ביותר ללא תלות בקאש דפדפן
+        const res = await fetch(`./data/supermarket_catalog.json?v=${Date.now()}`, {
+          cache: 'no-store',
+          headers: {
+            'Cache-Control': 'no-cache, no-store, must-revalidate',
+            'Pragma': 'no-cache'
+          }
+        });
         if (res.ok) {
           const data = await res.json();
           if (isMounted && Array.isArray(data) && data.length > 0) {
             setCatalog(data);
             setActiveCatalog(data);
 
-            // אם הסל ריק בהפעלה ראשונה, נטען סל התחלתי מגוון הכולל גבינה במשקל
+            // אם הסל ריק בהפעלה ראשונה, נטען סל התחלתי מגוון הכולל גבינה במשקל ומוצרי ניקיון
             const savedCart = localStorage.getItem('smartbasket_v3_cart');
             if (!savedCart || JSON.parse(savedCart).length === 0) {
-              const starterIds = [
-                'dairy_eggs_1',      // חלב תנובה 3%
-                'dairy_eggs_18',     // תבנית 12 ביצים L
-                'deli_01',           // גבינה צהובה עמק במשקל 100 גרם
-                'deli_28',           // פסטרמה הודו בדבש במשקל 100 גרם
-                'produce_1',         // עגבניות
-                'produce_2',         // מלפפונים
-                'meat_fish_1',       // חזה עוף שניצל
-                'canned_cooking_13'  // טונה סטארקיסט
+              const starterBarcodes = [
+                '7290000045000',     // חלב תנובה 3%
+                '7290000045170',     // תבנית 12 ביצים L
+                '7290000045279',     // גבינה צהובה עמק במשקל 100 גרם
+                '7290000045545',     // פסטרמה הודו בדבש במשקל 100 גרם
+                '7290000045187',     // עגבניות
+                '7290000045354',     // חזה עוף שניצל
+                '7290000057001',     // אבקה להסרת כתמים וניש קליה אוקסי אקשן ורוד 1 ק"ג
+                '7290000056301'      // אבקת כביסה מרוכזת מותג שופרסל 5 ק"ג
               ];
               const starterItems = data
-                .filter(p => starterIds.includes(p.id))
+                .filter(p => starterBarcodes.includes(p.barcode) || starterBarcodes.includes(p.id))
                 .map(p => ({ ...p, quantity: p.category === 'deli_cheese' ? 2 : 1 }));
               
               if (starterItems.length > 0) {
@@ -214,7 +221,7 @@ export default function App() {
 
   const loadSampleBasket = () => {
     if (catalog.length === 0) return;
-    const sampleIds = [
+    const sampleKeys = [
       'dairy_eggs_1',      // חלב תנובה 3%
       'dairy_eggs_18',     // תבנית 12 ביצים L
       'deli_01',           // גבינת עמק במשקל
@@ -225,10 +232,12 @@ export default function App() {
       'bakery_1',          // לחם אחיד
       'meat_fish_1',       // חזה עוף טרי
       'canned_cooking_13', // טונה סטארקיסט
-      'coffee_tea_3'       // קפה נמס טסטרס צ'ויס
+      'coffee_tea_3',      // קפה נמס טסטרס צ'ויס
+      '7290000057001',     // אבקה להסרת כתמים וניש קליה אוקסי אקשן ורוד 1 ק"ג
+      '7290000056301'      // אבקת כביסה מרוכזת מותג שופרסל 5 ק"ג
     ];
     const sampleItems = catalog
-      .filter(p => sampleIds.includes(p.id))
+      .filter(p => sampleKeys.includes(p.id) || sampleKeys.includes(p.barcode))
       .map(p => ({ ...p, quantity: p.category === 'deli_cheese' ? 2 : 1 }));
     setCart(sampleItems);
   };
@@ -260,20 +269,28 @@ export default function App() {
 
   // סינון ומיון מוצרי הקטלוג
   const filteredAndSortedProducts = useMemo(() => {
+    const hasSearch = searchTerm.trim().length > 0;
+    const rawTerm = searchTerm.trim().toLowerCase();
+    const tokens = hasSearch ? rawTerm.split(/\s+/).filter(Boolean) : [];
+
     let result = catalog.filter((product) => {
-      // סינון קטגוריה
-      if (selectedCategory !== 'all' && product.category !== selectedCategory) {
+      // סינון קטגוריה: חל רק אם אין חיפוש פעיל. כאשר המשתמש מקליד חיפוש, נחפש בכל הסופרמרקט!
+      if (!hasSearch && selectedCategory !== 'all' && product.category !== selectedCategory) {
         return false;
       }
 
-      // סינון חיפוש
-      if (searchTerm.trim()) {
-        const term = searchTerm.trim().toLowerCase();
-        const matchName = product.name && product.name.toLowerCase().includes(term);
-        const matchMfg = product.manufacturer && product.manufacturer.toLowerCase().includes(term);
-        const matchBarcode = product.barcode && product.barcode.includes(term);
-        const matchAliases = product.aliases && product.aliases.some((a) => a.toLowerCase().includes(term));
-        if (!matchName && !matchMfg && !matchBarcode && !matchAliases) return false;
+      // סינון חיפוש מורחב: בדיקת שם, יצרן, ברקוד, וכינויים עם תמיכה בריבוי מילים
+      if (hasSearch) {
+        const searchPool = [
+          product.name || '',
+          product.manufacturer || '',
+          product.barcode || '',
+          ...(product.aliases || [])
+        ].join(' ').toLowerCase();
+
+        const fullMatch = searchPool.includes(rawTerm);
+        const tokensMatch = tokens.length > 0 && tokens.every((tok) => searchPool.includes(tok));
+        if (!fullMatch && !tokensMatch) return false;
       }
 
       return true;
@@ -410,14 +427,84 @@ export default function App() {
                 </div>
               </div>
 
+              {/* כפתורי חיפוש וסינון מהירים למוצרים פופולריים */}
+              <div className="quick-search-chips-row">
+                <span className="quick-chips-label">קיצורי דרך:</span>
+                <button
+                  type="button"
+                  className={`quick-chip ${searchTerm === 'וניש' ? 'active' : ''}`}
+                  onClick={() => {
+                    setSearchTerm('וניש');
+                    setSelectedCategory('all');
+                  }}
+                >
+                  🌸 וניש קליה (מסירי כתמים)
+                </button>
+                <button
+                  type="button"
+                  className={`quick-chip ${searchTerm === 'אבקת כביסה' ? 'active' : ''}`}
+                  onClick={() => {
+                    setSearchTerm('אבקת כביסה');
+                    setSelectedCategory('all');
+                  }}
+                >
+                  🧺 אבקות ונוזלי כביסה
+                </button>
+                <button
+                  type="button"
+                  className={`quick-chip ${selectedCategory === 'cleaning_disposable' && !searchTerm ? 'active' : ''}`}
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSelectedCategory('cleaning_disposable');
+                  }}
+                >
+                  🧼 כל מוצרי הניקיון והבית
+                </button>
+                <button
+                  type="button"
+                  className={`quick-chip ${selectedCategory === 'deli_cheese' && !searchTerm ? 'active' : ''}`}
+                  onClick={() => {
+                    setSearchTerm('');
+                    setSelectedCategory('deli_cheese');
+                  }}
+                >
+                  🧀 מעדנייה וגבינות במשקל
+                </button>
+                {searchTerm && (
+                  <button
+                    type="button"
+                    className="quick-chip chip-clear"
+                    onClick={() => {
+                      setSearchTerm('');
+                      setSelectedCategory('all');
+                    }}
+                  >
+                    ✕ נקה חיפוש
+                  </button>
+                )}
+              </div>
+
               {/* הודעת דגש למחלקת מעדנייה */}
-              {selectedCategory === 'deli_cheese' && (
+              {selectedCategory === 'deli_cheese' && !searchTerm && (
                 <div className="deli-category-banner">
                   <span style={{ fontSize: '1.25rem' }}>🧀</span>
                   <div>
                     <strong>מחלקת מעדנייה וגבינות במשקל (לפי 100 גרם):</strong>
                     <p style={{ margin: 0, fontSize: '0.8rem', opacity: 0.9 }}>
                       המחיר מוצג ל-100 גרם. בעת הוספת כמות (לדוגמה: 2 או 3) יוצג משקל כולל של 200 גרם או 300 גרם בסל!
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* הודעת דגש למחלקת ניקיון וכביסה */}
+              {selectedCategory === 'cleaning_disposable' && !searchTerm && (
+                <div className="cleaning-category-banner" style={{ background: '#ecfdf5', border: '1px solid #a7f3d0', borderRadius: '8px', padding: '0.65rem 0.9rem', marginTop: '0.6rem', display: 'flex', gap: '0.6rem', alignItems: 'center' }}>
+                  <span style={{ fontSize: '1.25rem' }}>🧼</span>
+                  <div>
+                    <strong style={{ color: '#065f46' }}>מחלקת ניקיון, כביסה ובית:</strong>
+                    <p style={{ margin: 0, fontSize: '0.8rem', color: '#047857' }}>
+                      כולל אבקות כביסה וג'ל כביסה של מותגי הרשתות, וניש קליה, סנו אוקסיג'ן, קלגון, פיניש למדיח, ניירות טואלט ועוד!
                     </p>
                   </div>
                 </div>

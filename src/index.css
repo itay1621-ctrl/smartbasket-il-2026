@@ -401,6 +401,65 @@ html, body {
   font-family: inherit;
 }
 
+/* Quick Search Chips Row */
+.quick-search-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  flex-wrap: wrap;
+  margin-top: 0.75rem;
+  padding-top: 0.65rem;
+  border-top: 1px dashed var(--border-light);
+}
+
+.quick-chips-label {
+  font-size: 0.76rem;
+  font-weight: 800;
+  color: #64748b;
+  margin-left: 0.2rem;
+}
+
+.quick-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  background: #f1f5f9;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 0.78rem;
+  font-weight: 700;
+  padding: 0.32rem 0.7rem;
+  border-radius: 9999px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+
+.quick-chip:hover {
+  background: #e2e8f0;
+  border-color: #94a3b8;
+  color: #0f172a;
+  transform: translateY(-1px);
+}
+
+.quick-chip.active {
+  background: #2563eb;
+  border-color: #1d4ed8;
+  color: #ffffff;
+  box-shadow: 0 2px 5px rgba(37, 99, 235, 0.3);
+}
+
+.quick-chip.chip-clear {
+  background: #fee2e2;
+  border-color: #fca5a5;
+  color: #b91c1c;
+}
+
+.quick-chip.chip-clear:hover {
+  background: #fecaca;
+  color: #991b1b;
+}
+
 .deli-category-banner {
   margin-top: 0.75rem;
   padding: 0.65rem 0.85rem;
